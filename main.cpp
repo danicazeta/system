@@ -29,6 +29,16 @@ struct Artifact {
     string photoFilename;
 };
 
+// STRUCTURE FOR ARTIFACT CLASSIFICATION
+struct ArtifactClassification {
+    int artifactID;
+    string category;
+    string material;
+    string characteristics;
+    string classificationNotes;
+};
+
+
 // GLOBAL ARRAY
 ExcavationSite sites[MAX_SITES];
 int siteCount = 0;
@@ -42,7 +52,33 @@ Artifact artifacts[MAX_ARTIFACTS];
 int artifactCount = 0;
 int nextArtifactID = 1;
 
+
+// MAXIMUM NUMBER OF CLASSIFICATIONS
+const int MAX_CLASSIFICATIONS = 500;
+
+// GLOBAL CLASSIFICATION ARRAY
+ArtifactClassification classifications[MAX_CLASSIFICATIONS];
+int classificationCount = 0;
+
+// TWO-DIMENSIONAL ARRAY FOR CLASSIFICATION CATEGORIES
+string classificationOptions[5][2] = {
+
+    {"Fossils", "Preserved remains or traces of ancient organisms."},
+
+    {"Pottery", "Ceramic objects such as pots, jars, and fragments."},
+
+    {"Tools", "Objects made or used for practical activities."},
+
+    {"Jewelry", "Decorative objects such as rings, beads, and ornaments."},
+
+    {"Other Artifacts", "Other discovered materials that do not fit the listed categories."}
+
+};
+
+
 // FUNCTION DECLARATIONS
+
+//EXCAVATION SITE MANAGEMENT
 void excavationSiteMenu();
 void registerSite();
 void viewSites();
@@ -72,6 +108,19 @@ void deleteArtifact();
 
 int findArtifact(int id);
 void displayArtifact(int index);
+
+// ARTIFACT CLASSIFICATION
+void classificationMenu();
+void classifyArtifact();
+void viewClassifications();
+void searchClassification();
+void updateClassification();
+void deleteClassification();
+
+int findClassification(int id);
+void displayClassification(int index);
+
+
 
 // MAIN FUNCTION
 int main() {
@@ -543,9 +592,517 @@ void artifactMenu() {
     } while (choice != 6);
 }
 
-void classificationMenu() {
-    cout << "\nArtifact Classification selected." << endl;
+// ============================================
+// REGISTER NEW ARTIFACT
+// ============================================
+
+void registerArtifact() {
+
+    if (artifactCount >= MAX_ARTIFACTS) {
+        cout << "\nMaximum number of artifacts reached!" << endl;
+        return;
+    }
+
+    if (siteCount == 0) {
+        cout << "\nNo excavation sites registered yet." << endl;
+        cout << "Please register an excavation site first." << endl;
+        return;
+    }
+
+    Artifact newArtifact;
+
+    cout << "\n===== REGISTER NEW ARTIFACT =====" << endl;
+
+    cout << "\n===== AVAILABLE EXCAVATION SITES =====" << endl;
+
+    viewSites();
+
+    cout << "\nEnter Excavation Site ID: ";
+    cin >> newArtifact.siteID;
+
+    int siteIndex = findSite(newArtifact.siteID);
+
+    if (siteIndex == -1) {
+        cout << "\nInvalid Site ID! Artifact registration cancelled." << endl;
+        return;
+    }
+
+    newArtifact.artifactID = nextArtifactID++;
+
+    cout << "\nArtifact ID: " << newArtifact.artifactID << endl;
+    cout << "Excavation Site: " << sites[siteIndex].siteName << endl;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter Artifact Name: ";
+    getline(cin, newArtifact.artifactName);
+
+    cout << "Enter Discovery Date: ";
+    getline(cin, newArtifact.discoveryDate);
+
+    cout << "Enter Discoverer's Name: ";
+    getline(cin, newArtifact.discoverer);
+
+    cout << "Enter Excavation Grid or Area: ";
+    getline(cin, newArtifact.excavationGrid);
+
+    cout << "Enter Discovery Description: ";
+    getline(cin, newArtifact.discoveryDescription);
+
+    cout << "Enter Photo Filename (if available): ";
+    getline(cin, newArtifact.photoFilename);
+
+    artifacts[artifactCount] = newArtifact;
+    artifactCount++;
+
+    cout << "\nArtifact successfully registered!" << endl;
+    cout << "Assigned Artifact ID: " << newArtifact.artifactID << endl;
 }
+
+// ============================================
+// VIEW ALL ARTIFACTS
+// ============================================
+
+void viewArtifacts() {
+
+    if (artifactCount == 0) {
+        cout << "\nNo artifacts registered yet." << endl;
+        return;
+    }
+
+    cout << "\n===== REGISTERED ARTIFACTS =====" << endl;
+
+    for (int i = 0; i < artifactCount; i++) {
+
+        displayArtifact(i);
+
+    }
+}
+// ============================================
+// DISPLAY ARTIFACT INFORMATION
+// ============================================
+
+void displayArtifact(int index) {
+
+    cout << "\n----------------------------------------" << endl;
+
+    cout << "Artifact ID: " << artifacts[index].artifactID << endl;
+    cout << "Artifact Name: " << artifacts[index].artifactName << endl;
+    cout << "Excavation Site ID: " << artifacts[index].siteID << endl;
+
+    int siteIndex = findSite(artifacts[index].siteID);
+
+    if (siteIndex != -1) {
+        cout << "Excavation Site: " << sites[siteIndex].siteName << endl;
+    }
+
+    cout << "Discovery Date: " << artifacts[index].discoveryDate << endl;
+    cout << "Discoverer: " << artifacts[index].discoverer << endl;
+    cout << "Excavation Grid: " << artifacts[index].excavationGrid << endl;
+    cout << "Description: " << artifacts[index].discoveryDescription << endl;
+    cout << "Photo Filename: " << artifacts[index].photoFilename << endl;
+
+    cout << "----------------------------------------" << endl;
+}
+
+// ============================================
+// FIND ARTIFACT USING ID
+// ============================================
+
+int findArtifact(int id) {
+
+    for (int i = 0; i < artifactCount; i++) {
+
+        if (artifacts[i].artifactID == id) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// ============================================
+// SEARCH ARTIFACT
+// ============================================
+
+void searchArtifact() {
+
+    int id;
+
+    cout << "\nEnter Artifact ID to Search: ";
+    cin >> id;
+
+    int index = findArtifact(id);
+
+    if (index == -1) {
+        cout << "\nArtifact not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== ARTIFACT RECORD FOUND =====" << endl;
+
+    displayArtifact(index);
+}
+
+// ============================================
+// UPDATE ARTIFACT INFORMATION
+// ============================================
+
+void updateArtifact() {
+
+    int id;
+
+    cout << "\nEnter Artifact ID to Update: ";
+    cin >> id;
+
+    int index = findArtifact(id);
+
+    if (index == -1) {
+        cout << "\nArtifact not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== UPDATE ARTIFACT INFORMATION =====" << endl;
+
+    cout << "\nCurrent Artifact Name: " << artifacts[index].artifactName << endl;
+
+    cout << "\n===== AVAILABLE EXCAVATION SITES =====" << endl;
+    viewSites();
+
+    cout << "\nEnter New Excavation Site ID: ";
+
+    int newSiteID;
+    cin >> newSiteID;
+
+    int siteIndex = findSite(newSiteID);
+
+    if (siteIndex == -1) {
+        cout << "\nInvalid Site ID! Update cancelled." << endl;
+        return;
+    }
+
+    artifacts[index].siteID = newSiteID;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "Enter New Artifact Name: ";
+    getline(cin, artifacts[index].artifactName);
+
+    cout << "Enter New Discovery Date: ";
+    getline(cin, artifacts[index].discoveryDate);
+
+    cout << "Enter New Discoverer's Name: ";
+    getline(cin, artifacts[index].discoverer);
+
+    cout << "Enter New Excavation Grid or Area: ";
+    getline(cin, artifacts[index].excavationGrid);
+
+    cout << "Enter New Discovery Description: ";
+    getline(cin, artifacts[index].discoveryDescription);
+
+    cout << "Enter New Photo Filename: ";
+    getline(cin, artifacts[index].photoFilename);
+
+    cout << "\nArtifact information successfully updated!" << endl;
+}
+
+// ============================================
+// DELETE ARTIFACT RECORD
+// ============================================
+
+void deleteArtifact() {
+
+    int id;
+
+    cout << "\nEnter Artifact ID to Delete: ";
+    cin >> id;
+
+    int index = findArtifact(id);
+
+    if (index == -1) {
+        cout << "\nArtifact not found!" << endl;
+        return;
+    }
+
+    cout << "\nArtifact Name: " << artifacts[index].artifactName << endl;
+
+    char confirmation;
+
+    cout << "Are you sure you want to delete this artifact? (Y/N): ";
+    cin >> confirmation;
+
+    if (confirmation == 'Y' || confirmation == 'y') {
+
+        for (int i = index; i < artifactCount - 1; i++) {
+            artifacts[i] = artifacts[i + 1];
+        }
+
+        artifactCount--;
+
+        cout << "\nArtifact record successfully deleted!" << endl;
+
+    } else {
+
+        cout << "\nDeletion cancelled." << endl;
+    }
+}
+
+
+
+// ============================================
+// ARTIFACT CLASSIFICATION MENU
+// ============================================
+
+void classificationMenu() {
+
+    int choice;
+
+    do {
+
+        cout << "\n========================================" << endl;
+        cout << "        ARTIFACT CLASSIFICATION" << endl;
+        cout << "========================================" << endl;
+
+        cout << "\n1. Classify Artifact" << endl;
+        cout << "2. View All Classifications" << endl;
+        cout << "3. Search Classification" << endl;
+        cout << "4. Update Classification" << endl;
+        cout << "5. Delete Classification" << endl;
+        cout << "6. Return to Main Menu" << endl;
+
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "\nInvalid input!" << endl;
+            continue;
+        }
+
+        switch (choice) {
+
+            case 1:
+                classifyArtifact();
+                break;
+
+            case 2:
+                viewClassifications();
+                break;
+
+            case 3:
+                searchClassification();
+                break;
+
+            case 4:
+                updateClassification();
+                break;
+
+            case 5:
+                deleteClassification();
+                break;
+
+            case 6:
+                cout << "\nReturning to Main Menu..." << endl;
+                break;
+
+            default:
+                cout << "\nInvalid choice!" << endl;
+        }
+
+    } while (choice != 6);
+}
+
+// ============================================
+// CLASSIFY ARTIFACT
+// ============================================
+
+void classifyArtifact() {
+
+    if (artifactCount == 0) {
+        cout << "\nNo registered artifacts available." << endl;
+        cout << "Please register an artifact first." << endl;
+        return;
+    }
+
+    if (classificationCount >= MAX_CLASSIFICATIONS) {
+        cout << "\nMaximum number of classifications reached!" << endl;
+        return;
+    }
+
+    int id;
+
+    cout << "\n===== CLASSIFY ARTIFACT =====" << endl;
+
+    cout << "\n===== REGISTERED ARTIFACTS =====" << endl;
+    viewArtifacts();
+
+    cout << "\nEnter Artifact ID to Classify: ";
+    cin >> id;
+
+    int artifactIndex = findArtifact(id);
+
+    if (artifactIndex == -1) {
+        cout << "\nArtifact not found!" << endl;
+        return;
+    }
+
+    int existingIndex = findClassification(id);
+
+    if (existingIndex != -1) {
+        cout << "\nThis artifact already has a classification." << endl;
+        cout << "Use Update Classification to modify it." << endl;
+        return;
+    }
+
+    ArtifactClassification newClassification;
+
+    newClassification.artifactID = id;
+
+    cout << "\nArtifact Name: "
+         << artifacts[artifactIndex].artifactName << endl;
+
+    cout << "\n===== CLASSIFICATION CATEGORIES =====" << endl;
+
+    for (int i = 0; i < 5; i++) {
+
+        cout << "\n" << i + 1 << ". "
+             << classificationOptions[i][0] << endl;
+
+        cout << "   "
+             << classificationOptions[i][1] << endl;
+    }
+
+    int categoryChoice;
+
+    cout << "\nSelect Artifact Category: ";
+    cin >> categoryChoice;
+
+    if (categoryChoice < 1 || categoryChoice > 5) {
+        cout << "\nInvalid category selection!" << endl;
+        return;
+    }
+
+    newClassification.category =
+        classificationOptions[categoryChoice - 1][0];
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter Artifact Material: ";
+    getline(cin, newClassification.material);
+
+    cout << "Enter Artifact Characteristics: ";
+    getline(cin, newClassification.characteristics);
+
+    cout << "Enter Additional Classification Notes: ";
+    getline(cin, newClassification.classificationNotes);
+
+    classifications[classificationCount] = newClassification;
+
+    classificationCount++;
+
+    cout << "\nArtifact successfully classified!" << endl;
+    cout << "Artifact ID: " << id << endl;
+    cout << "Category: " << newClassification.category << endl;
+}
+
+// ============================================
+// VIEW ALL CLASSIFICATIONS
+// ============================================
+
+void viewClassifications() {
+
+    if (classificationCount == 0) {
+        cout << "\nNo artifact classifications recorded yet." << endl;
+        return;
+    }
+
+    cout << "\n===== ARTIFACT CLASSIFICATION RECORDS =====" << endl;
+
+    for (int i = 0; i < classificationCount; i++) {
+
+        displayClassification(i);
+
+    }
+}
+
+// ============================================
+// DISPLAY CLASSIFICATION INFORMATION
+// ============================================
+
+void displayClassification(int index) {
+
+    cout << "\n----------------------------------------" << endl;
+
+    cout << "Artifact ID: "
+         << classifications[index].artifactID << endl;
+
+    int artifactIndex = findArtifact(classifications[index].artifactID);
+
+    if (artifactIndex != -1) {
+
+        cout << "Artifact Name: "
+             << artifacts[artifactIndex].artifactName << endl;
+    }
+
+    cout << "Category: "
+         << classifications[index].category << endl;
+
+    cout << "Material: "
+         << classifications[index].material << endl;
+
+    cout << "Characteristics: "
+         << classifications[index].characteristics << endl;
+
+    cout << "Classification Notes: "
+         << classifications[index].classificationNotes << endl;
+
+    cout << "----------------------------------------" << endl;
+}
+
+// ============================================
+// FIND CLASSIFICATION USING ARTIFACT ID
+// ============================================
+
+int findClassification(int id) {
+
+    for (int i = 0; i < classificationCount; i++) {
+
+        if (classifications[i].artifactID == id) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// ============================================
+// SEARCH CLASSIFICATION
+// ============================================
+
+void searchClassification() {
+
+    int id;
+
+    cout << "\nEnter Artifact ID to Search: ";
+    cin >> id;
+
+    int index = findClassification(id);
+
+    if (index == -1) {
+        cout << "\nClassification record not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== CLASSIFICATION RECORD FOUND =====" << endl;
+
+    displayClassification(index);
+}
+
+
+
+
 
 void agePeriodMenu() {
     cout << "\nAge and Historical Period Management selected." << endl;
