@@ -81,21 +81,6 @@ struct ExcavationTeam {
 
 
 // ============================================
-// STRUCTURE FOR RESEARCH ASSIGNMENTS
-// ============================================
-
-struct ResearchAssignment {
-
-    int assignmentID;
-    int memberID;
-    int siteID;
-    string taskDescription;
-    string assignmentDate;
-    string assignmentStatus;
-
-};
-
-// ============================================
 // STRUCTURE FOR PRESERVATION MANAGEMENT
 // ============================================
 
@@ -222,20 +207,17 @@ HistoricalPeriod historicalPeriods[5] = {
 };
 
 // ============================================
-// EXCAVATION TEAM AND ASSIGNMENT ARRAYS
+// EXCAVATION TEAM ARRAY
 // ============================================
 
 const int MAX_TEAM_MEMBERS = 100;
-const int MAX_ASSIGNMENTS = 200;
 
 ExcavationTeam teamMembers[MAX_TEAM_MEMBERS];
-ResearchAssignment assignments[MAX_ASSIGNMENTS];
+
 
 int teamCount = 0;
-int assignmentCount = 0;
 
 int nextMemberID = 1;
-int nextAssignmentID = 1;
 
 // ============================================
 // PRESERVATION RECORD ARRAY
@@ -343,9 +325,9 @@ void displayAgeEstimate(int index);
 void calculateAgeRange(int periodChoice, int &minimumAge, int &maximumAge);
 
 
-// ============================================
-// EXCAVATION TEAM AND RESEARCH ASSIGNMENTS
-// ============================================
+// ================
+// EXCAVATION TEAM 
+// ================
 
 void teamAssignmentMenu();
 
@@ -355,13 +337,6 @@ void viewTeamMembers();
 void searchTeamMember();
 void updateTeamMember();
 void deleteTeamMember();
-
-// RESEARCH ASSIGNMENTS
-void assignResearchTask();
-void viewAssignments();
-void searchAssignment();
-void updateAssignment();
-void deleteAssignment();
 
 // SEARCH FUNCTIONS
 int findTeamMember(int id);
@@ -464,8 +439,9 @@ void userMenu() {
         cout << "[2] Artifact Discovery and Cataloguing\n";
         cout << "[3] Artifact Classification\n";
         cout << "[4] Artifact Age Estimation\n";
-        cout << "[5] Preservation Management\n";
-        cout << "[6] Log Out\n";
+        cout << "[5] Excavation Team Management\n;
+        cout << "[6] Preservation Management\n";
+        cout << "[7] Log Out\n";
         cout << "================================================================\n";
         cout << "Enter your choice: ";
         cin >> choice;
@@ -486,12 +462,14 @@ void userMenu() {
             case 4:
                 ageEstimationMenu();
                 break;
-
             case 5:
+                ExcavationTeamManagement();
+
+            case 6:
                 preservationMenu();
                 break;
 
-            case 6:
+            case 7:
                 cout << "\nLogging out...\n";
                 break;
 
@@ -499,7 +477,7 @@ void userMenu() {
                 cout << "\nInvalid choice. Please try again.\n";
         }
 
-    } while (choice != 6);
+    } while (choice != 7);
 }
 
 void trackingReportsMenu();
@@ -2303,7 +2281,7 @@ void teamAssignmentMenu() {
     do {
 
         cout << "\n========================================" << endl;
-        cout << " EXCAVATION TEAM AND RESEARCH ASSIGNMENTS" << endl;
+        cout << " EXCAVATION TEAM MANAGEMENT" << endl;
         cout << "========================================" << endl;
 
         cout << "\n===== TEAM MANAGEMENT =====" << endl;
@@ -2313,14 +2291,7 @@ void teamAssignmentMenu() {
         cout << "4. Update Team Member" << endl;
         cout << "5. Delete Team Member" << endl;
 
-        cout << "\n===== RESEARCH ASSIGNMENTS =====" << endl;
-        cout << "6. Assign Research Task" << endl;
-        cout << "7. View All Assignments" << endl;
-        cout << "8. Search Assignment" << endl;
-        cout << "9. Update Assignment" << endl;
-        cout << "10. Delete Assignment" << endl;
-
-        cout << "\n11. Return to Main Menu" << endl;
+        cout << "\n6. Return to Main Menu" << endl;
 
         cout << "\nEnter your choice: ";
         cin >> choice;
@@ -2357,26 +2328,6 @@ void teamAssignmentMenu() {
                 break;
 
             case 6:
-                assignResearchTask();
-                break;
-
-            case 7:
-                viewAssignments();
-                break;
-
-            case 8:
-                searchAssignment();
-                break;
-
-            case 9:
-                updateAssignment();
-                break;
-
-            case 10:
-                deleteAssignment();
-                break;
-
-            case 11:
                 cout << "\nReturning to Main Menu..." << endl;
                 break;
 
@@ -2384,7 +2335,7 @@ void teamAssignmentMenu() {
                 cout << "\nInvalid choice!" << endl;
         }
 
-    } while (choice != 11);
+    } while (choice != 6);
 }
 
 
@@ -2630,15 +2581,7 @@ void assignResearchTask() {
         return;
     }
 
-    if (assignmentCount >= MAX_ASSIGNMENTS) {
-
-        cout << "\nMaximum number of assignments reached!" << endl;
-        return;
-    }
-
-    ResearchAssignment newAssignment;
-
-    cout << "\n===== CREATE RESEARCH ASSIGNMENT =====" << endl;
+    
 
     cout << "\n===== AVAILABLE TEAM MEMBERS =====" << endl;
 
@@ -2673,312 +2616,7 @@ void assignResearchTask() {
         cout << "\nExcavation site not found!" << endl;
         return;
     }
-
-    newAssignment.assignmentID = nextAssignmentID;
-    newAssignment.memberID = memberID;
-    newAssignment.siteID = siteID;
-
-    cout << "\nAssigned Team Member: "
-         << teamMembers[memberIndex].memberName << endl;
-
-    cout << "Excavation Site: "
-         << sites[siteIndex].siteName << endl;
-
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    cout << "\nEnter Research Task Description: ";
-    getline(cin, newAssignment.taskDescription);
-
-    cout << "Enter Assignment Date: ";
-    getline(cin, newAssignment.assignmentDate);
-
-    cout << "\n===== ASSIGNMENT STATUS =====" << endl;
-    cout << "1. Pending" << endl;
-    cout << "2. In Progress" << endl;
-    cout << "3. Completed" << endl;
-
-    int statusChoice;
-
-    cout << "\nSelect Assignment Status: ";
-    cin >> statusChoice;
-
-    if (statusChoice < 1 || statusChoice > 3) {
-
-        cout << "\nInvalid status selection! Assignment cancelled." << endl;
-        return;
-    }
-
-    if (statusChoice == 1) {
-        newAssignment.assignmentStatus = "Pending";
-    }
-    else if (statusChoice == 2) {
-        newAssignment.assignmentStatus = "In Progress";
-    }
-    else {
-        newAssignment.assignmentStatus = "Completed";
-    }
-
-    assignments[assignmentCount] = newAssignment;
-
-    assignmentCount++;
-    nextAssignmentID++;
-
-    cout << "\nResearch assignment successfully created!" << endl;
-
-    cout << "Assignment ID: " << newAssignment.assignmentID << endl;
-    cout << "Assigned Member: "
-         << teamMembers[memberIndex].memberName << endl;
-    cout << "Excavation Site: "
-         << sites[siteIndex].siteName << endl;
 }
-
-
-// ============================================
-// DISPLAY RESEARCH ASSIGNMENT
-// ============================================
-
-void displayAssignment(int index) {
-
-    cout << "\n----------------------------------------" << endl;
-
-    cout << "Assignment ID: "
-         << assignments[index].assignmentID << endl;
-
-    cout << "Member ID: "
-         << assignments[index].memberID << endl;
-
-    int memberIndex = findTeamMember(assignments[index].memberID);
-
-    if (memberIndex != -1) {
-
-        cout << "Team Member: "
-             << teamMembers[memberIndex].memberName << endl;
-    }
-
-    cout << "Excavation Site ID: "
-         << assignments[index].siteID << endl;
-
-    int siteIndex = findSite(assignments[index].siteID);
-
-    if (siteIndex != -1) {
-
-        cout << "Excavation Site: "
-             << sites[siteIndex].siteName << endl;
-    }
-
-    cout << "Research Task: "
-         << assignments[index].taskDescription << endl;
-
-    cout << "Assignment Date: "
-         << assignments[index].assignmentDate << endl;
-
-    cout << "Assignment Status: "
-         << assignments[index].assignmentStatus << endl;
-
-    cout << "----------------------------------------" << endl;
-}
-
-
-// ============================================
-// VIEW ALL RESEARCH ASSIGNMENTS
-// ============================================
-
-void viewAssignments() {
-
-    if (assignmentCount == 0) {
-
-        cout << "\nNo research assignments recorded yet." << endl;
-        return;
-    }
-
-    cout << "\n===== RESEARCH ASSIGNMENT RECORDS =====" << endl;
-
-    for (int i = 0; i < assignmentCount; i++) {
-
-        displayAssignment(i);
-    }
-}
-
-// ============================================
-// FIND ASSIGNMENT USING ASSIGNMENT ID
-// ============================================
-
-int findAssignment(int id) {
-
-    for (int i = 0; i < assignmentCount; i++) {
-
-        if (assignments[i].assignmentID == id) {
-
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-// ============================================
-// SEARCH RESEARCH ASSIGNMENT
-// ============================================
-
-void searchAssignment() {
-
-    int id;
-
-    cout << "\nEnter Assignment ID to Search: ";
-    cin >> id;
-
-    int index = findAssignment(id);
-
-    if (index == -1) {
-
-        cout << "\nResearch assignment not found!" << endl;
-        return;
-    }
-
-    cout << "\n===== RESEARCH ASSIGNMENT FOUND =====" << endl;
-
-    displayAssignment(index);
-}
-
-
-// ============================================
-// UPDATE RESEARCH ASSIGNMENT
-// ============================================
-
-void updateAssignment() {
-
-    int id;
-
-    cout << "\nEnter Assignment ID to Update: ";
-    cin >> id;
-
-    int index = findAssignment(id);
-
-    if (index == -1) {
-
-        cout << "\nResearch assignment not found!" << endl;
-        return;
-    }
-
-    cout << "\n===== UPDATE RESEARCH ASSIGNMENT =====" << endl;
-
-    cout << "\n===== AVAILABLE TEAM MEMBERS =====" << endl;
-
-    viewTeamMembers();
-
-    int memberID;
-
-    cout << "\nEnter New Member ID: ";
-    cin >> memberID;
-
-    int memberIndex = findTeamMember(memberID);
-
-    if (memberIndex == -1) {
-
-        cout << "\nTeam member not found! Update cancelled." << endl;
-        return;
-    }
-
-    cout << "\n===== AVAILABLE EXCAVATION SITES =====" << endl;
-
-    viewSites();
-
-    int siteID;
-
-    cout << "\nEnter New Excavation Site ID: ";
-    cin >> siteID;
-
-    int siteIndex = findSite(siteID);
-
-    if (siteIndex == -1) {
-
-        cout << "\nExcavation site not found! Update cancelled." << endl;
-        return;
-    }
-
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    cout << "\nEnter New Research Task Description: ";
-    getline(cin, assignments[index].taskDescription);
-
-    cout << "Enter New Assignment Date: ";
-    getline(cin, assignments[index].assignmentDate);
-
-    cout << "\n===== ASSIGNMENT STATUS =====" << endl;
-    cout << "1. Pending" << endl;
-    cout << "2. In Progress" << endl;
-    cout << "3. Completed" << endl;
-
-    int statusChoice;
-
-    cout << "\nSelect New Assignment Status: ";
-    cin >> statusChoice;
-
-    if (statusChoice < 1 || statusChoice > 3) {
-
-        cout << "\nInvalid status! Update cancelled." << endl;
-        return;
-    }
-
-    assignments[index].memberID = memberID;
-    assignments[index].siteID = siteID;
-
-    if (statusChoice == 1) {
-        assignments[index].assignmentStatus = "Pending";
-    }
-    else if (statusChoice == 2) {
-        assignments[index].assignmentStatus = "In Progress";
-    }
-    else {
-        assignments[index].assignmentStatus = "Completed";
-    }
-
-    cout << "\nResearch assignment successfully updated!" << endl;
-
-    displayAssignment(index);
-}
-
-// ============================================
-// DELETE RESEARCH ASSIGNMENT
-// ============================================
-
-void deleteAssignment() {
-
-    int id;
-
-    cout << "\nEnter Assignment ID to Delete: ";
-    cin >> id;
-
-    int index = findAssignment(id);
-
-    if (index == -1) {
-
-        cout << "\nResearch assignment not found!" << endl;
-        return;
-    }
-
-    char confirmation;
-
-    cout << "\nAre you sure you want to delete this assignment? (Y/N): ";
-    cin >> confirmation;
-
-    if (confirmation == 'Y' || confirmation == 'y') {
-
-        for (int i = index; i < assignmentCount - 1; i++) {
-
-            assignments[i] = assignments[i + 1];
-        }
-
-        assignmentCount--;
-
-        cout << "\nResearch assignment successfully deleted!" << endl;
-    }
-    else {
-
-        cout << "\nDeletion cancelled." << endl;
-    }
-}
-
 
 // ============================================
 // PRESERVATION MANAGEMENT MENU
