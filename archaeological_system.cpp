@@ -340,7 +340,6 @@ void deleteTeamMember();
 
 // SEARCH FUNCTIONS
 int findTeamMember(int id);
-int findAssignment(int id);
 
 // DISPLAY FUNCTIONS
 void displayTeamMember(int index);
