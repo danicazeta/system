@@ -1,0 +1,4585 @@
+
+#include <iostream>
+#include <string>
+#include <limits>
+
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+
+#include <fstream>
+#include <sstream>
+
+using namespace std;
+
+// MAXIMUM NUMBER OF SITES
+const int MAX_SITES = 100;
+
+// STRUCTURE FOR EXCAVATION SITE
+struct ExcavationSite {
+    int siteID;
+    string siteName;
+    string location;
+    double latitude;
+    double longitude;
+    string description;
+    string status;
+};
+
+struct Artifact {
+    int artifactID;
+    int siteID;
+    string artifactName;
+    string discoveryDate;
+    string discoverer;
+    string excavationGrid;
+    string discoveryDescription;
+    string photoFilename;
+};
+
+// STRUCTURE FOR ARTIFACT CLASSIFICATION
+struct ArtifactClassification {
+    int artifactID;
+    string category;
+    string material;
+    string characteristics;
+    string classificationNotes;
+};
+
+// STRUCTURE FOR ARTIFACT AGE ESTIMATION
+struct AgeEstimation {
+    int artifactID;
+    string historicalPeriod;
+    int startingYear;
+    int endingYear;
+    int minimumAge;
+    int maximumAge;
+    string referenceBasis;
+    string estimationNotes;
+};
+
+// STRUCTURE FOR HISTORICAL PERIOD REFERENCES
+struct HistoricalPeriod {
+    string periodName;
+    int startingYear;
+    int endingYear;
+};
+
+// ============================================
+// STRUCTURE FOR EXCAVATION TEAM MEMBERS
+// ============================================
+
+struct ExcavationTeam {
+
+    int memberID;
+    string memberName;
+    string role;
+    string specialization;
+    string contactNumber;
+
+};
+
+
+// ============================================
+// STRUCTURE FOR RESEARCH ASSIGNMENTS
+// ============================================
+
+struct ResearchAssignment {
+
+    int assignmentID;
+    int memberID;
+    int siteID;
+    string taskDescription;
+    string assignmentDate;
+    string assignmentStatus;
+
+};
+
+// ============================================
+// STRUCTURE FOR PRESERVATION MANAGEMENT
+// ============================================
+
+struct PreservationRecord {
+
+    int preservationID;
+    int artifactID;
+    string preservationActivity;
+    string preservationMethod;
+    string responsiblePerson;
+    string preservationDate;
+    string nextMonitoringDate;
+    string preservationStatus;
+
+};
+
+// ============================================
+// STRUCTURE FOR RESTORATION FACILITIES AND MUSEUMS
+// ============================================
+
+struct HeritageFacility {
+
+    int facilityID;
+    string facilityName;
+    string facilityType;
+    string location;
+    string contactPerson;
+    string contactNumber;
+    string services;
+
+};
+
+
+// ============================================
+// STRUCTURE FOR ARTIFACT TRANSFERS
+// ============================================
+
+struct ArtifactTransfer {
+
+    int transferID;
+    int artifactID;
+    int facilityID;
+    string transferDate;
+    string transferPurpose;
+    string transferStatus;
+
+};
+
+// ============================================
+// STRUCTURE FOR USER MANAGEMENT
+// ============================================
+
+struct User {
+
+    int userID;
+    string fullName;
+    string username;
+    string password;
+    string role;
+
+};
+
+
+
+// GLOBAL ARRAY
+ExcavationSite sites[MAX_SITES];
+int siteCount = 0;
+int nextSiteID = 1;
+
+// MAXIMUM NUMBER OF ARTIFACTS
+const int MAX_ARTIFACTS = 500;
+
+// GLOBAL ARTIFACT ARRAY
+Artifact artifacts[MAX_ARTIFACTS];
+int artifactCount = 0;
+int nextArtifactID = 1;
+
+
+// MAXIMUM NUMBER OF CLASSIFICATIONS
+const int MAX_CLASSIFICATIONS = 500;
+
+// GLOBAL CLASSIFICATION ARRAY
+ArtifactClassification classifications[MAX_CLASSIFICATIONS];
+int classificationCount = 0;
+
+// TWO-DIMENSIONAL ARRAY FOR CLASSIFICATION CATEGORIES
+string classificationOptions[5][2] = {
+
+    {"Fossils", "Preserved remains or traces of ancient organisms."},
+
+    {"Pottery", "Ceramic objects such as pots, jars, and fragments."},
+
+    {"Tools", "Objects made or used for practical activities."},
+
+    {"Jewelry", "Decorative objects such as rings, beads, and ornaments."},
+
+    {"Other Artifacts", "Other discovered materials that do not fit the listed categories."}
+
+};
+
+// MAXIMUM NUMBER OF AGE ESTIMATION RECORDS
+const int MAX_AGE_RECORDS = 500;
+
+// GLOBAL AGE ESTIMATION ARRAY
+AgeEstimation ageRecords[MAX_AGE_RECORDS];
+int ageCount = 0;
+
+// CURRENT REFERENCE YEAR
+const int CURRENT_YEAR = 2026;
+
+// PREDEFINED PHILIPPINE HISTORICAL PERIODS
+HistoricalPeriod historicalPeriods[5] = {
+
+    {"Precolonial Period (before 1565)", 0, 1565},
+
+    {"Spanish Colonial Period", 1565, 1898},
+
+    {"American Colonial Period", 1898, 1946},
+
+    {"Japanese Occupation Period", 1942, 1945},
+
+    {"Postwar Period (1946 onward)", 1946, 2026}
+
+};
+
+// ============================================
+// EXCAVATION TEAM AND ASSIGNMENT ARRAYS
+// ============================================
+
+const int MAX_TEAM_MEMBERS = 100;
+const int MAX_ASSIGNMENTS = 200;
+
+ExcavationTeam teamMembers[MAX_TEAM_MEMBERS];
+ResearchAssignment assignments[MAX_ASSIGNMENTS];
+
+int teamCount = 0;
+int assignmentCount = 0;
+
+int nextMemberID = 1;
+int nextAssignmentID = 1;
+
+// ============================================
+// PRESERVATION RECORD ARRAY
+// ============================================
+
+const int MAX_PRESERVATION = 500;
+
+PreservationRecord preservationRecords[MAX_PRESERVATION];
+
+int preservationCount = 0;
+int nextPreservationID = 1;
+
+// ============================================
+// RESTORATION AND MUSEUM ARRAYS
+// ============================================
+
+const int MAX_FACILITIES = 100;
+const int MAX_TRANSFERS = 500;
+
+HeritageFacility facilities[MAX_FACILITIES];
+ArtifactTransfer transfers[MAX_TRANSFERS];
+
+int facilityCount = 0;
+int transferCount = 0;
+
+int nextFacilityID = 1;
+int nextTransferID = 1;
+
+
+// ============================================
+// USER MANAGEMENT ARRAY
+// ============================================
+
+const int MAX_USERS = 100;
+
+User users[MAX_USERS];
+
+int userCount = 0;
+int nextUserID = 1;
+
+
+
+// FUNCTION DECLARATIONS
+
+//EXCAVATION SITE MANAGEMENT
+void excavationSiteMenu();
+void registerSite();
+void viewSites();
+void searchSite();
+void updateSite();
+void deleteSite();
+int findSite(int id);
+
+void artifactMenu();
+void classificationMenu();
+void agePeriodMenu();
+void teamMenu();
+void preservationMenu();
+void restorationMenu();
+void reportsMenu();
+void userMenu();
+
+// ARTIFACT DISCOVERY AND CATALOGUING
+void artifactMenu();
+void registerArtifact();
+void viewArtifacts();
+void searchArtifact();
+void updateArtifact();
+void deleteArtifact();
+
+int findArtifact(int id);
+void displayArtifact(int index);
+
+// ARTIFACT CLASSIFICATION
+void classificationMenu();
+void classifyArtifact();
+void viewClassifications();
+void searchClassification();
+void updateClassification();
+void deleteClassification();
+
+int findClassification(int id);
+void displayClassification(int index);
+
+string toLowerCase(string text);
+
+string suggestClassification(
+    string artifactName,
+    string material,
+    string characteristics
+);
+
+string confirmClassification(string suggested);
+
+// AGE ESTIMATION AND HISTORICAL PERIOD MANAGEMENT
+void ageEstimationMenu();
+void estimateArtifactAge();
+void viewAgeEstimates();
+void searchAgeEstimate();
+void updateAgeEstimate();
+void deleteAgeEstimate();
+
+int findAgeEstimate(int id);
+void displayAgeEstimate(int index);
+void calculateAgeRange(int periodChoice, int &minimumAge, int &maximumAge);
+
+
+// ============================================
+// EXCAVATION TEAM AND RESEARCH ASSIGNMENTS
+// ============================================
+
+void teamAssignmentMenu();
+
+// TEAM MANAGEMENT
+void registerTeamMember();
+void viewTeamMembers();
+void searchTeamMember();
+void updateTeamMember();
+void deleteTeamMember();
+
+// RESEARCH ASSIGNMENTS
+void assignResearchTask();
+void viewAssignments();
+void searchAssignment();
+void updateAssignment();
+void deleteAssignment();
+
+// SEARCH FUNCTIONS
+int findTeamMember(int id);
+int findAssignment(int id);
+
+// DISPLAY FUNCTIONS
+void displayTeamMember(int index);
+void displayAssignment(int index);
+
+// ============================================
+// PRESERVATION MANAGEMENT FUNCTIONS
+// ============================================
+
+void preservationMenu();
+
+void addPreservationRecord();
+void viewPreservationRecords();
+void searchPreservationRecord();
+void updatePreservationRecord();
+void deletePreservationRecord();
+
+int findPreservationRecord(int id);
+
+void displayPreservationRecord(int index);
+
+
+// ============================================
+// RESTORATION AND MUSEUM FUNCTIONS
+// ============================================
+
+void restorationMuseumMenu();
+
+// FACILITY MANAGEMENT
+void registerFacility();
+void viewFacilities();
+void searchFacility();
+void updateFacility();
+void deleteFacility();
+
+// ARTIFACT TRANSFER MANAGEMENT
+void recordArtifactTransfer();
+void viewArtifactTransfers();
+void searchArtifactTransfer();
+
+// SEARCH FUNCTIONS
+int findFacility(int id);
+int findArtifactTransfer(int id);
+
+// DISPLAY FUNCTIONS
+void displayFacility(int index);
+void displayArtifactTransfer(int index);
+
+
+// ============================================
+// REPORTS AND RECORDS FUNCTIONS
+// ============================================
+
+void reportsMenu();
+
+
+void generateSystemSummary();
+void displaySite(int index);
+void generateSiteReport();
+void generateArtifactReport();
+void generateActivityReport();
+
+
+// ============================================
+// USER MANAGEMENT FUNCTIONS
+// ============================================
+
+void userManagementMenu();
+
+void registerUser();
+void viewUsers();
+void searchUser();
+void updateUser();
+void deleteUser();
+void userLogin();
+
+int findUser(int id);
+void displayUser(int index);
+
+// ============================================
+// EXCAVATION SITE FILE HANDLING
+// ============================================
+
+void saveSites();
+void loadSites();
+
+
+void userMenu() {
+    int choice;
+
+    do {
+        cout << "\n============================================================== \n";
+        cout << "                          USER MENU\n"; 
+        cout << "================================================================\n";
+        cout << "[1] Excavation Site Management\n";
+        cout << "[2] Artifact Discovery and Cataloguing\n";
+        cout << "[3] Artifact Classification\n";
+        cout << "[4] Artifact Age Estimation\n";
+        cout << "[5] Preservation Management\n";
+        cout << "[6] Log Out\n";
+        cout << "================================================================\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                excavationSiteMenu();
+                break;
+
+            case 2:
+                artifactMenu();
+                break;
+
+            case 3:
+                classificationMenu();
+                break;
+
+            case 4:
+                ageEstimationMenu();
+                break;
+
+            case 5:
+                preservationMenu();
+                break;
+
+            case 6:
+                cout << "\nLogging out...\n";
+                break;
+
+            default:
+                cout << "\nInvalid choice. Please try again.\n";
+        }
+
+    } while (choice != 6);
+}
+
+void trackingReportsMenu();
+void adminMenu() {
+    int choice;
+
+    do {
+        cout << "\n========================================\n";
+        cout << "               ADMIN MENU\n";
+        cout << "========================================\n";
+        cout << "[1] Tracking, Reports and Records\n";
+        cout << "[2] Restoration and Museum Management\n";
+        cout << "[3] Log Out\n";
+        cout << "========================================\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                trackingReportsMenu();
+                break;
+
+            case 2:
+                restorationMuseumMenu();
+                break;
+
+            case 3:
+                cout << "\nLogging out...\n";
+                break;
+
+            default:
+                cout << "\nInvalid choice. Please try again.\n";
+        }
+
+    } while (choice != 3);
+}
+
+
+void login() {
+    int choice;
+
+    string username;
+    string password;
+
+    do {
+        cout << "\n========================================\n";
+        cout << "       ARCHAEOLOGICAL MANAGEMENT SYSTEM\n";
+        cout << "========================================\n";
+        cout << "\n";
+        cout << "                 LOGIN\n";
+        cout << "\n";
+        cout << "[1] User\n";
+        cout << "[2] Admin\n";
+        cout << "[3] Exit\n";
+        cout << "========================================\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        if (choice == 1 || choice == 2) {
+
+            cout << "\nEnter Username: ";
+            cin >> username;
+
+            cout << "Enter Password: ";
+            cin >> password;
+
+            if (choice == 1) {
+
+                if (username == "user" && password == "user123") {
+                    cout << "\nUser Login Successful!\n";
+                    userMenu();
+                }
+                else {
+                    cout << "\nInvalid username or password.\n";
+                }
+
+            }
+            else if (choice == 2) {
+
+                if (username == "admin" && password == "admin123") {
+                    cout << "\nAdmin Login Successful!\n";
+                    adminMenu();
+                }
+                else {
+                    cout << "\nInvalid username or password.\n";
+                }
+
+            }
+
+        }
+        else if (choice == 3) {
+            cout << "\nExiting Archaeological Management System...\n";
+        }
+        else {
+            cout << "\nInvalid choice. Please try again.\n";
+        }
+
+    } while (choice != 3);
+}
+
+void trackingReportsMenu() {
+    int choice;
+
+    do {
+        cout << "\n========================================\n";
+        cout << "       TRACKING, REPORTS AND RECORDS\n";
+        cout << "========================================\n";
+        cout << "[1] View Excavation Site Records\n";
+        cout << "[2] View Artifact Catalogue\n";
+        cout << "[3] View Classification Records\n";
+        cout << "[4] View Age Estimation Records\n";
+        cout << "[5] View Preservation Records\n";
+        cout << "[6] Back to Admin Menu\n";
+        cout << "========================================\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                viewSites();
+                break;
+
+            case 2:
+                viewArtifacts();
+                break;
+
+            case 3:
+                viewClassifications();
+                break;
+
+            case 4:
+                viewAgeEstimates();
+                break;
+
+            case 5:
+                viewPreservationRecords();
+                break;
+
+            case 6:
+                cout << "\nReturning to Admin Menu...\n";
+                break;
+
+            default:
+                cout << "\nInvalid choice!\n";
+        }
+
+    } while (choice != 6);
+}
+
+// MAIN FUNCTION
+int main() {
+
+    login();
+
+    return 0;
+}
+// ============================================
+// EXCAVATION SITE MANAGEMENT
+// ============================================
+
+void excavationSiteMenu() {
+
+    int choice;
+
+    do {
+
+        cout << "\n================================" << endl;
+        cout << "     EXCAVATION SITE MANAGEMENT" << endl;
+        cout << "================================" << endl;
+
+        cout << "\n1. Register New Excavation Site" << endl;
+        cout << "2. View All Excavation Sites" << endl;
+        cout << "3. Search Excavation Site" << endl;
+        cout << "4. Update Site Information" << endl;
+        cout << "5. Delete Site Record" << endl;
+        cout << "6. Return to Main Menu" << endl;
+
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "\nInvalid input!" << endl;
+            continue;
+        }
+
+        switch (choice) {
+
+            case 1:
+                registerSite();
+                break;
+
+            case 2:
+                viewSites();
+                break;
+
+            case 3:
+                searchSite();
+                break;
+
+            case 4:
+                updateSite();
+                break;
+
+            case 5:
+                deleteSite();
+                break;
+
+            case 6:
+                cout << "\nReturning to Main Menu..." << endl;
+                break;
+
+            default:
+                cout << "\nInvalid choice!" << endl;
+        }
+
+    } while (choice != 6);
+}
+
+
+
+bool isValidText(string input) {
+    bool hasLetter = false;
+
+    if (input.empty()) {
+        return false;
+    }
+
+    for (int i = 0; i < input.length(); i++) {
+        char ch = input[i];
+
+        if (isalpha(static_cast<unsigned char>(ch))) {
+            hasLetter = true;
+        }
+        else if (isspace(static_cast<unsigned char>(ch)) ||
+                 ch == ',' || ch == '.' ||
+                 ch == '-' || ch == '\'') {
+            continue;
+        }
+        else {
+            return false;
+        }
+    }
+
+    return hasLetter;
+}
+
+
+string readValidatedText(string prompt) {
+    string input;
+
+    while (true) {
+        cout << prompt;
+        getline(cin, input);
+
+        if (isValidText(input)) {
+            return input;
+        }
+
+        cout << "Invalid input! Please enter letters and words only.\n";
+    }
+}
+
+
+double readValidatedDouble(string prompt, double minimum, double maximum) {
+    string input;
+    double number;
+
+    while (true) {
+        cout << prompt;
+        getline(cin, input);
+
+        try {
+            size_t position;
+            number = stod(input, &position);
+
+            if (position != input.length() ||
+                !isfinite(number) ||
+                number < minimum ||
+                number > maximum) {
+
+                cout << "Invalid input! Please enter a valid number within the allowed range.\n";
+            }
+            else {
+                return number;
+            }
+        }
+        catch (...) {
+            cout << "Invalid input! Numbers only. Please try again.\n";
+        }
+    }
+}
+
+// ============================================
+// REGISTER NEW EXCAVATION SITE
+// ============================================
+
+
+void registerSite() {
+
+    if (siteCount >= MAX_SITES) {
+        cout << "\nSite storage is full!\n";
+        return;
+    }
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    ExcavationSite newSite;
+
+    cout << "\n========================================\n";
+    cout << "       REGISTER EXCAVATION SITE\n";
+    cout << "========================================\n";
+
+    newSite.siteID = nextSiteID;
+
+    newSite.siteName = readValidatedText("Enter Site Name: ");
+
+    newSite.location = readValidatedText("Enter Location: ");
+
+    newSite.latitude = readValidatedDouble(
+        "Enter Latitude: ", -90.0, 90.0
+    );
+
+    newSite.longitude = readValidatedDouble(
+        "Enter Longitude: ", -180.0, 180.0
+    );
+
+    newSite.description = readValidatedText("Enter Description: ");
+
+    cout << "\nSelect Site Status:\n";
+    cout << "[1] Active\n";
+    cout << "[2] Inactive\n";
+    cout << "[3] Completed\n";
+
+    string statusChoice;
+
+    while (true) {
+        cout << "Enter Choice: ";
+        getline(cin, statusChoice);
+
+        if (statusChoice == "1") {
+            newSite.status = "Active";
+            break;
+        }
+        else if (statusChoice == "2") {
+            newSite.status = "Inactive";
+            break;
+        }
+        else if (statusChoice == "3") {
+            newSite.status = "Completed";
+            break;
+        }
+        else {
+            cout << "Invalid choice! Please select 1, 2, or 3.\n";
+        }
+    }
+
+    sites[siteCount] = newSite;
+
+    siteCount++;
+    nextSiteID++;
+
+    cout << "\nEXCAVATION SITE REGISTERED SUCCESSFULLY!\n";
+    cout << "Site ID: " << newSite.siteID << endl;
+    cout << "Site Name: " << newSite.siteName << endl;
+    cout << "Location: " << newSite.location << endl;
+    cout << "Latitude: " << newSite.latitude << endl;
+    cout << "Longitude: " << newSite.longitude << endl;
+    cout << "Description: " << newSite.description << endl;
+    cout << "Status: " << newSite.status << endl;
+}
+
+// ============================================
+// VIEW ALL EXCAVATION SITES
+// ============================================
+
+
+    
+void displaySite(int index) {
+
+    if (index < 0 || index >= siteCount) {
+        cout << "\nInvalid excavation site index." << endl;
+        return;
+    }
+
+    cout << "\n========================================" << endl;
+    cout << "       EXCAVATION SITE DETAILS" << endl;
+    cout << "========================================" << endl;
+
+    cout << "Site ID: " << sites[index].siteID << endl;
+    cout << "Site Name: " << sites[index].siteName << endl;
+    cout << "Location: " << sites[index].location << endl;
+    cout << "Latitude: " << sites[index].latitude << endl;
+    cout << "Longitude: " << sites[index].longitude << endl;
+    cout << "Description: " << sites[index].description << endl;
+    cout << "Status: " << sites[index].status << endl;
+
+    cout << "========================================" << endl;
+}
+
+
+void viewSites() {
+
+    cout << "\n========================================" << endl;
+    cout << "       REGISTERED EXCAVATION SITES" << endl;
+    cout << "========================================" << endl;
+
+    if (siteCount == 0) {
+        cout << "No excavation sites registered yet." << endl;
+        return;
+    }
+
+    cout << "Total Registered Sites: " << siteCount << endl;
+
+    for (int i = 0; i < siteCount; i++) {
+        displaySite(i);
+    }
+}
+
+
+// ============================================
+// FIND SITE USING ID
+// ============================================
+
+int findSite(int id) {
+
+    for (int i = 0; i < siteCount; i++) {
+
+        if (sites[i].siteID == id) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// ============================================
+// SEARCH EXCAVATION SITE
+// ============================================
+
+void searchSite() {
+
+    int id;
+
+    cout << "\nEnter Site ID to Search: ";
+    cin >> id;
+
+    int index = findSite(id);
+
+    if (index == -1) {
+        cout << "\nExcavation site not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== SITE RECORD FOUND =====" << endl;
+
+    cout << "Site ID: " << sites[index].siteID << endl;
+    cout << "Site Name: " << sites[index].siteName << endl;
+    cout << "Location: " << sites[index].location << endl;
+    cout << "Latitude: " << sites[index].latitude << endl;
+    cout << "Longitude: " << sites[index].longitude << endl;
+    cout << "Description: " << sites[index].description << endl;
+    cout << "Status: " << sites[index].status << endl;
+}
+
+// ============================================
+// UPDATE SITE INFORMATION
+// ============================================
+
+void updateSite() {
+
+    int id;
+
+    cout << "\nEnter Site ID to Update: ";
+    cin >> id;
+
+    int index = findSite(id);
+
+    if (index == -1) {
+        cout << "\nExcavation site not found!" << endl;
+        return;
+    }
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\n===== UPDATE SITE INFORMATION =====" << endl;
+
+    cout << "Enter New Site Name: ";
+    getline(cin, sites[index].siteName);
+
+    cout << "Enter New Location: ";
+    getline(cin, sites[index].location);
+
+    cout << "Enter New Latitude: ";
+    cin >> sites[index].latitude;
+
+    cout << "Enter New Longitude: ";
+    cin >> sites[index].longitude;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "Enter New Description: ";
+    getline(cin, sites[index].description);
+
+    cout << "\nSelect New Status" << endl;
+    cout << "1. Active" << endl;
+    cout << "2. Inactive" << endl;
+    cout << "3. Completed" << endl;
+
+    int statusChoice;
+    cout << "Enter choice: ";
+    cin >> statusChoice;
+
+    switch (statusChoice) {
+
+        case 1:
+            sites[index].status = "Active";
+            break;
+
+        case 2:
+            sites[index].status = "Inactive";
+            break;
+
+        case 3:
+            sites[index].status = "Completed";
+            break;
+
+        default:
+            cout << "Invalid status. Previous status retained." << endl;
+    }
+
+    cout << "\nSite information successfully updated!" << endl;
+}
+
+// ============================================
+// DELETE SITE RECORD
+// ============================================
+
+void deleteSite() {
+
+    int id;
+
+    cout << "\nEnter Site ID to Delete: ";
+    cin >> id;
+
+    int index = findSite(id);
+
+    if (index == -1) {
+        cout << "\nExcavation site not found!" << endl;
+        return;
+    }
+
+    for (int i = index; i < siteCount - 1; i++) {
+        sites[i] = sites[i + 1];
+    }
+
+    siteCount--;
+
+    cout << "\nSite record successfully deleted!" << endl;
+}
+
+
+
+// ============================================
+// ARTIFACT DISCOVERY AND CATALOGUING MENU
+// ============================================
+
+void artifactMenu() {
+
+    int choice;
+
+    do {
+
+        cout << "\n========================================" << endl;
+        cout << "   ARTIFACT DISCOVERY AND CATALOGUING" << endl;
+        cout << "========================================" << endl;
+
+        cout << "\n1. Register New Artifact" << endl;
+        cout << "2. View All Artifacts" << endl;
+        cout << "3. Search Artifact" << endl;
+        cout << "4. Update Artifact Information" << endl;
+        cout << "5. Delete Artifact Record" << endl;
+        cout << "6. Return to Main Menu" << endl;
+
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "\nInvalid input!" << endl;
+            continue;
+        }
+
+        switch (choice) {
+
+            case 1:
+                registerArtifact();
+                break;
+
+            case 2:
+                viewArtifacts();
+                break;
+
+            case 3:
+                searchArtifact();
+                break;
+
+            case 4:
+                updateArtifact();
+                break;
+
+            case 5:
+                deleteArtifact();
+                break;
+
+            case 6:
+                cout << "\nReturning to Main Menu..." << endl;
+                break;
+
+            default:
+                cout << "\nInvalid choice!" << endl;
+        }
+
+    } while (choice != 6);
+}
+
+// ============================================
+// REGISTER NEW ARTIFACT
+// ============================================
+
+void registerArtifact() {
+
+    if (artifactCount >= MAX_ARTIFACTS) {
+        cout << "\nMaximum number of artifacts reached!" << endl;
+        return;
+    }
+
+    if (siteCount == 0) {
+        cout << "\nNo excavation sites registered yet." << endl;
+        cout << "Please register an excavation site first." << endl;
+        return;
+    }
+
+    Artifact newArtifact;
+
+    cout << "\n===== REGISTER NEW ARTIFACT =====" << endl;
+
+    cout << "\n===== AVAILABLE EXCAVATION SITES =====" << endl;
+
+    viewSites();
+
+    cout << "\nEnter Excavation Site ID: ";
+    cin >> newArtifact.siteID;
+
+    int siteIndex = findSite(newArtifact.siteID);
+
+    if (siteIndex == -1) {
+        cout << "\nInvalid Site ID! Artifact registration cancelled." << endl;
+        return;
+    }
+
+    newArtifact.artifactID = nextArtifactID++;
+
+    cout << "\nArtifact ID: " << newArtifact.artifactID << endl;
+    cout << "Excavation Site: " << sites[siteIndex].siteName << endl;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter Artifact Name: ";
+    getline(cin, newArtifact.artifactName);
+
+    cout << "Enter Discovery Date: ";
+    getline(cin, newArtifact.discoveryDate);
+
+    cout << "Enter Discoverer's Name: ";
+    getline(cin, newArtifact.discoverer);
+
+    cout << "Enter Excavation Grid or Area: ";
+    getline(cin, newArtifact.excavationGrid);
+
+    cout << "Enter Discovery Description: ";
+    getline(cin, newArtifact.discoveryDescription);
+
+    cout << "Enter Photo Filename (if available): ";
+    getline(cin, newArtifact.photoFilename);
+
+    artifacts[artifactCount] = newArtifact;
+    artifactCount++;
+
+    cout << "\nArtifact successfully registered!" << endl;
+    cout << "Assigned Artifact ID: " << newArtifact.artifactID << endl;
+}
+
+// ============================================
+// VIEW ALL ARTIFACTS
+// ============================================
+
+void viewArtifacts() {
+
+    if (artifactCount == 0) {
+        cout << "\nNo artifacts registered yet." << endl;
+        return;
+    }
+
+    cout << "\n===== REGISTERED ARTIFACTS =====" << endl;
+
+    for (int i = 0; i < artifactCount; i++) {
+
+        displayArtifact(i);
+
+    }
+}
+// ============================================
+// DISPLAY ARTIFACT INFORMATION
+// ============================================
+
+void displayArtifact(int index) {
+
+    cout << "\n----------------------------------------" << endl;
+
+    cout << "Artifact ID: " << artifacts[index].artifactID << endl;
+    cout << "Artifact Name: " << artifacts[index].artifactName << endl;
+    cout << "Excavation Site ID: " << artifacts[index].siteID << endl;
+
+    int siteIndex = findSite(artifacts[index].siteID);
+
+    if (siteIndex != -1) {
+        cout << "Excavation Site: " << sites[siteIndex].siteName << endl;
+    }
+
+    cout << "Discovery Date: " << artifacts[index].discoveryDate << endl;
+    cout << "Discoverer: " << artifacts[index].discoverer << endl;
+    cout << "Excavation Grid: " << artifacts[index].excavationGrid << endl;
+    cout << "Description: " << artifacts[index].discoveryDescription << endl;
+    cout << "Photo Filename: " << artifacts[index].photoFilename << endl;
+
+    cout << "----------------------------------------" << endl;
+}
+
+// ============================================
+// FIND ARTIFACT USING ID
+// ============================================
+
+int findArtifact(int id) {
+
+    for (int i = 0; i < artifactCount; i++) {
+
+        if (artifacts[i].artifactID == id) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// ============================================
+// SEARCH ARTIFACT
+// ============================================
+
+void searchArtifact() {
+
+    int id;
+
+    cout << "\nEnter Artifact ID to Search: ";
+    cin >> id;
+
+    int index = findArtifact(id);
+
+    if (index == -1) {
+        cout << "\nArtifact not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== ARTIFACT RECORD FOUND =====" << endl;
+
+    displayArtifact(index);
+}
+
+// ============================================
+// UPDATE ARTIFACT INFORMATION
+// ============================================
+
+void updateArtifact() {
+
+    int id;
+
+    cout << "\nEnter Artifact ID to Update: ";
+    cin >> id;
+
+    int index = findArtifact(id);
+
+    if (index == -1) {
+        cout << "\nArtifact not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== UPDATE ARTIFACT INFORMATION =====" << endl;
+
+    cout << "\nCurrent Artifact Name: " << artifacts[index].artifactName << endl;
+
+    cout << "\n===== AVAILABLE EXCAVATION SITES =====" << endl;
+    viewSites();
+
+    cout << "\nEnter New Excavation Site ID: ";
+
+    int newSiteID;
+    cin >> newSiteID;
+
+    int siteIndex = findSite(newSiteID);
+
+    if (siteIndex == -1) {
+        cout << "\nInvalid Site ID! Update cancelled." << endl;
+        return;
+    }
+
+    artifacts[index].siteID = newSiteID;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "Enter New Artifact Name: ";
+    getline(cin, artifacts[index].artifactName);
+
+    cout << "Enter New Discovery Date: ";
+    getline(cin, artifacts[index].discoveryDate);
+
+    cout << "Enter New Discoverer's Name: ";
+    getline(cin, artifacts[index].discoverer);
+
+    cout << "Enter New Excavation Grid or Area: ";
+    getline(cin, artifacts[index].excavationGrid);
+
+    cout << "Enter New Discovery Description: ";
+    getline(cin, artifacts[index].discoveryDescription);
+
+    cout << "Enter New Photo Filename: ";
+    getline(cin, artifacts[index].photoFilename);
+
+    cout << "\nArtifact information successfully updated!" << endl;
+}
+
+// ============================================
+// DELETE ARTIFACT RECORD
+// ============================================
+
+void deleteArtifact() {
+
+    int id;
+
+    cout << "\nEnter Artifact ID to Delete: ";
+    cin >> id;
+
+    int index = findArtifact(id);
+
+    if (index == -1) {
+        cout << "\nArtifact not found!" << endl;
+        return;
+    }
+
+    cout << "\nArtifact Name: " << artifacts[index].artifactName << endl;
+
+    char confirmation;
+
+    cout << "Are you sure you want to delete this artifact? (Y/N): ";
+    cin >> confirmation;
+
+    if (confirmation == 'Y' || confirmation == 'y') {
+
+        for (int i = index; i < artifactCount - 1; i++) {
+            artifacts[i] = artifacts[i + 1];
+        }
+
+        artifactCount--;
+
+        cout << "\nArtifact record successfully deleted!" << endl;
+
+    } else {
+
+        cout << "\nDeletion cancelled." << endl;
+    }
+}
+
+
+
+// ============================================
+// ARTIFACT CLASSIFICATION MENU
+// ============================================
+
+void classificationMenu() {
+
+    int choice;
+
+    do {
+
+        cout << "\n========================================" << endl;
+        cout << "        ARTIFACT CLASSIFICATION" << endl;
+        cout << "========================================" << endl;
+
+        cout << "\n1. Classify Artifact" << endl;
+        cout << "2. View All Classifications" << endl;
+        cout << "3. Search Classification" << endl;
+        cout << "4. Update Classification" << endl;
+        cout << "5. Delete Classification" << endl;
+        cout << "6. Return to Main Menu" << endl;
+
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "\nInvalid input!" << endl;
+            continue;
+        }
+
+        switch (choice) {
+
+            case 1:
+                classifyArtifact();
+                break;
+
+            case 2:
+                viewClassifications();
+                break;
+
+            case 3:
+                searchClassification();
+                break;
+
+            case 4:
+                updateClassification();
+                break;
+
+            case 5:
+                deleteClassification();
+                break;
+
+            case 6:
+                cout << "\nReturning to Main Menu..." << endl;
+                break;
+
+            default:
+                cout << "\nInvalid choice!" << endl;
+        }
+
+    } while (choice != 6);
+}
+
+// ============================================
+// CONVERT TEXT TO LOWERCASE
+// ============================================
+
+string toLowerCase(string text) {
+
+    for (int i = 0; i < text.length(); i++) {
+        text[i] = tolower(text[i]);
+    }
+
+    return text;
+}
+
+
+// ============================================
+// SUGGEST ARTIFACT CLASSIFICATION
+// ============================================
+
+string suggestClassification(
+    string artifactName,
+    string material,
+    string characteristics
+) {
+
+    artifactName = toLowerCase(artifactName);
+    material = toLowerCase(material);
+    characteristics = toLowerCase(characteristics);
+
+    string information = artifactName + " " +
+                         material + " " +
+                         characteristics;
+
+    // FOSSILS
+    if (information.find("fossil") != string::npos ||
+        information.find("fossilized") != string::npos) {
+
+        return "Fossils";
+    }
+
+    // POTTERY
+    else if (information.find("pottery") != string::npos ||
+             information.find("ceramic") != string::npos ||
+             information.find("clay") != string::npos ||
+             information.find("pot fragment") != string::npos ||
+             information.find("jar") != string::npos) {
+
+        return "Pottery";
+    }
+
+    // JEWELRY
+    else if (information.find("jewelry") != string::npos ||
+             information.find("jewellery") != string::npos ||
+             information.find("bead") != string::npos ||
+             information.find("necklace") != string::npos ||
+             information.find("ring") != string::npos ||
+             information.find("pendant") != string::npos ||
+             information.find("ornament") != string::npos) {
+
+        return "Jewelry";
+    }
+
+    // TOOLS
+    else if (information.find("tool") != string::npos ||
+             information.find("blade") != string::npos ||
+             information.find("axe") != string::npos ||
+             information.find("scraper") != string::npos ||
+             information.find("spearhead") != string::npos) {
+
+        return "Tools";
+    }
+
+    // NO CLEAR MATCH
+    else {
+
+        return "No clear match";
+    }
+}
+
+
+// ============================================
+// CONFIRM ARTIFACT CLASSIFICATION
+// ============================================
+
+string confirmClassification(string suggested) {
+
+    cout << "\n===== SYSTEM CLASSIFICATION RESULT =====" << endl;
+
+    if (suggested != "No clear match") {
+
+        cout << "Suggested Category: " << suggested << endl;
+
+        char confirmation;
+
+        cout << "Confirm this classification? (Y/N): ";
+        cin >> confirmation;
+
+        if (confirmation == 'Y' || confirmation == 'y') {
+            return suggested;
+        }
+    }
+    else {
+
+        cout << "The system could not identify a clear category." << endl;
+    }
+
+    cout << "\n===== SELECT CLASSIFICATION MANUALLY =====" << endl;
+
+    for (int i = 0; i < 5; i++) {
+        cout << i + 1 << ". " << classificationOptions[i][0] << endl;
+    }
+
+    int choice;
+
+    cout << "\nEnter your preferred category: ";
+    cin >> choice;
+
+    if (choice >= 1 && choice <= 5) {
+        return classificationOptions[choice - 1][0];
+    }
+
+    cout << "\nInvalid selection. Classification cancelled." << endl;
+
+    return "";
+}
+
+// ============================================
+// CLASSIFY ARTIFACT
+// ============================================
+
+void classifyArtifact() {
+
+    if (artifactCount == 0) {
+        cout << "\nNo registered artifacts available." << endl;
+        return;
+    }
+
+    if (classificationCount >= MAX_CLASSIFICATIONS) {
+        cout << "\nMaximum number of classifications reached!" << endl;
+        return;
+    }
+
+    int id;
+
+    cout << "\n===== AUTOMATIC ARTIFACT CLASSIFICATION =====" << endl;
+
+    viewArtifacts();
+
+    cout << "\nEnter Artifact ID to Classify: ";
+    cin >> id;
+
+    int artifactIndex = findArtifact(id);
+
+    if (artifactIndex == -1) {
+        cout << "\nArtifact not found!" << endl;
+        return;
+    }
+
+    int existingIndex = findClassification(id);
+
+    if (existingIndex != -1) {
+        cout << "\nThis artifact already has a classification." << endl;
+        cout << "Use Update Classification to modify it." << endl;
+        return;
+    }
+
+    ArtifactClassification newClassification;
+
+    newClassification.artifactID = id;
+
+    cout << "\nArtifact Name: "
+         << artifacts[artifactIndex].artifactName << endl;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter Artifact Material: ";
+    getline(cin, newClassification.material);
+
+    cout << "Enter Artifact Characteristics: ";
+    getline(cin, newClassification.characteristics);
+
+    // SYSTEM GENERATES CLASSIFICATION SUGGESTION
+
+    string suggested = suggestClassification(
+        artifacts[artifactIndex].artifactName,
+        newClassification.material,
+        newClassification.characteristics
+    );
+
+    // USER CONFIRMS OR CORRECTS THE SUGGESTION
+
+    newClassification.category = confirmClassification(suggested);
+
+    if (newClassification.category == "") {
+        cout << "\nClassification cancelled." << endl;
+        return;
+    }
+
+    cout << "\nEnter Additional Classification Notes: ";
+    getline(cin, newClassification.classificationNotes);
+
+    classifications[classificationCount] = newClassification;
+
+    classificationCount++;
+
+    cout << "\nArtifact successfully classified!" << endl;
+
+    cout << "Artifact ID: " << id << endl;
+    cout << "Artifact Name: "
+         << artifacts[artifactIndex].artifactName << endl;
+    cout << "Final Category: "
+         << newClassification.category << endl;
+}
+
+
+// ============================================
+// VIEW ALL CLASSIFICATIONS
+// ============================================
+
+void viewClassifications() {
+
+    if (classificationCount == 0) {
+        cout << "\nNo artifact classifications recorded yet." << endl;
+        return;
+    }
+
+    cout << "\n===== ARTIFACT CLASSIFICATION RECORDS =====" << endl;
+
+    for (int i = 0; i < classificationCount; i++) {
+
+        displayClassification(i);
+
+    }
+}
+
+// ============================================
+// DISPLAY CLASSIFICATION INFORMATION
+// ============================================
+
+void displayClassification(int index) {
+
+    cout << "\n----------------------------------------" << endl;
+
+    cout << "Artifact ID: "
+         << classifications[index].artifactID << endl;
+
+    int artifactIndex = findArtifact(classifications[index].artifactID);
+
+    if (artifactIndex != -1) {
+
+        cout << "Artifact Name: "
+             << artifacts[artifactIndex].artifactName << endl;
+    }
+
+    cout << "Category: "
+         << classifications[index].category << endl;
+
+    cout << "Material: "
+         << classifications[index].material << endl;
+
+    cout << "Characteristics: "
+         << classifications[index].characteristics << endl;
+
+    cout << "Classification Notes: "
+         << classifications[index].classificationNotes << endl;
+
+    cout << "----------------------------------------" << endl;
+}
+
+// ============================================
+// FIND CLASSIFICATION USING ARTIFACT ID
+// ============================================
+
+int findClassification(int id) {
+
+    for (int i = 0; i < classificationCount; i++) {
+
+        if (classifications[i].artifactID == id) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// ============================================
+// SEARCH CLASSIFICATION
+// ============================================
+
+void searchClassification() {
+
+    int id;
+
+    cout << "\nEnter Artifact ID to Search: ";
+    cin >> id;
+
+    int index = findClassification(id);
+
+    if (index == -1) {
+        cout << "\nClassification record not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== CLASSIFICATION RECORD FOUND =====" << endl;
+
+    displayClassification(index);
+}
+
+// ============================================
+// UPDATE CLASSIFICATION
+// ============================================
+
+// ============================================
+// UPDATE CLASSIFICATION
+// ============================================
+
+void updateClassification() {
+
+    int id;
+
+    cout << "\nEnter Artifact ID to Update: ";
+    cin >> id;
+
+    int index = findClassification(id);
+
+    if (index == -1) {
+        cout << "\nClassification record not found!" << endl;
+        return;
+    }
+
+    int artifactIndex = findArtifact(id);
+
+    if (artifactIndex == -1) {
+        cout << "\nAssociated artifact record not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== UPDATE CLASSIFICATION =====" << endl;
+
+    cout << "Artifact Name: "
+         << artifacts[artifactIndex].artifactName << endl;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter New Material: ";
+    getline(cin, classifications[index].material);
+
+    cout << "Enter New Characteristics: ";
+    getline(cin, classifications[index].characteristics);
+
+    string suggested = suggestClassification(
+        artifacts[artifactIndex].artifactName,
+        classifications[index].material,
+        classifications[index].characteristics
+    );
+
+    string newCategory = confirmClassification(suggested);
+
+    if (newCategory == "") {
+        cout << "\nUpdate cancelled." << endl;
+        return;
+    }
+
+    classifications[index].category = newCategory;
+
+    cout << "Enter New Classification Notes: ";
+    getline(cin, classifications[index].classificationNotes);
+
+    cout << "\nClassification successfully updated!" << endl;
+}
+
+// ============================================
+// DELETE CLASSIFICATION
+// ============================================
+
+void deleteClassification() {
+
+    int id;
+
+    cout << "\nEnter Artifact ID to Delete Classification: ";
+    cin >> id;
+
+    int index = findClassification(id);
+
+    if (index == -1) {
+        cout << "\nClassification record not found!" << endl;
+        return;
+    }
+
+    char confirmation;
+
+    cout << "\nAre you sure you want to delete this classification? (Y/N): ";
+    cin >> confirmation;
+
+    if (confirmation == 'Y' || confirmation == 'y') {
+
+        for (int i = index; i < classificationCount - 1; i++) {
+            classifications[i] = classifications[i + 1];
+        }
+
+        classificationCount--;
+
+        cout << "\nClassification successfully deleted!" << endl;
+
+    } else {
+
+        cout << "\nDeletion cancelled." << endl;
+    }
+}
+
+
+
+
+
+// ============================================
+// AGE ESTIMATION AND HISTORICAL PERIOD MENU
+// ============================================
+
+void ageEstimationMenu() {
+
+    int choice;
+
+    do {
+
+        cout << "\n========================================" << endl;
+        cout << " AGE ESTIMATION AND HISTORICAL PERIOD" << endl;
+        cout << "========================================" << endl;
+
+        cout << "\n1. Estimate Artifact Age" << endl;
+        cout << "2. View All Age Estimates" << endl;
+        cout << "3. Search Age Estimate" << endl;
+        cout << "4. Update Age Estimate" << endl;
+        cout << "5. Delete Age Estimate" << endl;
+        cout << "6. Return to Main Menu" << endl;
+
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "\nInvalid input!" << endl;
+            continue;
+        }
+
+        switch (choice) {
+
+            case 1:
+                estimateArtifactAge();
+                break;
+
+            case 2:
+                viewAgeEstimates();
+                break;
+
+            case 3:
+                searchAgeEstimate();
+                break;
+
+            case 4:
+                updateAgeEstimate();
+                break;
+
+            case 5:
+                deleteAgeEstimate();
+                break;
+
+            case 6:
+                cout << "\nReturning to Main Menu..." << endl;
+                break;
+
+            default:
+                cout << "\nInvalid choice!" << endl;
+        }
+
+    } while (choice != 6);
+}
+
+// ============================================
+// CALCULATE ARTIFACT AGE RANGE
+// ============================================
+
+void calculateAgeRange(
+    int periodChoice,
+    int &minimumAge,
+    int &maximumAge
+) {
+
+    int startingYear = historicalPeriods[periodChoice - 1].startingYear;
+    int endingYear = historicalPeriods[periodChoice - 1].endingYear;
+
+    minimumAge = CURRENT_YEAR - endingYear;
+
+    if (startingYear == 0) {
+
+        // PRECOLONIAL PERIOD HAS NO DEFINED OLDEST YEAR
+        maximumAge = 0;
+
+    } else {
+
+        maximumAge = CURRENT_YEAR - startingYear;
+    }
+}
+
+// ============================================
+// ESTIMATE ARTIFACT AGE
+// ============================================
+
+void estimateArtifactAge() {
+
+    if (artifactCount == 0) {
+        cout << "\nNo registered artifacts available." << endl;
+        cout << "Please register an artifact first." << endl;
+        return;
+    }
+
+    if (ageCount >= MAX_AGE_RECORDS) {
+        cout << "\nMaximum number of age records reached!" << endl;
+        return;
+    }
+
+    int id;
+
+    cout << "\n===== ARTIFACT AGE ESTIMATION =====" << endl;
+
+    viewArtifacts();
+
+    cout << "\nEnter Artifact ID: ";
+    cin >> id;
+
+    int artifactIndex = findArtifact(id);
+
+    if (artifactIndex == -1) {
+        cout << "\nArtifact not found!" << endl;
+        return;
+    }
+
+    int existingIndex = findAgeEstimate(id);
+
+    if (existingIndex != -1) {
+        cout << "\nAn age estimation record already exists for this artifact." << endl;
+        cout << "Use Update Age Estimate to modify it." << endl;
+        return;
+    }
+
+    cout << "\nArtifact Name: "
+         << artifacts[artifactIndex].artifactName << endl;
+
+    cout << "\n===== HISTORICAL PERIOD REFERENCES =====" << endl;
+
+    for (int i = 0; i < 5; i++) {
+
+        cout << "\n" << i + 1 << ". "
+             << historicalPeriods[i].periodName << endl;
+
+        if (historicalPeriods[i].startingYear == 0) {
+            cout << "   Before "
+                 << historicalPeriods[i].endingYear << endl;
+        }
+        else {
+            cout << "   "
+                 << historicalPeriods[i].startingYear
+                 << " - "
+                 << historicalPeriods[i].endingYear << endl;
+        }
+    }
+
+    int periodChoice;
+
+    cout << "\nSelect Historical Period Reference: ";
+    cin >> periodChoice;
+
+    if (periodChoice < 1 || periodChoice > 5) {
+        cout << "\nInvalid historical period selection!" << endl;
+        return;
+    }
+
+    AgeEstimation newRecord;
+
+    newRecord.artifactID = id;
+
+    newRecord.historicalPeriod =
+        historicalPeriods[periodChoice - 1].periodName;
+
+    newRecord.startingYear =
+        historicalPeriods[periodChoice - 1].startingYear;
+
+    newRecord.endingYear =
+        historicalPeriods[periodChoice - 1].endingYear;
+
+    calculateAgeRange(
+        periodChoice,
+        newRecord.minimumAge,
+        newRecord.maximumAge
+    );
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter Historical Reference or Evidence Basis: ";
+    getline(cin, newRecord.referenceBasis);
+
+    cout << "Enter Additional Estimation Notes: ";
+    getline(cin, newRecord.estimationNotes);
+
+    ageRecords[ageCount] = newRecord;
+
+    ageCount++;
+
+    cout << "\n===== AGE ESTIMATION RESULT =====" << endl;
+
+    displayAgeEstimate(ageCount - 1);
+
+    cout << "\nAge estimation record successfully saved!" << endl;
+}
+
+// ============================================
+// DISPLAY AGE ESTIMATION RECORD
+// ============================================
+
+void displayAgeEstimate(int index) {
+
+    cout << "\n----------------------------------------" << endl;
+
+    cout << "Artifact ID: "
+         << ageRecords[index].artifactID << endl;
+
+    int artifactIndex = findArtifact(ageRecords[index].artifactID);
+
+    if (artifactIndex != -1) {
+        cout << "Artifact Name: "
+             << artifacts[artifactIndex].artifactName << endl;
+    }
+
+    cout << "Historical Period: "
+         << ageRecords[index].historicalPeriod << endl;
+
+    cout << "Possible Age Range: ";
+
+    if (ageRecords[index].maximumAge == 0) {
+
+        cout << "At least "
+             << ageRecords[index].minimumAge
+             << " years old" << endl;
+
+    } else {
+
+        cout << ageRecords[index].minimumAge
+             << " - "
+             << ageRecords[index].maximumAge
+             << " years old" << endl;
+    }
+
+    cout << "Reference Years: ";
+
+    if (ageRecords[index].startingYear == 0) {
+
+        cout << "Before "
+             << ageRecords[index].endingYear << endl;
+
+    } else {
+
+        cout << ageRecords[index].startingYear
+             << " - "
+             << ageRecords[index].endingYear << endl;
+    }
+
+    cout << "Historical Reference or Evidence Basis: "
+         << ageRecords[index].referenceBasis << endl;
+
+    cout << "Estimation Notes: "
+         << ageRecords[index].estimationNotes << endl;
+
+    cout << "Estimation Type: Preliminary Reference" << endl;
+
+    cout << "----------------------------------------" << endl;
+}
+
+// ============================================
+// FIND AGE ESTIMATION USING ARTIFACT ID
+// ============================================
+
+int findAgeEstimate(int id) {
+
+    for (int i = 0; i < ageCount; i++) {
+
+        if (ageRecords[i].artifactID == id) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// ============================================
+// VIEW ALL AGE ESTIMATES
+// ============================================
+
+void viewAgeEstimates() {
+
+    if (ageCount == 0) {
+        cout << "\nNo age estimation records available." << endl;
+        return;
+    }
+
+    cout << "\n===== ALL ARTIFACT AGE ESTIMATES =====" << endl;
+
+    for (int i = 0; i < ageCount; i++) {
+
+        displayAgeEstimate(i);
+    }
+}
+
+// ============================================
+// SEARCH AGE ESTIMATE
+// ============================================
+
+void searchAgeEstimate() {
+
+    int id;
+
+    cout << "\nEnter Artifact ID to Search: ";
+    cin >> id;
+
+    int index = findAgeEstimate(id);
+
+    if (index == -1) {
+        cout << "\nAge estimation record not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== AGE ESTIMATION RECORD FOUND =====" << endl;
+
+    displayAgeEstimate(index);
+}
+
+// ============================================
+// UPDATE AGE ESTIMATION
+// ============================================
+
+void updateAgeEstimate() {
+
+    int id;
+
+    cout << "\nEnter Artifact ID to Update: ";
+    cin >> id;
+
+    int index = findAgeEstimate(id);
+
+    if (index == -1) {
+        cout << "\nAge estimation record not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== UPDATE AGE ESTIMATION =====" << endl;
+
+    cout << "\n===== HISTORICAL PERIOD REFERENCES =====" << endl;
+
+    for (int i = 0; i < 5; i++) {
+
+        cout << i + 1 << ". "
+             << historicalPeriods[i].periodName << endl;
+    }
+
+    int periodChoice;
+
+    cout << "\nSelect New Historical Period: ";
+    cin >> periodChoice;
+
+    if (periodChoice < 1 || periodChoice > 5) {
+        cout << "\nInvalid selection! Update cancelled." << endl;
+        return;
+    }
+
+    ageRecords[index].historicalPeriod =
+        historicalPeriods[periodChoice - 1].periodName;
+
+    ageRecords[index].startingYear =
+        historicalPeriods[periodChoice - 1].startingYear;
+
+    ageRecords[index].endingYear =
+        historicalPeriods[periodChoice - 1].endingYear;
+
+    calculateAgeRange(
+        periodChoice,
+        ageRecords[index].minimumAge,
+        ageRecords[index].maximumAge
+    );
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "Enter New Historical Reference or Evidence Basis: ";
+    getline(cin, ageRecords[index].referenceBasis);
+
+    cout << "Enter New Estimation Notes: ";
+    getline(cin, ageRecords[index].estimationNotes);
+
+    cout << "\nAge estimation successfully updated!" << endl;
+
+    displayAgeEstimate(index);
+}
+
+// ============================================
+// DELETE AGE ESTIMATION RECORD
+// ============================================
+
+void deleteAgeEstimate() {
+
+    int id;
+
+    cout << "\nEnter Artifact ID to Delete: ";
+    cin >> id;
+
+    int index = findAgeEstimate(id);
+
+    if (index == -1) {
+        cout << "\nAge estimation record not found!" << endl;
+        return;
+    }
+
+    char confirmation;
+
+    cout << "\nAre you sure you want to delete this age estimation? (Y/N): ";
+    cin >> confirmation;
+
+    if (confirmation == 'Y' || confirmation == 'y') {
+
+        for (int i = index; i < ageCount - 1; i++) {
+            ageRecords[i] = ageRecords[i + 1];
+        }
+
+        ageCount--;
+
+        cout << "\nAge estimation record successfully deleted!" << endl;
+
+    } else {
+
+        cout << "\nDeletion cancelled." << endl;
+    }
+}
+
+
+
+// ============================================
+// EXCAVATION TEAM AND ASSIGNMENT MENU
+// ============================================
+
+void teamAssignmentMenu() {
+
+    int choice;
+
+    do {
+
+        cout << "\n========================================" << endl;
+        cout << " EXCAVATION TEAM AND RESEARCH ASSIGNMENTS" << endl;
+        cout << "========================================" << endl;
+
+        cout << "\n===== TEAM MANAGEMENT =====" << endl;
+        cout << "1. Register Team Member" << endl;
+        cout << "2. View All Team Members" << endl;
+        cout << "3. Search Team Member" << endl;
+        cout << "4. Update Team Member" << endl;
+        cout << "5. Delete Team Member" << endl;
+
+        cout << "\n===== RESEARCH ASSIGNMENTS =====" << endl;
+        cout << "6. Assign Research Task" << endl;
+        cout << "7. View All Assignments" << endl;
+        cout << "8. Search Assignment" << endl;
+        cout << "9. Update Assignment" << endl;
+        cout << "10. Delete Assignment" << endl;
+
+        cout << "\n11. Return to Main Menu" << endl;
+
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "\nInvalid input!" << endl;
+            continue;
+        }
+
+        switch (choice) {
+
+            case 1:
+                registerTeamMember();
+                break;
+
+            case 2:
+                viewTeamMembers();
+                break;
+
+            case 3:
+                searchTeamMember();
+                break;
+
+            case 4:
+                updateTeamMember();
+                break;
+
+            case 5:
+                deleteTeamMember();
+                break;
+
+            case 6:
+                assignResearchTask();
+                break;
+
+            case 7:
+                viewAssignments();
+                break;
+
+            case 8:
+                searchAssignment();
+                break;
+
+            case 9:
+                updateAssignment();
+                break;
+
+            case 10:
+                deleteAssignment();
+                break;
+
+            case 11:
+                cout << "\nReturning to Main Menu..." << endl;
+                break;
+
+            default:
+                cout << "\nInvalid choice!" << endl;
+        }
+
+    } while (choice != 11);
+}
+
+
+// ============================================
+// REGISTER TEAM MEMBER
+// ============================================
+
+void registerTeamMember() {
+
+    if (teamCount >= MAX_TEAM_MEMBERS) {
+
+        cout << "\nMaximum number of team members reached!" << endl;
+        return;
+    }
+
+    ExcavationTeam newMember;
+
+    cout << "\n===== REGISTER EXCAVATION TEAM MEMBER =====" << endl;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter Member Name: ";
+    getline(cin, newMember.memberName);
+
+    cout << "Enter Role: ";
+    getline(cin, newMember.role);
+
+    cout << "Enter Specialization: ";
+    getline(cin, newMember.specialization);
+
+    cout << "Enter Contact Number: ";
+    getline(cin, newMember.contactNumber);
+
+    newMember.memberID = nextMemberID;
+
+    teamMembers[teamCount] = newMember;
+
+    teamCount++;
+    nextMemberID++;
+
+    cout << "\nTeam member successfully registered!" << endl;
+
+    cout << "Member ID: " << newMember.memberID << endl;
+    cout << "Member Name: " << newMember.memberName << endl;
+}
+
+// ============================================
+// DISPLAY TEAM MEMBER
+// ============================================
+
+void displayTeamMember(int index) {
+
+    cout << "\n----------------------------------------" << endl;
+
+    cout << "Member ID: "
+         << teamMembers[index].memberID << endl;
+
+    cout << "Name: "
+         << teamMembers[index].memberName << endl;
+
+    cout << "Role: "
+         << teamMembers[index].role << endl;
+
+    cout << "Specialization: "
+         << teamMembers[index].specialization << endl;
+
+    cout << "Contact Number: "
+         << teamMembers[index].contactNumber << endl;
+
+    cout << "----------------------------------------" << endl;
+}
+
+// ============================================
+// VIEW ALL TEAM MEMBERS
+// ============================================
+
+void viewTeamMembers() {
+
+    if (teamCount == 0) {
+
+        cout << "\nNo registered team members available." << endl;
+        return;
+    }
+
+    cout << "\n===== EXCAVATION TEAM MEMBERS =====" << endl;
+
+    for (int i = 0; i < teamCount; i++) {
+
+        displayTeamMember(i);
+    }
+}
+
+// ============================================
+// FIND TEAM MEMBER USING MEMBER ID
+// ============================================
+
+int findTeamMember(int id) {
+
+    for (int i = 0; i < teamCount; i++) {
+
+        if (teamMembers[i].memberID == id) {
+
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// ============================================
+// SEARCH TEAM MEMBER
+// ============================================
+
+void searchTeamMember() {
+
+    int id;
+
+    cout << "\nEnter Member ID to Search: ";
+    cin >> id;
+
+    int index = findTeamMember(id);
+
+    if (index == -1) {
+
+        cout << "\nTeam member not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== TEAM MEMBER FOUND =====" << endl;
+
+    displayTeamMember(index);
+}
+
+// ============================================
+// UPDATE TEAM MEMBER
+// ============================================
+
+void updateTeamMember() {
+
+    int id;
+
+    cout << "\nEnter Member ID to Update: ";
+    cin >> id;
+
+    int index = findTeamMember(id);
+
+    if (index == -1) {
+
+        cout << "\nTeam member not found!" << endl;
+        return;
+    }
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\n===== UPDATE TEAM MEMBER =====" << endl;
+
+    cout << "Enter New Name: ";
+    getline(cin, teamMembers[index].memberName);
+
+    cout << "Enter New Role: ";
+    getline(cin, teamMembers[index].role);
+
+    cout << "Enter New Specialization: ";
+    getline(cin, teamMembers[index].specialization);
+
+    cout << "Enter New Contact Number: ";
+    getline(cin, teamMembers[index].contactNumber);
+
+    cout << "\nTeam member information successfully updated!" << endl;
+}
+
+// ============================================
+// DELETE TEAM MEMBER
+// ============================================
+
+void deleteTeamMember() {
+
+    int id;
+
+    cout << "\nEnter Member ID to Delete: ";
+    cin >> id;
+
+    int index = findTeamMember(id);
+
+    if (index == -1) {
+
+        cout << "\nTeam member not found!" << endl;
+        return;
+    }
+
+    // CHECK EXISTING ASSIGNMENTS
+
+    for (int i = 0; i < assignmentCount; i++) {
+
+        if (assignments[i].memberID == id) {
+
+            cout << "\nCannot delete this team member." << endl;
+            cout << "The member still has recorded assignments." << endl;
+
+            return;
+        }
+    }
+
+    char confirmation;
+
+    cout << "\nAre you sure you want to delete this team member? (Y/N): ";
+    cin >> confirmation;
+
+    if (confirmation == 'Y' || confirmation == 'y') {
+
+        for (int i = index; i < teamCount - 1; i++) {
+
+            teamMembers[i] = teamMembers[i + 1];
+        }
+
+        teamCount--;
+
+        cout << "\nTeam member successfully deleted!" << endl;
+    }
+    else {
+
+        cout << "\nDeletion cancelled." << endl;
+    }
+}
+
+// ============================================
+// ASSIGN RESEARCH TASK
+// ============================================
+
+void assignResearchTask() {
+
+    if (teamCount == 0) {
+
+        cout << "\nNo registered team members available." << endl;
+        cout << "Please register a team member first." << endl;
+        return;
+    }
+
+    if (siteCount == 0) {
+
+        cout << "\nNo registered excavation sites available." << endl;
+        cout << "Please register an excavation site first." << endl;
+        return;
+    }
+
+    if (assignmentCount >= MAX_ASSIGNMENTS) {
+
+        cout << "\nMaximum number of assignments reached!" << endl;
+        return;
+    }
+
+    ResearchAssignment newAssignment;
+
+    cout << "\n===== CREATE RESEARCH ASSIGNMENT =====" << endl;
+
+    cout << "\n===== AVAILABLE TEAM MEMBERS =====" << endl;
+
+    viewTeamMembers();
+
+    int memberID;
+
+    cout << "\nEnter Member ID: ";
+    cin >> memberID;
+
+    int memberIndex = findTeamMember(memberID);
+
+    if (memberIndex == -1) {
+
+        cout << "\nTeam member not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== AVAILABLE EXCAVATION SITES =====" << endl;
+
+    viewSites();
+
+    int siteID;
+
+    cout << "\nEnter Excavation Site ID: ";
+    cin >> siteID;
+
+    int siteIndex = findSite(siteID);
+
+    if (siteIndex == -1) {
+
+        cout << "\nExcavation site not found!" << endl;
+        return;
+    }
+
+    newAssignment.assignmentID = nextAssignmentID;
+    newAssignment.memberID = memberID;
+    newAssignment.siteID = siteID;
+
+    cout << "\nAssigned Team Member: "
+         << teamMembers[memberIndex].memberName << endl;
+
+    cout << "Excavation Site: "
+         << sites[siteIndex].siteName << endl;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter Research Task Description: ";
+    getline(cin, newAssignment.taskDescription);
+
+    cout << "Enter Assignment Date: ";
+    getline(cin, newAssignment.assignmentDate);
+
+    cout << "\n===== ASSIGNMENT STATUS =====" << endl;
+    cout << "1. Pending" << endl;
+    cout << "2. In Progress" << endl;
+    cout << "3. Completed" << endl;
+
+    int statusChoice;
+
+    cout << "\nSelect Assignment Status: ";
+    cin >> statusChoice;
+
+    if (statusChoice < 1 || statusChoice > 3) {
+
+        cout << "\nInvalid status selection! Assignment cancelled." << endl;
+        return;
+    }
+
+    if (statusChoice == 1) {
+        newAssignment.assignmentStatus = "Pending";
+    }
+    else if (statusChoice == 2) {
+        newAssignment.assignmentStatus = "In Progress";
+    }
+    else {
+        newAssignment.assignmentStatus = "Completed";
+    }
+
+    assignments[assignmentCount] = newAssignment;
+
+    assignmentCount++;
+    nextAssignmentID++;
+
+    cout << "\nResearch assignment successfully created!" << endl;
+
+    cout << "Assignment ID: " << newAssignment.assignmentID << endl;
+    cout << "Assigned Member: "
+         << teamMembers[memberIndex].memberName << endl;
+    cout << "Excavation Site: "
+         << sites[siteIndex].siteName << endl;
+}
+
+
+// ============================================
+// DISPLAY RESEARCH ASSIGNMENT
+// ============================================
+
+void displayAssignment(int index) {
+
+    cout << "\n----------------------------------------" << endl;
+
+    cout << "Assignment ID: "
+         << assignments[index].assignmentID << endl;
+
+    cout << "Member ID: "
+         << assignments[index].memberID << endl;
+
+    int memberIndex = findTeamMember(assignments[index].memberID);
+
+    if (memberIndex != -1) {
+
+        cout << "Team Member: "
+             << teamMembers[memberIndex].memberName << endl;
+    }
+
+    cout << "Excavation Site ID: "
+         << assignments[index].siteID << endl;
+
+    int siteIndex = findSite(assignments[index].siteID);
+
+    if (siteIndex != -1) {
+
+        cout << "Excavation Site: "
+             << sites[siteIndex].siteName << endl;
+    }
+
+    cout << "Research Task: "
+         << assignments[index].taskDescription << endl;
+
+    cout << "Assignment Date: "
+         << assignments[index].assignmentDate << endl;
+
+    cout << "Assignment Status: "
+         << assignments[index].assignmentStatus << endl;
+
+    cout << "----------------------------------------" << endl;
+}
+
+
+// ============================================
+// VIEW ALL RESEARCH ASSIGNMENTS
+// ============================================
+
+void viewAssignments() {
+
+    if (assignmentCount == 0) {
+
+        cout << "\nNo research assignments recorded yet." << endl;
+        return;
+    }
+
+    cout << "\n===== RESEARCH ASSIGNMENT RECORDS =====" << endl;
+
+    for (int i = 0; i < assignmentCount; i++) {
+
+        displayAssignment(i);
+    }
+}
+
+// ============================================
+// FIND ASSIGNMENT USING ASSIGNMENT ID
+// ============================================
+
+int findAssignment(int id) {
+
+    for (int i = 0; i < assignmentCount; i++) {
+
+        if (assignments[i].assignmentID == id) {
+
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// ============================================
+// SEARCH RESEARCH ASSIGNMENT
+// ============================================
+
+void searchAssignment() {
+
+    int id;
+
+    cout << "\nEnter Assignment ID to Search: ";
+    cin >> id;
+
+    int index = findAssignment(id);
+
+    if (index == -1) {
+
+        cout << "\nResearch assignment not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== RESEARCH ASSIGNMENT FOUND =====" << endl;
+
+    displayAssignment(index);
+}
+
+
+// ============================================
+// UPDATE RESEARCH ASSIGNMENT
+// ============================================
+
+void updateAssignment() {
+
+    int id;
+
+    cout << "\nEnter Assignment ID to Update: ";
+    cin >> id;
+
+    int index = findAssignment(id);
+
+    if (index == -1) {
+
+        cout << "\nResearch assignment not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== UPDATE RESEARCH ASSIGNMENT =====" << endl;
+
+    cout << "\n===== AVAILABLE TEAM MEMBERS =====" << endl;
+
+    viewTeamMembers();
+
+    int memberID;
+
+    cout << "\nEnter New Member ID: ";
+    cin >> memberID;
+
+    int memberIndex = findTeamMember(memberID);
+
+    if (memberIndex == -1) {
+
+        cout << "\nTeam member not found! Update cancelled." << endl;
+        return;
+    }
+
+    cout << "\n===== AVAILABLE EXCAVATION SITES =====" << endl;
+
+    viewSites();
+
+    int siteID;
+
+    cout << "\nEnter New Excavation Site ID: ";
+    cin >> siteID;
+
+    int siteIndex = findSite(siteID);
+
+    if (siteIndex == -1) {
+
+        cout << "\nExcavation site not found! Update cancelled." << endl;
+        return;
+    }
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter New Research Task Description: ";
+    getline(cin, assignments[index].taskDescription);
+
+    cout << "Enter New Assignment Date: ";
+    getline(cin, assignments[index].assignmentDate);
+
+    cout << "\n===== ASSIGNMENT STATUS =====" << endl;
+    cout << "1. Pending" << endl;
+    cout << "2. In Progress" << endl;
+    cout << "3. Completed" << endl;
+
+    int statusChoice;
+
+    cout << "\nSelect New Assignment Status: ";
+    cin >> statusChoice;
+
+    if (statusChoice < 1 || statusChoice > 3) {
+
+        cout << "\nInvalid status! Update cancelled." << endl;
+        return;
+    }
+
+    assignments[index].memberID = memberID;
+    assignments[index].siteID = siteID;
+
+    if (statusChoice == 1) {
+        assignments[index].assignmentStatus = "Pending";
+    }
+    else if (statusChoice == 2) {
+        assignments[index].assignmentStatus = "In Progress";
+    }
+    else {
+        assignments[index].assignmentStatus = "Completed";
+    }
+
+    cout << "\nResearch assignment successfully updated!" << endl;
+
+    displayAssignment(index);
+}
+
+// ============================================
+// DELETE RESEARCH ASSIGNMENT
+// ============================================
+
+void deleteAssignment() {
+
+    int id;
+
+    cout << "\nEnter Assignment ID to Delete: ";
+    cin >> id;
+
+    int index = findAssignment(id);
+
+    if (index == -1) {
+
+        cout << "\nResearch assignment not found!" << endl;
+        return;
+    }
+
+    char confirmation;
+
+    cout << "\nAre you sure you want to delete this assignment? (Y/N): ";
+    cin >> confirmation;
+
+    if (confirmation == 'Y' || confirmation == 'y') {
+
+        for (int i = index; i < assignmentCount - 1; i++) {
+
+            assignments[i] = assignments[i + 1];
+        }
+
+        assignmentCount--;
+
+        cout << "\nResearch assignment successfully deleted!" << endl;
+    }
+    else {
+
+        cout << "\nDeletion cancelled." << endl;
+    }
+}
+
+
+// ============================================
+// PRESERVATION MANAGEMENT MENU
+// ============================================
+
+void preservationMenu() {
+
+    int choice;
+
+    do {
+
+        cout << "\n========================================" << endl;
+        cout << "       PRESERVATION MANAGEMENT" << endl;
+        cout << "========================================" << endl;
+
+        cout << "\n1. Add Preservation Record" << endl;
+        cout << "2. View All Preservation Records" << endl;
+        cout << "3. Search Preservation Record" << endl;
+        cout << "4. Update Preservation Record" << endl;
+        cout << "5. Delete Preservation Record" << endl;
+        cout << "6. Return to Main Menu" << endl;
+
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "\nInvalid input!" << endl;
+            continue;
+        }
+
+        switch (choice) {
+
+            case 1:
+                addPreservationRecord();
+                break;
+
+            case 2:
+                viewPreservationRecords();
+                break;
+
+            case 3:
+                searchPreservationRecord();
+                break;
+
+            case 4:
+                updatePreservationRecord();
+                break;
+
+            case 5:
+                deletePreservationRecord();
+                break;
+
+            case 6:
+                cout << "\nReturning to Main Menu..." << endl;
+                break;
+
+            default:
+                cout << "\nInvalid choice!" << endl;
+        }
+
+    } while (choice != 6);
+}
+
+// ============================================
+// ADD PRESERVATION RECORD
+// ============================================
+
+void addPreservationRecord() {
+
+    if (artifactCount == 0) {
+
+        cout << "\nNo registered artifacts available." << endl;
+        cout << "Please register an artifact first." << endl;
+        return;
+    }
+
+    if (preservationCount >= MAX_PRESERVATION) {
+
+        cout << "\nMaximum number of preservation records reached!" << endl;
+        return;
+    }
+
+    PreservationRecord newRecord;
+
+    int artifactID;
+
+    cout << "\n===== ADD PRESERVATION RECORD =====" << endl;
+
+    cout << "\n===== REGISTERED ARTIFACTS =====" << endl;
+
+    viewArtifacts();
+
+    cout << "\nEnter Artifact ID: ";
+    cin >> artifactID;
+
+    int artifactIndex = findArtifact(artifactID);
+
+    if (artifactIndex == -1) {
+
+        cout << "\nArtifact not found!" << endl;
+        return;
+    }
+
+    newRecord.artifactID = artifactID;
+
+    newRecord.preservationID = nextPreservationID;
+
+    cout << "\nArtifact Name: "
+         << artifacts[artifactIndex].artifactName << endl;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter Preservation Activity: ";
+    getline(cin, newRecord.preservationActivity);
+
+    cout << "Enter Preservation Method: ";
+    getline(cin, newRecord.preservationMethod);
+
+    cout << "Enter Responsible Person: ";
+    getline(cin, newRecord.responsiblePerson);
+
+    cout << "Enter Preservation Date: ";
+    getline(cin, newRecord.preservationDate);
+
+    cout << "Enter Next Monitoring Date: ";
+    getline(cin, newRecord.nextMonitoringDate);
+
+    cout << "\n===== PRESERVATION STATUS =====" << endl;
+    cout << "1. Planned" << endl;
+    cout << "2. Ongoing" << endl;
+    cout << "3. Completed" << endl;
+
+    int statusChoice;
+
+    cout << "\nSelect Preservation Status: ";
+    cin >> statusChoice;
+
+    if (statusChoice < 1 || statusChoice > 3) {
+
+        cout << "\nInvalid status selection! Record cancelled." << endl;
+        return;
+    }
+
+    if (statusChoice == 1) {
+        newRecord.preservationStatus = "Planned";
+    }
+    else if (statusChoice == 2) {
+        newRecord.preservationStatus = "Ongoing";
+    }
+    else {
+        newRecord.preservationStatus = "Completed";
+    }
+
+    preservationRecords[preservationCount] = newRecord;
+
+    preservationCount++;
+    nextPreservationID++;
+
+    cout << "\nPreservation record successfully added!" << endl;
+
+    cout << "Preservation ID: "
+         << newRecord.preservationID << endl;
+
+    cout << "Artifact ID: "
+         << newRecord.artifactID << endl;
+}
+
+// ============================================
+// DISPLAY PRESERVATION RECORD
+// ============================================
+
+void displayPreservationRecord(int index) {
+
+    cout << "\n----------------------------------------" << endl;
+
+    cout << "Preservation ID: "
+         << preservationRecords[index].preservationID << endl;
+
+    cout << "Artifact ID: "
+         << preservationRecords[index].artifactID << endl;
+
+    int artifactIndex = findArtifact(
+        preservationRecords[index].artifactID
+    );
+
+    if (artifactIndex != -1) {
+
+        cout << "Artifact Name: "
+             << artifacts[artifactIndex].artifactName << endl;
+    }
+
+    cout << "Preservation Activity: "
+         << preservationRecords[index].preservationActivity << endl;
+
+    cout << "Preservation Method: "
+         << preservationRecords[index].preservationMethod << endl;
+
+    cout << "Responsible Person: "
+         << preservationRecords[index].responsiblePerson << endl;
+
+    cout << "Preservation Date: "
+         << preservationRecords[index].preservationDate << endl;
+
+    cout << "Next Monitoring Date: "
+         << preservationRecords[index].nextMonitoringDate << endl;
+
+    cout << "Preservation Status: "
+         << preservationRecords[index].preservationStatus << endl;
+
+    cout << "----------------------------------------" << endl;
+}
+
+// ============================================
+// VIEW ALL PRESERVATION RECORDS
+// ============================================
+
+void viewPreservationRecords() {
+
+    if (preservationCount == 0) {
+
+        cout << "\nNo preservation records available." << endl;
+        return;
+    }
+
+    cout << "\n===== ALL PRESERVATION RECORDS =====" << endl;
+
+    for (int i = 0; i < preservationCount; i++) {
+
+        displayPreservationRecord(i);
+    }
+}
+
+
+// ============================================
+// FIND PRESERVATION RECORD
+// ============================================
+
+int findPreservationRecord(int id) {
+
+    for (int i = 0; i < preservationCount; i++) {
+
+        if (preservationRecords[i].preservationID == id) {
+
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+
+// ============================================
+// SEARCH PRESERVATION RECORD
+// ============================================
+
+void searchPreservationRecord() {
+
+    int id;
+
+    cout << "\nEnter Preservation ID to Search: ";
+    cin >> id;
+
+    int index = findPreservationRecord(id);
+
+    if (index == -1) {
+
+        cout << "\nPreservation record not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== PRESERVATION RECORD FOUND =====" << endl;
+
+    displayPreservationRecord(index);
+}
+
+// ============================================
+// UPDATE PRESERVATION RECORD
+// ============================================
+
+void updatePreservationRecord() {
+
+    int id;
+
+    cout << "\nEnter Preservation ID to Update: ";
+    cin >> id;
+
+    int index = findPreservationRecord(id);
+
+    if (index == -1) {
+
+        cout << "\nPreservation record not found!" << endl;
+        return;
+    }
+
+    PreservationRecord updatedRecord = preservationRecords[index];
+
+    cout << "\n===== UPDATE PRESERVATION RECORD =====" << endl;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter New Preservation Activity: ";
+    getline(cin, updatedRecord.preservationActivity);
+
+    cout << "Enter New Preservation Method: ";
+    getline(cin, updatedRecord.preservationMethod);
+
+    cout << "Enter New Responsible Person: ";
+    getline(cin, updatedRecord.responsiblePerson);
+
+    cout << "Enter New Preservation Date: ";
+    getline(cin, updatedRecord.preservationDate);
+
+    cout << "Enter New Monitoring Date: ";
+    getline(cin, updatedRecord.nextMonitoringDate);
+
+    cout << "\n===== PRESERVATION STATUS =====" << endl;
+    cout << "1. Planned" << endl;
+    cout << "2. Ongoing" << endl;
+    cout << "3. Completed" << endl;
+
+    int statusChoice;
+
+    cout << "\nSelect New Status: ";
+    cin >> statusChoice;
+
+    if (statusChoice < 1 || statusChoice > 3) {
+
+        cout << "\nInvalid status! Update cancelled." << endl;
+        return;
+    }
+
+    if (statusChoice == 1) {
+        updatedRecord.preservationStatus = "Planned";
+    }
+    else if (statusChoice == 2) {
+        updatedRecord.preservationStatus = "Ongoing";
+    }
+    else {
+        updatedRecord.preservationStatus = "Completed";
+    }
+
+    preservationRecords[index] = updatedRecord;
+
+    cout << "\nPreservation record successfully updated!" << endl;
+
+    displayPreservationRecord(index);
+}
+
+// ============================================
+// DELETE PRESERVATION RECORD
+// ============================================
+
+void deletePreservationRecord() {
+
+    int id;
+
+    cout << "\nEnter Preservation ID to Delete: ";
+    cin >> id;
+
+    int index = findPreservationRecord(id);
+
+    if (index == -1) {
+
+        cout << "\nPreservation record not found!" << endl;
+        return;
+    }
+
+    char confirmation;
+
+    cout << "\nAre you sure you want to delete this record? (Y/N): ";
+    cin >> confirmation;
+
+    if (confirmation == 'Y' || confirmation == 'y') {
+
+        for (int i = index; i < preservationCount - 1; i++) {
+
+            preservationRecords[i] = preservationRecords[i + 1];
+        }
+
+        preservationCount--;
+
+        cout << "\nPreservation record successfully deleted!" << endl;
+    }
+    else {
+
+        cout << "\nDeletion cancelled." << endl;
+    }
+}
+
+// ============================================
+// RESTORATION AND MUSEUM MANAGEMENT MENU
+// ============================================
+
+void restorationMuseumMenu() {
+
+    int choice;
+
+    do {
+
+        cout << "\n========================================" << endl;
+        cout << "   RESTORATION AND MUSEUM MANAGEMENT" << endl;
+        cout << "========================================" << endl;
+
+        cout << "\n===== FACILITY AND MUSEUM RECORDS =====" << endl;
+        cout << "1. Register Facility or Museum" << endl;
+        cout << "2. View All Facilities and Museums" << endl;
+        cout << "3. Search Facility or Museum" << endl;
+        cout << "4. Update Facility Information" << endl;
+        cout << "5. Delete Facility Record" << endl;
+
+        cout << "\n===== ARTIFACT TRANSFERS =====" << endl;
+        cout << "6. Record Artifact Transfer" << endl;
+        cout << "7. View All Artifact Transfers" << endl;
+        cout << "8. Search Artifact Transfer" << endl;
+
+        cout << "\n9. Return to Main Menu" << endl;
+
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "\nInvalid input!" << endl;
+            continue;
+        }
+
+        switch (choice) {
+
+            case 1:
+                registerFacility();
+                break;
+
+            case 2:
+                viewFacilities();
+                break;
+
+            case 3:
+                searchFacility();
+                break;
+
+            case 4:
+                updateFacility();
+                break;
+
+            case 5:
+                deleteFacility();
+                break;
+
+            case 6:
+                recordArtifactTransfer();
+                break;
+
+            case 7:
+                viewArtifactTransfers();
+                break;
+
+            case 8:
+                searchArtifactTransfer();
+                break;
+
+            case 9:
+                cout << "\nReturning to Main Menu..." << endl;
+                break;
+
+            default:
+                cout << "\nInvalid choice!" << endl;
+        }
+
+    } while (choice != 9);
+}
+
+// ============================================
+// REGISTER FACILITY OR MUSEUM
+// ============================================
+
+void registerFacility() {
+
+    if (facilityCount >= MAX_FACILITIES) {
+
+        cout << "\nMaximum number of facility records reached!" << endl;
+        return;
+    }
+
+    HeritageFacility newFacility;
+
+    int typeChoice;
+
+    cout << "\n===== REGISTER FACILITY OR MUSEUM =====" << endl;
+
+    cout << "\n1. Restoration Facility" << endl;
+    cout << "2. Museum" << endl;
+
+    cout << "\nSelect Institution Type: ";
+    cin >> typeChoice;
+
+    if (typeChoice < 1 || typeChoice > 2) {
+
+        cout << "\nInvalid selection!" << endl;
+        return;
+    }
+
+    if (typeChoice == 1) {
+        newFacility.facilityType = "Restoration Facility";
+    }
+    else {
+        newFacility.facilityType = "Museum";
+    }
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter Institution Name: ";
+    getline(cin, newFacility.facilityName);
+
+    cout << "Enter Location: ";
+    getline(cin, newFacility.location);
+
+    cout << "Enter Contact Person: ";
+    getline(cin, newFacility.contactPerson);
+
+    cout << "Enter Contact Number: ";
+    getline(cin, newFacility.contactNumber);
+
+    cout << "Enter Services or Facilities Offered: ";
+    getline(cin, newFacility.services);
+
+    newFacility.facilityID = nextFacilityID;
+
+    facilities[facilityCount] = newFacility;
+
+    facilityCount++;
+    nextFacilityID++;
+
+    cout << "\nInstitution successfully registered!" << endl;
+
+    cout << "Facility ID: " << newFacility.facilityID << endl;
+    cout << "Institution Name: " << newFacility.facilityName << endl;
+    cout << "Institution Type: " << newFacility.facilityType << endl;
+}
+// ============================================
+// DISPLAY FACILITY OR MUSEUM
+// ============================================
+
+void displayFacility(int index) {
+
+    cout << "\n----------------------------------------" << endl;
+
+    cout << "Facility ID: "
+         << facilities[index].facilityID << endl;
+
+    cout << "Institution Name: "
+         << facilities[index].facilityName << endl;
+
+    cout << "Institution Type: "
+         << facilities[index].facilityType << endl;
+
+    cout << "Location: "
+         << facilities[index].location << endl;
+
+    cout << "Contact Person: "
+         << facilities[index].contactPerson << endl;
+
+    cout << "Contact Number: "
+         << facilities[index].contactNumber << endl;
+
+    cout << "Services Offered: "
+         << facilities[index].services << endl;
+
+    cout << "----------------------------------------" << endl;
+}
+
+// ============================================
+// VIEW ALL FACILITIES AND MUSEUMS
+// ============================================
+
+void viewFacilities() {
+
+    if (facilityCount == 0) {
+
+        cout << "\nNo registered facilities or museums available." << endl;
+        return;
+    }
+
+    cout << "\n===== REGISTERED FACILITIES AND MUSEUMS =====" << endl;
+
+    for (int i = 0; i < facilityCount; i++) {
+
+        displayFacility(i);
+    }
+}
+
+
+// ============================================
+// FIND FACILITY USING FACILITY ID
+// ============================================
+
+int findFacility(int id) {
+
+    for (int i = 0; i < facilityCount; i++) {
+
+        if (facilities[i].facilityID == id) {
+
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// ============================================
+// SEARCH FACILITY OR MUSEUM
+// ============================================
+
+void searchFacility() {
+
+    int id;
+
+    cout << "\nEnter Facility ID to Search: ";
+    cin >> id;
+
+    int index = findFacility(id);
+
+    if (index == -1) {
+
+        cout << "\nFacility record not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== FACILITY RECORD FOUND =====" << endl;
+
+    displayFacility(index);
+}
+
+// ============================================
+// UPDATE FACILITY INFORMATION
+// ============================================
+
+void updateFacility() {
+
+    int id;
+
+    cout << "\nEnter Facility ID to Update: ";
+    cin >> id;
+
+    int index = findFacility(id);
+
+    if (index == -1) {
+
+        cout << "\nFacility record not found!" << endl;
+        return;
+    }
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\n===== UPDATE FACILITY INFORMATION =====" << endl;
+
+    cout << "Enter New Institution Name: ";
+    getline(cin, facilities[index].facilityName);
+
+    cout << "Enter New Location: ";
+    getline(cin, facilities[index].location);
+
+    cout << "Enter New Contact Person: ";
+    getline(cin, facilities[index].contactPerson);
+
+    cout << "Enter New Contact Number: ";
+    getline(cin, facilities[index].contactNumber);
+
+    cout << "Enter New Services Offered: ";
+    getline(cin, facilities[index].services);
+
+    cout << "\nFacility information successfully updated!" << endl;
+}
+
+// ============================================
+// DELETE FACILITY RECORD
+// ============================================
+
+void deleteFacility() {
+
+    int id;
+
+    cout << "\nEnter Facility ID to Delete: ";
+    cin >> id;
+
+    int index = findFacility(id);
+
+    if (index == -1) {
+
+        cout << "\nFacility record not found!" << endl;
+        return;
+    }
+
+    for (int i = 0; i < transferCount; i++) {
+
+        if (transfers[i].facilityID == id) {
+
+            cout << "\nCannot delete this facility." << endl;
+            cout << "It is linked to an artifact transfer record." << endl;
+
+            return;
+        }
+    }
+
+    char confirmation;
+
+    cout << "\nAre you sure you want to delete this facility? (Y/N): ";
+    cin >> confirmation;
+
+    if (confirmation == 'Y' || confirmation == 'y') {
+
+        for (int i = index; i < facilityCount - 1; i++) {
+
+            facilities[i] = facilities[i + 1];
+        }
+
+        facilityCount--;
+
+        cout << "\nFacility record successfully deleted!" << endl;
+    }
+    else {
+
+        cout << "\nDeletion cancelled." << endl;
+    }
+}
+
+// ============================================
+// RECORD ARTIFACT TRANSFER
+// ============================================
+
+void recordArtifactTransfer() {
+
+    if (artifactCount == 0) {
+
+        cout << "\nNo registered artifacts available." << endl;
+        return;
+    }
+
+    if (facilityCount == 0) {
+
+        cout << "\nNo registered facilities or museums available." << endl;
+        cout << "Please register an institution first." << endl;
+        return;
+    }
+
+    if (transferCount >= MAX_TRANSFERS) {
+
+        cout << "\nMaximum number of transfer records reached!" << endl;
+        return;
+    }
+
+    ArtifactTransfer newTransfer;
+
+    int artifactID;
+    int facilityID;
+
+    cout << "\n===== RECORD ARTIFACT TRANSFER =====" << endl;
+
+    cout << "\n===== REGISTERED ARTIFACTS =====" << endl;
+
+    viewArtifacts();
+
+    cout << "\nEnter Artifact ID: ";
+    cin >> artifactID;
+
+    int artifactIndex = findArtifact(artifactID);
+
+    if (artifactIndex == -1) {
+
+        cout << "\nArtifact not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== REGISTERED FACILITIES AND MUSEUMS =====" << endl;
+
+    viewFacilities();
+
+    cout << "\nEnter Destination Facility ID: ";
+    cin >> facilityID;
+
+    int facilityIndex = findFacility(facilityID);
+
+    if (facilityIndex == -1) {
+
+        cout << "\nFacility not found!" << endl;
+        return;
+    }
+
+    newTransfer.transferID = nextTransferID;
+    newTransfer.artifactID = artifactID;
+    newTransfer.facilityID = facilityID;
+
+    cout << "\nArtifact: "
+         << artifacts[artifactIndex].artifactName << endl;
+
+    cout << "Destination: "
+         << facilities[facilityIndex].facilityName << endl;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter Transfer Date: ";
+    getline(cin, newTransfer.transferDate);
+
+    cout << "Enter Transfer Purpose: ";
+    getline(cin, newTransfer.transferPurpose);
+
+    cout << "\n===== TRANSFER STATUS =====" << endl;
+    cout << "1. Scheduled" << endl;
+    cout << "2. In Transit" << endl;
+    cout << "3. Received" << endl;
+
+    int statusChoice;
+
+    cout << "\nSelect Transfer Status: ";
+    cin >> statusChoice;
+
+    if (statusChoice < 1 || statusChoice > 3) {
+
+        cout << "\nInvalid status! Transfer record cancelled." << endl;
+        return;
+    }
+
+    if (statusChoice == 1) {
+        newTransfer.transferStatus = "Scheduled";
+    }
+    else if (statusChoice == 2) {
+        newTransfer.transferStatus = "In Transit";
+    }
+    else {
+        newTransfer.transferStatus = "Received";
+    }
+
+    transfers[transferCount] = newTransfer;
+
+    transferCount++;
+    nextTransferID++;
+
+    cout << "\nArtifact transfer successfully recorded!" << endl;
+
+    cout << "Transfer ID: " << newTransfer.transferID << endl;
+    cout << "Artifact Name: "
+         << artifacts[artifactIndex].artifactName << endl;
+    cout << "Destination: "
+         << facilities[facilityIndex].facilityName << endl;
+}
+
+
+// ============================================
+// DISPLAY ARTIFACT TRANSFER
+// ============================================
+
+void displayArtifactTransfer(int index) {
+
+    cout << "\n----------------------------------------" << endl;
+
+    cout << "Transfer ID: "
+         << transfers[index].transferID << endl;
+
+    cout << "Artifact ID: "
+         << transfers[index].artifactID << endl;
+
+    int artifactIndex = findArtifact(transfers[index].artifactID);
+
+    if (artifactIndex != -1) {
+
+        cout << "Artifact Name: "
+             << artifacts[artifactIndex].artifactName << endl;
+    }
+
+    cout << "Destination Facility ID: "
+         << transfers[index].facilityID << endl;
+
+    int facilityIndex = findFacility(transfers[index].facilityID);
+
+    if (facilityIndex != -1) {
+
+        cout << "Destination Institution: "
+             << facilities[facilityIndex].facilityName << endl;
+
+        cout << "Institution Type: "
+             << facilities[facilityIndex].facilityType << endl;
+    }
+
+    cout << "Transfer Date: "
+         << transfers[index].transferDate << endl;
+
+    cout << "Transfer Purpose: "
+         << transfers[index].transferPurpose << endl;
+
+    cout << "Transfer Status: "
+         << transfers[index].transferStatus << endl;
+
+    cout << "----------------------------------------" << endl;
+}
+
+// ============================================
+// VIEW ALL ARTIFACT TRANSFERS
+// ============================================
+
+void viewArtifactTransfers() {
+
+    if (transferCount == 0) {
+
+        cout << "\nNo artifact transfer records available." << endl;
+        return;
+    }
+
+    cout << "\n===== ARTIFACT TRANSFER RECORDS =====" << endl;
+
+    for (int i = 0; i < transferCount; i++) {
+
+        displayArtifactTransfer(i);
+    }
+}
+
+// ============================================
+// FIND ARTIFACT TRANSFER
+// ============================================
+
+int findArtifactTransfer(int id) {
+
+    for (int i = 0; i < transferCount; i++) {
+
+        if (transfers[i].transferID == id) {
+
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// ============================================
+// SEARCH ARTIFACT TRANSFER
+// ============================================
+
+void searchArtifactTransfer() {
+
+    int id;
+
+    cout << "\nEnter Transfer ID to Search: ";
+    cin >> id;
+
+    int index = findArtifactTransfer(id);
+
+    if (index == -1) {
+
+        cout << "\nArtifact transfer record not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== ARTIFACT TRANSFER FOUND =====" << endl;
+
+    displayArtifactTransfer(index);
+}
+
+// ============================================
+// REPORTS AND RECORDS MENU
+// ============================================
+
+void reportsMenu() {
+
+    int choice;
+
+    do {
+
+        cout << "\n========================================" << endl;
+        cout << "          REPORTS AND RECORDS" << endl;
+        cout << "========================================" << endl;
+
+        cout << "\n1. System Summary Report" << endl;
+        cout << "2. Excavation Site Report" << endl;
+        cout << "3. Artifact Inventory Report" << endl;
+        cout << "4. Activity Report" << endl;
+        cout << "5. Return to Main Menu" << endl;
+
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "\nInvalid input!" << endl;
+            continue;
+        }
+
+        switch (choice) {
+
+            case 1:
+                generateSystemSummary();
+                break;
+
+            case 2:
+                generateSiteReport();
+                break;
+
+            case 3:
+                generateArtifactReport();
+                break;
+
+            case 4:
+                generateActivityReport();
+                break;
+
+            case 5:
+                cout << "\nReturning to Main Menu..." << endl;
+                break;
+
+            default:
+                cout << "\nInvalid choice!" << endl;
+        }
+
+    } while (choice != 5);
+}
+
+// ============================================
+// GENERATE SYSTEM SUMMARY REPORT
+// ============================================
+
+void generateSystemSummary() {
+
+    cout << "\n========================================" << endl;
+    cout << "          SYSTEM SUMMARY REPORT" << endl;
+    cout << "========================================" << endl;
+
+    cout << "\n===== RECORD TOTALS =====" << endl;
+
+    cout << "Registered Excavation Sites: "
+         << siteCount << endl;
+
+    cout << "Registered Artifacts: "
+         << artifactCount << endl;
+
+    cout << "Age Estimation Records: "
+         << ageCount << endl;
+
+    cout << "Excavation Team Members: "
+         << teamCount << endl;
+
+    cout << "Research Assignments: "
+         << assignmentCount << endl;
+
+    cout << "Preservation Records: "
+         << preservationCount << endl;
+
+    cout << "Registered Facilities and Museums: "
+         << facilityCount << endl;
+
+    cout << "Artifact Transfer Records: "
+         << transferCount << endl;
+
+    cout << "\n========================================" << endl;
+}
+
+// ============================================
+// GENERATE EXCAVATION SITE REPORT
+// ============================================
+
+void generateSiteReport() {
+
+    if (siteCount == 0) {
+
+        cout << "\nNo excavation site records available." << endl;
+        return;
+    }
+
+    cout << "\n========================================" << endl;
+    cout << "         EXCAVATION SITE REPORT" << endl;
+    cout << "========================================" << endl;
+
+    cout << "\nTotal Registered Sites: "
+         << siteCount << endl;
+
+    for (int i = 0; i < siteCount; i++) {
+
+        cout << "\n===== SITE RECORD " << i + 1 << " =====" << endl;
+
+        displaySite(i);
+    }
+
+    cout << "\n===== END OF SITE REPORT =====" << endl;
+}
+
+// ============================================
+// GENERATE ARTIFACT INVENTORY REPORT
+// ============================================
+
+void generateArtifactReport() {
+
+    if (artifactCount == 0) {
+
+        cout << "\nNo artifact records available." << endl;
+        return;
+    }
+
+    cout << "\n========================================" << endl;
+    cout << "        ARTIFACT INVENTORY REPORT" << endl;
+    cout << "========================================" << endl;
+
+    cout << "\nTotal Registered Artifacts: "
+         << artifactCount << endl;
+
+    for (int i = 0; i < artifactCount; i++) {
+
+        cout << "\n===== ARTIFACT RECORD " << i + 1 << " =====" << endl;
+
+        displayArtifact(i);
+    }
+
+    cout << "\n===== END OF ARTIFACT REPORT =====" << endl;
+}
+
+// ============================================
+// GENERATE ACTIVITY REPORT
+// ============================================
+
+void generateActivityReport() {
+
+    cout << "\n========================================" << endl;
+    cout << "             ACTIVITY REPORT" << endl;
+    cout << "========================================" << endl;
+
+    // RESEARCH ASSIGNMENTS
+
+    cout << "\n===== RESEARCH ASSIGNMENTS =====" << endl;
+
+    cout << "Total Assignments: "
+         << assignmentCount << endl;
+
+    if (assignmentCount > 0) {
+
+        for (int i = 0; i < assignmentCount; i++) {
+
+            displayAssignment(i);
+        }
+    }
+    else {
+
+        cout << "No research assignments recorded." << endl;
+    }
+
+    // PRESERVATION ACTIVITIES
+
+    cout << "\n===== PRESERVATION ACTIVITIES =====" << endl;
+
+    cout << "Total Preservation Records: "
+         << preservationCount << endl;
+
+    if (preservationCount > 0) {
+
+        for (int i = 0; i < preservationCount; i++) {
+
+            displayPreservationRecord(i);
+        }
+    }
+    else {
+
+        cout << "No preservation activities recorded." << endl;
+    }
+
+    // ARTIFACT TRANSFERS
+
+    cout << "\n===== ARTIFACT TRANSFERS =====" << endl;
+
+    cout << "Total Transfer Records: "
+         << transferCount << endl;
+
+    if (transferCount > 0) {
+
+        for (int i = 0; i < transferCount; i++) {
+
+            displayArtifactTransfer(i);
+        }
+    }
+    else {
+
+        cout << "No artifact transfers recorded." << endl;
+    }
+
+    cout << "\n===== END OF ACTIVITY REPORT =====" << endl;
+}
+
+// ============================================
+// USER MANAGEMENT MENU
+// ============================================
+
+void userManagementMenu() {
+
+    int choice;
+
+    do {
+
+        cout << "\n========================================" << endl;
+        cout << "             USER MANAGEMENT" << endl;
+        cout << "========================================" << endl;
+
+        cout << "\n1. Register New User" << endl;
+        cout << "2. View All Users" << endl;
+        cout << "3. Search User" << endl;
+        cout << "4. Update User Information" << endl;
+        cout << "5. Delete User Account" << endl;
+        cout << "6. User Login" << endl;
+        cout << "7. Return to Main Menu" << endl;
+
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "\nInvalid input!" << endl;
+            continue;
+        }
+
+        switch (choice) {
+
+            case 1:
+                registerUser();
+                break;
+
+            case 2:
+                viewUsers();
+                break;
+
+            case 3:
+                searchUser();
+                break;
+
+            case 4:
+                updateUser();
+                break;
+
+            case 5:
+                deleteUser();
+                break;
+
+            case 6:
+                userLogin();
+                break;
+
+            case 7:
+                cout << "\nReturning to Main Menu..." << endl;
+                break;
+
+            default:
+                cout << "\nInvalid choice!" << endl;
+        }
+
+    } while (choice != 7);
+}
+
+// ============================================
+// REGISTER NEW USER
+// ============================================
+
+void registerUser() {
+
+    if (userCount >= MAX_USERS) {
+
+        cout << "\nMaximum number of users reached!" << endl;
+        return;
+    }
+
+    User newUser;
+
+    cout << "\n===== REGISTER NEW USER =====" << endl;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter Full Name: ";
+    getline(cin, newUser.fullName);
+
+    cout << "Enter Username: ";
+    getline(cin, newUser.username);
+
+    // CHECK FOR DUPLICATE USERNAME
+
+    for (int i = 0; i < userCount; i++) {
+
+        if (users[i].username == newUser.username) {
+
+            cout << "\nUsername already exists!" << endl;
+            cout << "Please use another username." << endl;
+
+            return;
+        }
+    }
+
+    cout << "Enter Password: ";
+    getline(cin, newUser.password);
+
+    cout << "\n===== SELECT USER ROLE =====" << endl;
+    cout << "1. Administrator" << endl;
+    cout << "2. Researcher" << endl;
+    cout << "3. Staff" << endl;
+
+    int roleChoice;
+
+    cout << "\nSelect Role: ";
+    cin >> roleChoice;
+
+    if (roleChoice < 1 || roleChoice > 3) {
+
+        cout << "\nInvalid role selection! Registration cancelled." << endl;
+        return;
+    }
+
+    if (roleChoice == 1) {
+        newUser.role = "Administrator";
+    }
+    else if (roleChoice == 2) {
+        newUser.role = "Researcher";
+    }
+    else {
+        newUser.role = "Staff";
+    }
+
+    newUser.userID = nextUserID;
+
+    users[userCount] = newUser;
+
+    userCount++;
+    nextUserID++;
+
+    cout << "\nUser successfully registered!" << endl;
+
+    cout << "User ID: " << newUser.userID << endl;
+    cout << "Full Name: " << newUser.fullName << endl;
+    cout << "Username: " << newUser.username << endl;
+    cout << "Role: " << newUser.role << endl;
+}
+
+// ============================================
+// DISPLAY USER INFORMATION
+// ============================================
+
+void displayUser(int index) {
+
+    cout << "\n----------------------------------------" << endl;
+
+    cout << "User ID: "
+         << users[index].userID << endl;
+
+    cout << "Full Name: "
+         << users[index].fullName << endl;
+
+    cout << "Username: "
+         << users[index].username << endl;
+
+    cout << "Role: "
+         << users[index].role << endl;
+
+    cout << "----------------------------------------" << endl;
+}
+
+// ============================================
+// VIEW ALL USERS
+// ============================================
+
+void viewUsers() {
+
+    if (userCount == 0) {
+
+        cout << "\nNo registered users available." << endl;
+        return;
+    }
+
+    cout << "\n===== REGISTERED USERS =====" << endl;
+
+    for (int i = 0; i < userCount; i++) {
+
+        displayUser(i);
+    }
+}
+
+// ============================================
+// FIND USER USING USER ID
+// ============================================
+
+int findUser(int id) {
+
+    for (int i = 0; i < userCount; i++) {
+
+        if (users[i].userID == id) {
+
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// ============================================
+// SEARCH USER
+// ============================================
+
+void searchUser() {
+
+    int id;
+
+    cout << "\nEnter User ID to Search: ";
+    cin >> id;
+
+    int index = findUser(id);
+
+    if (index == -1) {
+
+        cout << "\nUser record not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== USER RECORD FOUND =====" << endl;
+
+    displayUser(index);
+}
+
+// ============================================
+// UPDATE USER INFORMATION
+// ============================================
+
+void updateUser() {
+
+    int id;
+
+    cout << "\nEnter User ID to Update: ";
+    cin >> id;
+
+    int index = findUser(id);
+
+    if (index == -1) {
+
+        cout << "\nUser record not found!" << endl;
+        return;
+    }
+
+    User updatedUser = users[index];
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\n===== UPDATE USER INFORMATION =====" << endl;
+
+    cout << "Enter New Full Name: ";
+    getline(cin, updatedUser.fullName);
+
+    cout << "Enter New Username: ";
+    getline(cin, updatedUser.username);
+
+    // CHECK IF THE USERNAME BELONGS TO ANOTHER USER
+
+    for (int i = 0; i < userCount; i++) {
+
+        if (i != index &&
+            users[i].username == updatedUser.username) {
+
+            cout << "\nUsername already exists!" << endl;
+            cout << "Update cancelled." << endl;
+
+            return;
+        }
+    }
+
+    cout << "Enter New Password: ";
+    getline(cin, updatedUser.password);
+
+    cout << "\n===== SELECT NEW USER ROLE =====" << endl;
+    cout << "1. Administrator" << endl;
+    cout << "2. Researcher" << endl;
+    cout << "3. Staff" << endl;
+
+    int roleChoice;
+
+    cout << "\nSelect New Role: ";
+    cin >> roleChoice;
+
+    if (roleChoice < 1 || roleChoice > 3) {
+
+        cout << "\nInvalid role selection! Update cancelled." << endl;
+        return;
+    }
+
+    if (roleChoice == 1) {
+        updatedUser.role = "Administrator";
+    }
+    else if (roleChoice == 2) {
+        updatedUser.role = "Researcher";
+    }
+    else {
+        updatedUser.role = "Staff";
+    }
+
+    users[index] = updatedUser;
+
+    cout << "\nUser information successfully updated!" << endl;
+
+    displayUser(index);
+}
+
+// ============================================
+// DELETE USER ACCOUNT
+// ============================================
+
+void deleteUser() {
+
+    int id;
+
+    cout << "\nEnter User ID to Delete: ";
+    cin >> id;
+
+    int index = findUser(id);
+
+    if (index == -1) {
+
+        cout << "\nUser record not found!" << endl;
+        return;
+    }
+
+    char confirmation;
+
+    cout << "\nAre you sure you want to delete this account? (Y/N): ";
+    cin >> confirmation;
+
+    if (confirmation == 'Y' || confirmation == 'y') {
+
+        for (int i = index; i < userCount - 1; i++) {
+
+            users[i] = users[i + 1];
+        }
+
+        userCount--;
+
+        cout << "\nUser account successfully deleted!" << endl;
+    }
+    else {
+
+        cout << "\nDeletion cancelled." << endl;
+    }
+}
+
+// ============================================
+// USER LOGIN
+// ============================================
+
+void userLogin() {
+
+    string username;
+    string password;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\n===== USER LOGIN =====" << endl;
+
+    cout << "\nEnter Username: ";
+    getline(cin, username);
+
+    cout << "Enter Password: ";
+    getline(cin, password);
+
+    for (int i = 0; i < userCount; i++) {
+
+        if (users[i].username == username &&
+            users[i].password == password) {
+
+            cout << "\nLogin successful!" << endl;
+
+            cout << "Welcome, "
+                 << users[i].fullName << "!" << endl;
+
+            cout << "Account Role: "
+                 << users[i].role << endl;
+
+            return;
+        }
+    }
+
+    cout << "\nInvalid username or password!" << endl;
+}
+
+
+
+// =====================================
+// MENU FUNCTION DEFINITIONS
+// =====================================
+
+void agePeriodMenu() {
+    ageEstimationMenu();
+}
+
+void teamMenu() {
+    teamAssignmentMenu();
+}
+
+void restorationMenu() {
+    restorationMuseumMenu();
+}
