@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <string>
 #include <limits>
@@ -445,13 +444,152 @@ void userLogin();
 int findUser(int id);
 void displayUser(int index);
 
+void login();
+void userAccountMenu();
+bool loginUser();
+void userMenu();
+void adminMenu();
+void adminLogin();
+
 // ============================================
 // EXCAVATION SITE FILE HANDLING
 // ============================================
 
 void saveSites();
 void loadSites();
+void registerUser() {
+    string fullname, username, password, confirmPassword;
+    string savedUsername, savedPassword, savedName;
 
+    cout << "\n===== CREATE USER ACCOUNT =====\n";
+
+    cout << "Enter Full Name: ";
+    getline(cin, fullname);
+
+    cout << "Create Username: ";
+    getline(cin, username);
+
+    if (username.empty() || username.find('|') != string::npos) {
+        cout << "Invalid username.\n";
+        return;
+    }
+
+    // Check if username already exists
+    ifstream file("users.txt");
+    string line;
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+
+        getline(ss, savedName, '|');
+        getline(ss, savedUsername, '|');
+        getline(ss, savedPassword, '|');
+
+        if (username == savedUsername) {
+            cout << "Username already exists!\n";
+            return;
+        }
+    }
+
+    file.close();
+
+    cout << "Create Password: ";
+    getline(cin, password);
+
+    cout << "Confirm Password: ";
+    getline(cin, confirmPassword);
+
+    if (password != confirmPassword) {
+        cout << "Passwords do not match!\n";
+        return;
+    }
+
+    // Save account
+    ofstream output("users.txt", ios::app);
+
+    output << fullname << "|"
+           << username << "|"
+           << password << "\n";
+
+    output.close();
+
+    cout << "\nAccount created successfully!\n";
+    cout << "You can now log in.\n";
+}
+
+bool loginUser() {
+    string username, password;
+    string savedName, savedUsername, savedPassword;
+
+    cout << "\n===== USER LOGIN =====\n";
+
+    cout << "Username: ";
+    getline(cin, username);
+
+    cout << "Password: ";
+    getline(cin, password);
+
+    ifstream file("users.txt");
+
+    string line;
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+
+        getline(ss, savedName, '|');
+        getline(ss, savedUsername, '|');
+        getline(ss, savedPassword, '|');
+
+        if (username == savedUsername &&
+            password == savedPassword) {
+
+            file.close();
+
+            cout << "\nLogin successful!\n";
+            cout << "Welcome, " << savedName << "!\n";
+
+            return true;
+        }
+    }
+
+    file.close();
+
+    cout << "\nInvalid username or password.\n";
+
+    return false;
+}
+
+void userAccountMenu() {
+    int choice;
+
+    do {
+        cout << "\n===== USER ACCOUNT =====\n";
+        cout << "[1] Log In\n";
+        cout << "[2] Create Account\n";
+        cout << "[3] Back\n";
+
+        cout << "Enter choice: ";
+        cin >> choice;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        if (choice == 1) {
+            if (loginUser()) {
+                userMenu();
+            }
+        }
+        else if (choice == 2) {
+            registerUser();
+        }
+        else if (choice == 3) {
+            cout << "Returning to main menu...\n";
+        }
+        else {
+            cout << "Invalid choice.\n";
+        }
+
+    }
+     while (choice != 3);
+}
 
 void userMenu() {
     int choice;
@@ -558,48 +696,18 @@ void login() {
         cout << "Enter your choice: ";
         cin >> choice;
 
-        if (choice == 1 || choice == 2) {
-
-            cout << "\nEnter Username: ";
-            cin >> username;
-
-            cout << "Enter Password: ";
-            cin >> password;
-
-            if (choice == 1) {
-
-                if (username == "user" && password == "user123") {
-                    cout << "\nUser Login Successful!\n";
-                    userMenu();
-                }
-                else {
-                    cout << "\nInvalid username or password.\n";
-                }
-
-            }
-            else if (choice == 2) {
-
-                if (username == "admin" && password == "admin123") {
-                    cout << "\nAdmin Login Successful!\n";
-                    adminMenu();
-                }
-                else {
-                    cout << "\nInvalid username or password.\n";
-                }
-
-            }
-
-        }
-        else if (choice == 3) {
-            cout << "\nExiting Archaeological Management System...\n";
-        }
-        else {
-            cout << "\nInvalid choice. Please try again.\n";
-        }
-
-    } while (choice != 3);
+        if (choice == 1) {
+    userAccountMenu();
+    }
+else if (choice == 2) {
+    adminLogin();
 }
-
+else if (choice == 3) {
+    cout << "Exiting system...";
+}
+} while (choice != 3);
+}
+        
 void trackingReportsMenu() {
     int choice;
 
