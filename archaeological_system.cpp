@@ -343,7 +343,6 @@ int findTeamMember(int id);
 
 // DISPLAY FUNCTIONS
 void displayTeamMember(int index);
-void displayAssignment(int index);
 
 // ============================================
 // PRESERVATION MANAGEMENT FUNCTIONS
