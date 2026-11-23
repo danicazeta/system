@@ -81,21 +81,6 @@ struct ExcavationTeam {
 
 
 // ============================================
-// STRUCTURE FOR RESEARCH ASSIGNMENTS
-// ============================================
-
-struct ResearchAssignment {
-
-    int assignmentID;
-    int memberID;
-    int siteID;
-    string taskDescription;
-    string assignmentDate;
-    string assignmentStatus;
-
-};
-
-// ============================================
 // STRUCTURE FOR PRESERVATION MANAGEMENT
 // ============================================
 
@@ -222,20 +207,17 @@ HistoricalPeriod historicalPeriods[5] = {
 };
 
 // ============================================
-// EXCAVATION TEAM AND ASSIGNMENT ARRAYS
+// EXCAVATION TEAM ARRAY
 // ============================================
 
 const int MAX_TEAM_MEMBERS = 100;
-const int MAX_ASSIGNMENTS = 200;
 
 ExcavationTeam teamMembers[MAX_TEAM_MEMBERS];
-ResearchAssignment assignments[MAX_ASSIGNMENTS];
+
 
 int teamCount = 0;
-int assignmentCount = 0;
 
 int nextMemberID = 1;
-int nextAssignmentID = 1;
 
 // ============================================
 // PRESERVATION RECORD ARRAY
@@ -343,9 +325,9 @@ void displayAgeEstimate(int index);
 void calculateAgeRange(int periodChoice, int &minimumAge, int &maximumAge);
 
 
-// ============================================
+// ================
 // EXCAVATION TEAM 
-// ============================================
+// ================
 
 void teamAssignmentMenu();
 
@@ -356,18 +338,15 @@ void searchTeamMember();
 void updateTeamMember();
 void deleteTeamMember();
 
-
 // SEARCH FUNCTIONS
 int findTeamMember(int id);
-
 
 // DISPLAY FUNCTIONS
 void displayTeamMember(int index);
 
-
-
+// ============================================
 // PRESERVATION MANAGEMENT FUNCTIONS
-
+// ============================================
 
 void preservationMenu();
 
@@ -382,8 +361,9 @@ int findPreservationRecord(int id);
 void displayPreservationRecord(int index);
 
 
-
+// ============================================
 // RESTORATION AND MUSEUM FUNCTIONS
+// ============================================
 
 void restorationMuseumMenu();
 
@@ -408,8 +388,9 @@ void displayFacility(int index);
 void displayArtifactTransfer(int index);
 
 
+// ============================================
 // REPORTS AND RECORDS FUNCTIONS
-
+// ============================================
 
 void reportsMenu();
 
@@ -421,17 +402,21 @@ void generateArtifactReport();
 void generateActivityReport();
 
 
-int findUser(int id);
-void displayUser(int index);
+// ============================================
+// USER MANAGEMENT FUNCTIONS
+// ============================================
+
+void userManagementMenu();
 
 void registerUser();
-void login();
-void userAccountMenu();
-bool loginUser();
-void userMenu();
-void adminMenu();
-void adminLogin();
+void viewUsers();
+void searchUser();
+void updateUser();
+void deleteUser();
+void userLogin();
 
+int findUser(int id);
+void displayUser(int index);
 
 // ============================================
 // EXCAVATION SITE FILE HANDLING
@@ -440,206 +425,6 @@ void adminLogin();
 void saveSites();
 void loadSites();
 
-
-    string readValidatedText(string prompt) {
-        string value;
-        bool valid;
-
-        do {
-            valid = true;
-
-            cout << prompt;
-            getline(cin, value);
-
-            if (value.empty()) {
-                valid = false;
-            }
-            else {
-                bool hasLetter = false;
-
-                for (char c : value) {
-                    if (isalpha(static_cast<unsigned char>(c))) {
-                        hasLetter = true;
-                    }
-                    else if (c != ' ' && c != ',' &&
-                            c != '.' && c != '-' &&
-                            c != '\'') {
-                        valid = false;
-                        break;
-                    }
-                }
-
-                if (!hasLetter) {
-                    valid = false;
-                }
-            }
-
-            if (!valid) {
-                cout << "Invalid input! Please enter valid text.\n";
-            }
-
-        } while (!valid);
-
-        return value;
-    }
-
-    bool readYesNo(string prompt) {
-        string answer;
-
-        while (true) {
-            cout << prompt;
-            getline(cin, answer);
-
-            for (char &c : answer) {
-                c = tolower(static_cast<unsigned char>(c));
-            }
-
-            if (answer == "yes" || answer == "y") {
-                return true;
-            }
-            else if (answer == "no" || answer == "n") {
-                return false;
-            }
-            else {
-                cout << "Invalid input! Enter Yes or No.\n";
-            }
-        }
-    }
-
-   
-void registerUser() {
-    string fullname, username, password, confirmPassword;
-    string savedUsername, savedPassword, savedName;
-
-    cout << "\n===== CREATE USER ACCOUNT =====\n";
-
-    cout << "Enter Full Name: ";
-    getline(cin, fullname);
-
-    cout << "Create Username: ";
-    getline(cin, username);
-
-    if (username.empty() || username.find('|') != string::npos) {
-        cout << "Invalid username.\n";
-        return;
-    }
-
-    // Check if username already exists
-    ifstream file("users.txt");
-    string line;
-
-    while (getline(file, line)) {
-        stringstream ss(line);
-
-        getline(ss, savedName, '|');
-        getline(ss, savedUsername, '|');
-        getline(ss, savedPassword, '|');
-
-        if (username == savedUsername) {
-            cout << "Username already exists!\n";
-            return;
-        }
-    }
-
-    file.close();
-
-    cout << "Create Password: ";
-    getline(cin, password);
-
-    cout << "Confirm Password: ";
-    getline(cin, confirmPassword);
-
-    if (password != confirmPassword) {
-        cout << "Passwords do not match!\n";
-        return;
-    }
-
-    // Save account
-    ofstream output("users.txt", ios::app);
-
-    output << fullname << "|"
-           << username << "|"
-           << password << "\n";
-
-    output.close();
-
-    cout << "\nAccount created successfully!\n";
-    cout << "You can now log in.\n";
-}
-
-bool loginUser() {
-    string username, password;
-    string savedName, savedUsername, savedPassword;
-
-    cout << "\n===== USER LOGIN =====\n";
-
-    cout << "Username: ";
-    getline(cin, username);
-
-    cout << "Password: ";
-    getline(cin, password);
-
-    ifstream file("users.txt");
-
-    string line;
-
-    while (getline(file, line)) {
-        stringstream ss(line);
-
-        getline(ss, savedName, '|');
-        getline(ss, savedUsername, '|');
-        getline(ss, savedPassword, '|');
-
-        if (username == savedUsername &&
-            password == savedPassword) {
-
-            file.close();
-
-            cout << "\nLogin successful!\n";
-            cout << "Welcome, " << savedName << "!\n";
-
-            return true;
-        }
-    }
-
-    file.close();
-
-    cout << "\nInvalid username or password.\n";
-
-    return false;
-}
-
-void userAccountMenu() {
-    int choice;
-
-    do {
-        cout << "\n===== USER ACCOUNT =====\n";
-        cout << "[1] Log In\n";
-        cout << "[2] Create Account\n";
-        cout << "[3] Back\n";
-
-        cout << "Enter choice: ";
-        cin >> choice;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-        if (choice == 1) {
-            if (loginUser()) {
-                userMenu();
-            }
-        }
-        else if (choice == 2) {
-            registerUser();
-        }
-        else if (choice == 3) {
-            cout << "Returning to main menu...\n";
-        }
-        else {
-            cout << "Invalid choice.\n";
-        }
-
-    }
-     while (choice != 3);
-}
 
 void userMenu() {
     int choice;
@@ -652,8 +437,9 @@ void userMenu() {
         cout << "[2] Artifact Discovery and Cataloguing\n";
         cout << "[3] Artifact Classification\n";
         cout << "[4] Artifact Age Estimation\n";
-        cout << "[5] Preservation Management\n";
-        cout << "[6] Log Out\n";
+        cout << "[5] Excavation Team Management\n;
+        cout << "[6] Preservation Management\n";
+        cout << "[7] Log Out\n";
         cout << "================================================================\n";
         cout << "Enter your choice: ";
         cin >> choice;
@@ -674,12 +460,14 @@ void userMenu() {
             case 4:
                 ageEstimationMenu();
                 break;
-
             case 5:
+                ExcavationTeamManagement();
+
+            case 6:
                 preservationMenu();
                 break;
 
-            case 6:
+            case 7:
                 cout << "\nLogging out...\n";
                 break;
 
@@ -687,11 +475,11 @@ void userMenu() {
                 cout << "\nInvalid choice. Please try again.\n";
         }
 
-    } while (choice != 6);
+    } while (choice != 7);
 }
 
 void trackingReportsMenu();
-void adminLogin() {
+void adminMenu() {
     int choice;
 
     do {
@@ -745,19 +533,48 @@ void login() {
         cout << "========================================\n";
         cout << "Enter your choice: ";
         cin >> choice;
-if (choice == 1) {
-    userAccountMenu();
-}
-else if (choice == 2) {
-    adminLogin();
-}
-else if (choice == 3) {
-    cout << "Exiting system...";
-}
-} while (choice != 3);
-}
 
+        if (choice == 1 || choice == 2) {
 
+            cout << "\nEnter Username: ";
+            cin >> username;
+
+            cout << "Enter Password: ";
+            cin >> password;
+
+            if (choice == 1) {
+
+                if (username == "user" && password == "user123") {
+                    cout << "\nUser Login Successful!\n";
+                    userMenu();
+                }
+                else {
+                    cout << "\nInvalid username or password.\n";
+                }
+
+            }
+            else if (choice == 2) {
+
+                if (username == "admin" && password == "admin123") {
+                    cout << "\nAdmin Login Successful!\n";
+                    adminMenu();
+                }
+                else {
+                    cout << "\nInvalid username or password.\n";
+                }
+
+            }
+
+        }
+        else if (choice == 3) {
+            cout << "\nExiting Archaeological Management System...\n";
+        }
+        else {
+            cout << "\nInvalid choice. Please try again.\n";
+        }
+
+    } while (choice != 3);
+}
 
 void trackingReportsMenu() {
     int choice;
@@ -880,39 +697,6 @@ void excavationSiteMenu() {
 }
 
 
-bool isValidDate(string date) {
-    if (date.length() != 10)
-        return false;
-
-    if (date[4] != '-' || date[7] != '-')
-        return false;
-
-    for (int i = 0; i < 10; i++) {
-        if (i != 4 && i != 7 &&
-            !isdigit(static_cast<unsigned char>(date[i]))) {
-            return false;
-        }
-    }
-
-    int year = stoi(date.substr(0, 4));
-    int month = stoi(date.substr(5, 2));
-    int day = stoi(date.substr(8, 2));
-
-    if (year < 1 || month < 1 || month > 12)
-        return false;
-
-    int days[] = {31, 28, 31, 30, 31, 30,
-                  31, 31, 30, 31, 30, 31};
-
-    bool leapYear = (year % 400 == 0) ||
-                    (year % 4 == 0 && year % 100 != 0);
-
-    if (leapYear)
-        days[1] = 29;
-
-    return day >= 1 && day <= days[month - 1];
-}
-
 
 bool isValidText(string input) {
     bool hasLetter = false;
@@ -941,6 +725,20 @@ bool isValidText(string input) {
 }
 
 
+string readValidatedText(string prompt) {
+    string input;
+
+    while (true) {
+        cout << prompt;
+        getline(cin, input);
+
+        if (isValidText(input)) {
+            return input;
+        }
+
+        cout << "Invalid input! Please enter letters and words only.\n";
+    }
+}
 
 
 double readValidatedDouble(string prompt, double minimum, double maximum) {
@@ -1365,7 +1163,7 @@ void registerArtifact() {
 
     cout << "Enter Photo Filename (if available): ";
     getline(cin, newArtifact.photoFilename);
-    
+
     artifacts[artifactCount] = newArtifact;
     artifactCount++;
 
@@ -2490,6 +2288,7 @@ void teamAssignmentMenu() {
         cout << "3. Search Team Member" << endl;
         cout << "4. Update Team Member" << endl;
         cout << "5. Delete Team Member" << endl;
+
         cout << "\n6. Return to Main Menu" << endl;
 
         cout << "\nEnter your choice: ";
@@ -2760,7 +2559,62 @@ void deleteTeamMember() {
     }
 }
 
+// ============================================
+// ASSIGN RESEARCH TASK
+// ============================================
 
+void assignResearchTask() {
+
+    if (teamCount == 0) {
+
+        cout << "\nNo registered team members available." << endl;
+        cout << "Please register a team member first." << endl;
+        return;
+    }
+
+    if (siteCount == 0) {
+
+        cout << "\nNo registered excavation sites available." << endl;
+        cout << "Please register an excavation site first." << endl;
+        return;
+    }
+
+    
+
+    cout << "\n===== AVAILABLE TEAM MEMBERS =====" << endl;
+
+    viewTeamMembers();
+
+    int memberID;
+
+    cout << "\nEnter Member ID: ";
+    cin >> memberID;
+
+    int memberIndex = findTeamMember(memberID);
+
+    if (memberIndex == -1) {
+
+        cout << "\nTeam member not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== AVAILABLE EXCAVATION SITES =====" << endl;
+
+    viewSites();
+
+    int siteID;
+
+    cout << "\nEnter Excavation Site ID: ";
+    cin >> siteID;
+
+    int siteIndex = findSite(siteID);
+
+    if (siteIndex == -1) {
+
+        cout << "\nExcavation site not found!" << endl;
+        return;
+    }
+}
 
 // ============================================
 // PRESERVATION MANAGEMENT MENU
@@ -3808,6 +3662,9 @@ void generateSystemSummary() {
     cout << "Excavation Team Members: "
          << teamCount << endl;
 
+    cout << "Research Assignments: "
+         << assignmentCount << endl;
+
     cout << "Preservation Records: "
          << preservationCount << endl;
 
@@ -3888,7 +3745,25 @@ void generateActivityReport() {
     cout << "             ACTIVITY REPORT" << endl;
     cout << "========================================" << endl;
 
-    
+    // RESEARCH ASSIGNMENTS
+
+    cout << "\n===== RESEARCH ASSIGNMENTS =====" << endl;
+
+    cout << "Total Assignments: "
+         << assignmentCount << endl;
+
+    if (assignmentCount > 0) {
+
+        for (int i = 0; i < assignmentCount; i++) {
+
+            displayAssignment(i);
+        }
+    }
+    else {
+
+        cout << "No research assignments recorded." << endl;
+    }
+
     // PRESERVATION ACTIVITIES
 
     cout << "\n===== PRESERVATION ACTIVITIES =====" << endl;
@@ -3928,6 +3803,403 @@ void generateActivityReport() {
     }
 
     cout << "\n===== END OF ACTIVITY REPORT =====" << endl;
+}
+
+// ============================================
+// USER MANAGEMENT MENU
+// ============================================
+
+void userManagementMenu() {
+
+    int choice;
+
+    do {
+
+        cout << "\n========================================" << endl;
+        cout << "             USER MANAGEMENT" << endl;
+        cout << "========================================" << endl;
+
+        cout << "\n1. Register New User" << endl;
+        cout << "2. View All Users" << endl;
+        cout << "3. Search User" << endl;
+        cout << "4. Update User Information" << endl;
+        cout << "5. Delete User Account" << endl;
+        cout << "6. User Login" << endl;
+        cout << "7. Return to Main Menu" << endl;
+
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        if (cin.fail()) {
+
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            cout << "\nInvalid input!" << endl;
+            continue;
+        }
+
+        switch (choice) {
+
+            case 1:
+                registerUser();
+                break;
+
+            case 2:
+                viewUsers();
+                break;
+
+            case 3:
+                searchUser();
+                break;
+
+            case 4:
+                updateUser();
+                break;
+
+            case 5:
+                deleteUser();
+                break;
+
+            case 6:
+                userLogin();
+                break;
+
+            case 7:
+                cout << "\nReturning to Main Menu..." << endl;
+                break;
+
+            default:
+                cout << "\nInvalid choice!" << endl;
+        }
+
+    } while (choice != 7);
+}
+
+// ============================================
+// REGISTER NEW USER
+// ============================================
+
+void registerUser() {
+
+    if (userCount >= MAX_USERS) {
+
+        cout << "\nMaximum number of users reached!" << endl;
+        return;
+    }
+
+    User newUser;
+
+    cout << "\n===== REGISTER NEW USER =====" << endl;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\nEnter Full Name: ";
+    getline(cin, newUser.fullName);
+
+    cout << "Enter Username: ";
+    getline(cin, newUser.username);
+
+    // CHECK FOR DUPLICATE USERNAME
+
+    for (int i = 0; i < userCount; i++) {
+
+        if (users[i].username == newUser.username) {
+
+            cout << "\nUsername already exists!" << endl;
+            cout << "Please use another username." << endl;
+
+            return;
+        }
+    }
+
+    cout << "Enter Password: ";
+    getline(cin, newUser.password);
+
+    cout << "\n===== SELECT USER ROLE =====" << endl;
+    cout << "1. Administrator" << endl;
+    cout << "2. Researcher" << endl;
+    cout << "3. Staff" << endl;
+
+    int roleChoice;
+
+    cout << "\nSelect Role: ";
+    cin >> roleChoice;
+
+    if (roleChoice < 1 || roleChoice > 3) {
+
+        cout << "\nInvalid role selection! Registration cancelled." << endl;
+        return;
+    }
+
+    if (roleChoice == 1) {
+        newUser.role = "Administrator";
+    }
+    else if (roleChoice == 2) {
+        newUser.role = "Researcher";
+    }
+    else {
+        newUser.role = "Staff";
+    }
+
+    newUser.userID = nextUserID;
+
+    users[userCount] = newUser;
+
+    userCount++;
+    nextUserID++;
+
+    cout << "\nUser successfully registered!" << endl;
+
+    cout << "User ID: " << newUser.userID << endl;
+    cout << "Full Name: " << newUser.fullName << endl;
+    cout << "Username: " << newUser.username << endl;
+    cout << "Role: " << newUser.role << endl;
+}
+
+// ============================================
+// DISPLAY USER INFORMATION
+// ============================================
+
+void displayUser(int index) {
+
+    cout << "\n----------------------------------------" << endl;
+
+    cout << "User ID: "
+         << users[index].userID << endl;
+
+    cout << "Full Name: "
+         << users[index].fullName << endl;
+
+    cout << "Username: "
+         << users[index].username << endl;
+
+    cout << "Role: "
+         << users[index].role << endl;
+
+    cout << "----------------------------------------" << endl;
+}
+
+// ============================================
+// VIEW ALL USERS
+// ============================================
+
+void viewUsers() {
+
+    if (userCount == 0) {
+
+        cout << "\nNo registered users available." << endl;
+        return;
+    }
+
+    cout << "\n===== REGISTERED USERS =====" << endl;
+
+    for (int i = 0; i < userCount; i++) {
+
+        displayUser(i);
+    }
+}
+
+// ============================================
+// FIND USER USING USER ID
+// ============================================
+
+int findUser(int id) {
+
+    for (int i = 0; i < userCount; i++) {
+
+        if (users[i].userID == id) {
+
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// ============================================
+// SEARCH USER
+// ============================================
+
+void searchUser() {
+
+    int id;
+
+    cout << "\nEnter User ID to Search: ";
+    cin >> id;
+
+    int index = findUser(id);
+
+    if (index == -1) {
+
+        cout << "\nUser record not found!" << endl;
+        return;
+    }
+
+    cout << "\n===== USER RECORD FOUND =====" << endl;
+
+    displayUser(index);
+}
+
+// ============================================
+// UPDATE USER INFORMATION
+// ============================================
+
+void updateUser() {
+
+    int id;
+
+    cout << "\nEnter User ID to Update: ";
+    cin >> id;
+
+    int index = findUser(id);
+
+    if (index == -1) {
+
+        cout << "\nUser record not found!" << endl;
+        return;
+    }
+
+    User updatedUser = users[index];
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\n===== UPDATE USER INFORMATION =====" << endl;
+
+    cout << "Enter New Full Name: ";
+    getline(cin, updatedUser.fullName);
+
+    cout << "Enter New Username: ";
+    getline(cin, updatedUser.username);
+
+    // CHECK IF THE USERNAME BELONGS TO ANOTHER USER
+
+    for (int i = 0; i < userCount; i++) {
+
+        if (i != index &&
+            users[i].username == updatedUser.username) {
+
+            cout << "\nUsername already exists!" << endl;
+            cout << "Update cancelled." << endl;
+
+            return;
+        }
+    }
+
+    cout << "Enter New Password: ";
+    getline(cin, updatedUser.password);
+
+    cout << "\n===== SELECT NEW USER ROLE =====" << endl;
+    cout << "1. Administrator" << endl;
+    cout << "2. Researcher" << endl;
+    cout << "3. Staff" << endl;
+
+    int roleChoice;
+
+    cout << "\nSelect New Role: ";
+    cin >> roleChoice;
+
+    if (roleChoice < 1 || roleChoice > 3) {
+
+        cout << "\nInvalid role selection! Update cancelled." << endl;
+        return;
+    }
+
+    if (roleChoice == 1) {
+        updatedUser.role = "Administrator";
+    }
+    else if (roleChoice == 2) {
+        updatedUser.role = "Researcher";
+    }
+    else {
+        updatedUser.role = "Staff";
+    }
+
+    users[index] = updatedUser;
+
+    cout << "\nUser information successfully updated!" << endl;
+
+    displayUser(index);
+}
+
+// ============================================
+// DELETE USER ACCOUNT
+// ============================================
+
+void deleteUser() {
+
+    int id;
+
+    cout << "\nEnter User ID to Delete: ";
+    cin >> id;
+
+    int index = findUser(id);
+
+    if (index == -1) {
+
+        cout << "\nUser record not found!" << endl;
+        return;
+    }
+
+    char confirmation;
+
+    cout << "\nAre you sure you want to delete this account? (Y/N): ";
+    cin >> confirmation;
+
+    if (confirmation == 'Y' || confirmation == 'y') {
+
+        for (int i = index; i < userCount - 1; i++) {
+
+            users[i] = users[i + 1];
+        }
+
+        userCount--;
+
+        cout << "\nUser account successfully deleted!" << endl;
+    }
+    else {
+
+        cout << "\nDeletion cancelled." << endl;
+    }
+}
+
+// ============================================
+// USER LOGIN
+// ============================================
+
+void userLogin() {
+
+    string username;
+    string password;
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "\n===== USER LOGIN =====" << endl;
+
+    cout << "\nEnter Username: ";
+    getline(cin, username);
+
+    cout << "Enter Password: ";
+    getline(cin, password);
+
+    for (int i = 0; i < userCount; i++) {
+
+        if (users[i].username == username &&
+            users[i].password == password) {
+
+            cout << "\nLogin successful!" << endl;
+
+            cout << "Welcome, "
+                 << users[i].fullName << "!" << endl;
+
+            cout << "Account Role: "
+                 << users[i].role << endl;
+
+            return;
+        }
+    }
+
+    cout << "\nInvalid username or password!" << endl;
 }
 
 
