@@ -2901,9 +2901,7 @@ void restorationMuseumMenu() {
 
         cout << "\n9. Return to Main Menu" << endl;
 
-        cout << "\nEnter your choice: ";
-        cin >> choice;
-
+                choice = readValidatedInteger("\nEnter your choice: ");
         if (cin.fail()) {
 
             cin.clear();
@@ -2977,8 +2975,7 @@ void registerFacility() {
     cout << "\n1. Restoration Facility" << endl;
     cout << "2. Museum" << endl;
 
-    cout << "\nSelect Institution Type: ";
-    cin >> typeChoice;
+        typeChoice = readValidatedInteger("\nSelect Institution Type: ");
 
     if (typeChoice < 1 || typeChoice > 2) {
 
@@ -2993,19 +2990,22 @@ void registerFacility() {
         newFacility.facilityType = "Museum";
     }
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-    cout << "\nEnter Institution Name: ";
-    getline(cin, newFacility.facilityName);
+
+
+    
+
+        newFacility.facilityName =
+        readValidatedText("\nEnter Institution Name: ");
 
     cout << "Enter Location: ";
     getline(cin, newFacility.location);
 
-    cout << "Enter Contact Person: ";
-    getline(cin, newFacility.contactPerson);
+    newFacility.contactPerson =
+        readValidatedName("Enter Contact Person: ");
 
-    cout << "Enter Contact Number: ";
-    getline(cin, newFacility.contactNumber);
+    newFacility.contactNumber =
+        readValidatedDigits("Enter Contact Number: ");
 
     cout << "Enter Services or Facilities Offered: ";
     getline(cin, newFacility.services);
@@ -3091,10 +3091,7 @@ int findFacility(int id) {
 
 void searchFacility() {
 
-    int id;
-
-    cout << "\nEnter Facility ID to Search: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Facility ID to Search: ");
 
     int index = findFacility(id);
 
@@ -3113,10 +3110,7 @@ void searchFacility() {
 
 void updateFacility() {
 
-    int id;
-
-    cout << "\nEnter Facility ID to Update: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Facility ID to Update: ");
 
     int index = findFacility(id);
 
@@ -3126,21 +3120,23 @@ void updateFacility() {
         return;
     }
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
+    
 
     cout << "\n===== UPDATE FACILITY INFORMATION =====" << endl;
 
-    cout << "Enter New Institution Name: ";
-    getline(cin, facilities[index].facilityName);
+        facilities[index].facilityName =
+        readValidatedText("Enter New Institution Name: ");
 
     cout << "Enter New Location: ";
     getline(cin, facilities[index].location);
 
-    cout << "Enter New Contact Person: ";
-    getline(cin, facilities[index].contactPerson);
+    facilities[index].contactPerson =
+        readValidatedName("Enter New Contact Person: ");
 
-    cout << "Enter New Contact Number: ";
-    getline(cin, facilities[index].contactNumber);
+    facilities[index].contactNumber =
+        readValidatedDigits("Enter New Contact Number: ");
 
     cout << "Enter New Services Offered: ";
     getline(cin, facilities[index].services);
@@ -3152,10 +3148,7 @@ void updateFacility() {
 
 void deleteFacility() {
 
-    int id;
-
-    cout << "\nEnter Facility ID to Delete: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Facility ID to Delete: ");
 
     int index = findFacility(id);
 
@@ -3232,8 +3225,7 @@ void recordArtifactTransfer() {
 
     viewArtifacts();
 
-    cout << "\nEnter Artifact ID: ";
-    cin >> artifactID;
+        artifactID = readValidatedInteger("\nEnter Artifact ID: ");
 
     int artifactIndex = findArtifact(artifactID);
 
@@ -3247,8 +3239,7 @@ void recordArtifactTransfer() {
 
     viewFacilities();
 
-    cout << "\nEnter Destination Facility ID: ";
-    cin >> facilityID;
+        facilityID = readValidatedInteger("\nEnter Destination Facility ID: ");
 
     int facilityIndex = findFacility(facilityID);
 
@@ -3268,7 +3259,9 @@ void recordArtifactTransfer() {
     cout << "Destination: "
          << facilities[facilityIndex].facilityName << endl;
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
+    
 
     cout << "\nEnter Transfer Date: ";
     getline(cin, newTransfer.transferDate);
@@ -3283,8 +3276,8 @@ void recordArtifactTransfer() {
 
     int statusChoice;
 
-    cout << "\nSelect Transfer Status: ";
-    cin >> statusChoice;
+        int statusChoice =
+        readValidatedInteger("\nSelect Transfer Status: ");
 
     if (statusChoice < 1 || statusChoice > 3) {
 
@@ -3400,10 +3393,7 @@ int findArtifactTransfer(int id) {
 
 void searchArtifactTransfer() {
 
-    int id;
-
-    cout << "\nEnter Transfer ID to Search: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Transfer ID to Search: ");
 
     int index = findArtifactTransfer(id);
 
