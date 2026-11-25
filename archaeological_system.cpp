@@ -1512,8 +1512,7 @@ void classificationMenu() {
         cout << "5. Delete Classification" << endl;
         cout << "6. Return to Main Menu" << endl;
 
-        cout << "\nEnter your choice: ";
-        cin >> choice;
+                choice = readValidatedInteger("\nEnter your choice: ");
 
         if (cin.fail()) {
             cin.clear();
@@ -1661,10 +1660,7 @@ string confirmClassification(string suggested) {
         cout << i + 1 << ". " << classificationOptions[i][0] << endl;
     }
 
-    int choice;
-
-    cout << "\nEnter your preferred category: ";
-    cin >> choice;
+        int choice = readValidatedInteger("\nEnter your preferred category: ");
 
     if (choice >= 1 && choice <= 5) {
         return classificationOptions[choice - 1][0];
@@ -1689,14 +1685,11 @@ void classifyArtifact() {
         return;
     }
 
-    int id;
-
-    cout << "\n===== AUTOMATIC ARTIFACT CLASSIFICATION =====" << endl;
+        cout << "\n===== AUTOMATIC ARTIFACT CLASSIFICATION =====" << endl;
 
     viewArtifacts();
 
-    cout << "\nEnter Artifact ID to Classify: ";
-    cin >> id;
+    int id = readValidatedInteger("\nEnter Artifact ID to Classify: ");
 
     int artifactIndex = findArtifact(id);
 
@@ -1719,8 +1712,6 @@ void classifyArtifact() {
 
     cout << "\nArtifact Name: "
          << artifacts[artifactIndex].artifactName << endl;
-
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     cout << "\nEnter Artifact Material: ";
     getline(cin, newClassification.material);
@@ -1830,10 +1821,7 @@ int findClassification(int id) {
 
 void searchClassification() {
 
-    int id;
-
-    cout << "\nEnter Artifact ID to Search: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Artifact ID to Search: ");
 
     int index = findClassification(id);
 
@@ -1853,10 +1841,7 @@ void searchClassification() {
 
 void updateClassification() {
 
-    int id;
-
-    cout << "\nEnter Artifact ID to Update: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Artifact ID to Update: ");
 
     int index = findClassification(id);
 
@@ -1876,8 +1861,6 @@ void updateClassification() {
 
     cout << "Artifact Name: "
          << artifacts[artifactIndex].artifactName << endl;
-
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     cout << "\nEnter New Material: ";
     getline(cin, classifications[index].material);
@@ -1910,11 +1893,7 @@ void updateClassification() {
 
 void deleteClassification() {
 
-    int id;
-
-    cout << "\nEnter Artifact ID to Delete Classification: ";
-    cin >> id;
-
+        int id = readValidatedInteger("\nEnter Artifact ID to Delete Classification: ");
     int index = findClassification(id);
 
     if (index == -1) {
@@ -1966,8 +1945,7 @@ void ageEstimationMenu() {
         cout << "5. Delete Age Estimate" << endl;
         cout << "6. Return to Main Menu" << endl;
 
-        cout << "\nEnter your choice: ";
-        cin >> choice;
+                choice = readValidatedInteger("\nEnter your choice: ");
 
         if (cin.fail()) {
             cin.clear();
@@ -2049,14 +2027,11 @@ void estimateArtifactAge() {
         return;
     }
 
-    int id;
-
-    cout << "\n===== ARTIFACT AGE ESTIMATION =====" << endl;
+        cout << "\n===== ARTIFACT AGE ESTIMATION =====" << endl;
 
     viewArtifacts();
 
-    cout << "\nEnter Artifact ID: ";
-    cin >> id;
+    int id = readValidatedInteger("\nEnter Artifact ID: ");
 
     int artifactIndex = findArtifact(id);
 
@@ -2095,10 +2070,8 @@ void estimateArtifactAge() {
         }
     }
 
-    int periodChoice;
-
-    cout << "\nSelect Historical Period Reference: ";
-    cin >> periodChoice;
+        int periodChoice =
+        readValidatedInteger("\nSelect Historical Period Reference: ");
 
     if (periodChoice < 1 || periodChoice > 5) {
         cout << "\nInvalid historical period selection!" << endl;
@@ -2123,8 +2096,6 @@ void estimateArtifactAge() {
         newRecord.minimumAge,
         newRecord.maximumAge
     );
-
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     cout << "\nEnter Historical Reference or Evidence Basis: ";
     getline(cin, newRecord.referenceBasis);
@@ -2238,10 +2209,7 @@ void viewAgeEstimates() {
 
 void searchAgeEstimate() {
 
-    int id;
-
-    cout << "\nEnter Artifact ID to Search: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Artifact ID to Search: ");
 
     int index = findAgeEstimate(id);
 
@@ -2259,10 +2227,7 @@ void searchAgeEstimate() {
 
 void updateAgeEstimate() {
 
-    int id;
-
-    cout << "\nEnter Artifact ID to Update: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Artifact ID to Update: ");
 
     int index = findAgeEstimate(id);
 
@@ -2281,10 +2246,8 @@ void updateAgeEstimate() {
              << historicalPeriods[i].periodName << endl;
     }
 
-    int periodChoice;
-
-    cout << "\nSelect New Historical Period: ";
-    cin >> periodChoice;
+        int periodChoice =
+        readValidatedInteger("\nSelect New Historical Period: ");
 
     if (periodChoice < 1 || periodChoice > 5) {
         cout << "\nInvalid selection! Update cancelled." << endl;
@@ -2306,7 +2269,7 @@ void updateAgeEstimate() {
         ageRecords[index].maximumAge
     );
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
 
     cout << "Enter New Historical Reference or Evidence Basis: ";
     getline(cin, ageRecords[index].referenceBasis);
@@ -2323,10 +2286,7 @@ void updateAgeEstimate() {
 
 void deleteAgeEstimate() {
 
-    int id;
-
-    cout << "\nEnter Artifact ID to Delete: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Artifact ID to Delete: ");
 
     int index = findAgeEstimate(id);
 
