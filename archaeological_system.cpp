@@ -422,6 +422,10 @@ void adminLogin();
 void saveSites();
 void loadSites();
 
+string readValidatedName(string prompt);
+string readValidatedWords(string prompt);
+int readValidatedInteger(string prompt);
+
 
 
     string readValidatedText(string prompt) {
