@@ -2507,9 +2507,7 @@ void preservationMenu() {
         cout << "5. Delete Preservation Record" << endl;
         cout << "6. Return to Main Menu" << endl;
 
-        cout << "\nEnter your choice: ";
-        cin >> choice;
-
+                choice = readValidatedInteger("\nEnter your choice: ");
         if (cin.fail()) {
 
             cin.clear();
@@ -2579,8 +2577,8 @@ void addPreservationRecord() {
 
     viewArtifacts();
 
-    cout << "\nEnter Artifact ID: ";
-    cin >> artifactID;
+        artifactID = readValidatedInteger("\nEnter Artifact ID: ");
+    
 
     int artifactIndex = findArtifact(artifactID);
 
@@ -2597,7 +2595,9 @@ void addPreservationRecord() {
     cout << "\nArtifact Name: "
          << artifacts[artifactIndex].artifactName << endl;
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
+    
 
     cout << "\nEnter Preservation Activity: ";
     getline(cin, newRecord.preservationActivity);
@@ -2605,8 +2605,8 @@ void addPreservationRecord() {
     cout << "Enter Preservation Method: ";
     getline(cin, newRecord.preservationMethod);
 
-    cout << "Enter Responsible Person: ";
-    getline(cin, newRecord.responsiblePerson);
+        newRecord.responsiblePerson =
+        readValidatedName("Enter Responsible Person: ");
 
     cout << "Enter Preservation Date: ";
     getline(cin, newRecord.preservationDate);
@@ -2619,10 +2619,8 @@ void addPreservationRecord() {
     cout << "2. Ongoing" << endl;
     cout << "3. Completed" << endl;
 
-    int statusChoice;
-
-    cout << "\nSelect Preservation Status: ";
-    cin >> statusChoice;
+        int statusChoice =
+        readValidatedInteger("\nSelect Preservation Status: ");
 
     if (statusChoice < 1 || statusChoice > 3) {
 
@@ -2736,10 +2734,7 @@ int findPreservationRecord(int id) {
 
 void searchPreservationRecord() {
 
-    int id;
-
-    cout << "\nEnter Preservation ID to Search: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Preservation ID to Search: ");
 
     int index = findPreservationRecord(id);
 
@@ -2758,10 +2753,7 @@ void searchPreservationRecord() {
 
 void updatePreservationRecord() {
 
-    int id;
-
-    cout << "\nEnter Preservation ID to Update: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Preservation ID to Update: ");
 
     int index = findPreservationRecord(id);
 
@@ -2775,7 +2767,9 @@ void updatePreservationRecord() {
 
     cout << "\n===== UPDATE PRESERVATION RECORD =====" << endl;
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
+    
 
     cout << "\nEnter New Preservation Activity: ";
     getline(cin, updatedRecord.preservationActivity);
@@ -2783,8 +2777,8 @@ void updatePreservationRecord() {
     cout << "Enter New Preservation Method: ";
     getline(cin, updatedRecord.preservationMethod);
 
-    cout << "Enter New Responsible Person: ";
-    getline(cin, updatedRecord.responsiblePerson);
+        updatedRecord.responsiblePerson =
+        readValidatedName("Enter New Responsible Person: ");
 
     cout << "Enter New Preservation Date: ";
     getline(cin, updatedRecord.preservationDate);
@@ -2797,10 +2791,8 @@ void updatePreservationRecord() {
     cout << "2. Ongoing" << endl;
     cout << "3. Completed" << endl;
 
-    int statusChoice;
-
-    cout << "\nSelect New Status: ";
-    cin >> statusChoice;
+        int statusChoice =
+        readValidatedInteger("\nSelect New Status: ");
 
     if (statusChoice < 1 || statusChoice > 3) {
 
@@ -2829,10 +2821,7 @@ void updatePreservationRecord() {
 
 void deletePreservationRecord() {
 
-    int id;
-
-    cout << "\nEnter Preservation ID to Delete: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Preservation ID to Delete: ");
 
     int index = findPreservationRecord(id);
 
