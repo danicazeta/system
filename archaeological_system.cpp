@@ -573,7 +573,10 @@ bool loginUser() {
 
     
 
-        username = readValidatedWords("Username: ");
+            username = readValidatedWords("Username: ");
+
+    cout << "Password: ";
+    getline(cin, password);
 
     ifstream file("users.txt");
 
