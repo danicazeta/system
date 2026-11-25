@@ -1287,8 +1287,8 @@ void registerArtifact() {
 
     viewSites();
 
-    cout << "\nEnter Excavation Site ID: ";
-    cin >> newArtifact.siteID;
+        newArtifact.siteID =
+        readValidatedInteger("\nEnter Excavation Site ID: ");
 
     int siteIndex = findSite(newArtifact.siteID);
 
@@ -1302,16 +1302,14 @@ void registerArtifact() {
     cout << "\nArtifact ID: " << newArtifact.artifactID << endl;
     cout << "Excavation Site: " << sites[siteIndex].siteName << endl;
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    cout << "\nEnter Artifact Name: ";
-    getline(cin, newArtifact.artifactName);
+            newArtifact.artifactName =
+        readValidatedName("\nEnter Artifact Name: ");
 
     cout << "Enter Discovery Date: ";
     getline(cin, newArtifact.discoveryDate);
 
-    cout << "Enter Discoverer's Name: ";
-    getline(cin, newArtifact.discoverer);
+    newArtifact.discoverer =
+        readValidatedName("Enter Discoverer's Name: ");
 
     cout << "Enter Excavation Grid or Area: ";
     getline(cin, newArtifact.excavationGrid);
@@ -1389,10 +1387,7 @@ int findArtifact(int id) {
 
 void searchArtifact() {
 
-    int id;
-
-    cout << "\nEnter Artifact ID to Search: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Artifact ID to Search: ");
 
     int index = findArtifact(id);
 
@@ -1410,10 +1405,9 @@ void searchArtifact() {
 
 void updateArtifact() {
 
-    int id;
+    
 
-    cout << "\nEnter Artifact ID to Update: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Artifact ID to Update: ");
 
     int index = findArtifact(id);
 
@@ -1429,10 +1423,8 @@ void updateArtifact() {
     cout << "\n===== AVAILABLE EXCAVATION SITES =====" << endl;
     viewSites();
 
-    cout << "\nEnter New Excavation Site ID: ";
-
-    int newSiteID;
-    cin >> newSiteID;
+        int newSiteID =
+        readValidatedInteger("\nEnter New Excavation Site ID: ");
 
     int siteIndex = findSite(newSiteID);
 
@@ -1443,16 +1435,14 @@ void updateArtifact() {
 
     artifacts[index].siteID = newSiteID;
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    cout << "Enter New Artifact Name: ";
-    getline(cin, artifacts[index].artifactName);
+        artifacts[index].artifactName =
+        readValidatedName("Enter New Artifact Name: ");
 
     cout << "Enter New Discovery Date: ";
     getline(cin, artifacts[index].discoveryDate);
 
-    cout << "Enter New Discoverer's Name: ";
-    getline(cin, artifacts[index].discoverer);
+    artifacts[index].discoverer =
+        readValidatedName("Enter New Discoverer's Name: ");
 
     cout << "Enter New Excavation Grid or Area: ";
     getline(cin, artifacts[index].excavationGrid);
@@ -1472,8 +1462,7 @@ void deleteArtifact() {
 
     int id;
 
-    cout << "\nEnter Artifact ID to Delete: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Artifact ID to Delete: ");
 
     int index = findArtifact(id);
 
