@@ -3274,11 +3274,8 @@ void recordArtifactTransfer() {
     cout << "2. In Transit" << endl;
     cout << "3. Received" << endl;
 
-    int statusChoice;
-
         int statusChoice =
         readValidatedInteger("\nSelect Transfer Status: ");
-
     if (statusChoice < 1 || statusChoice > 3) {
 
         cout << "\nInvalid status! Transfer record cancelled." << endl;
