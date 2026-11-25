@@ -1183,7 +1183,7 @@ void searchSite() {
 
     int id;
 
-    id = readValidatedInteger("");
+    
     id = readValidatedInteger("Enter Site ID to Search: ");
 
     int index = findSite(id);
@@ -1222,11 +1222,11 @@ void updateSite() {
         return;
     }
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
 
     cout << "\n===== UPDATE SITE INFORMATION =====" << endl;
 
-    cout << "Enter New Site Name: ";
+    
     sites[index].siteName = readValidatedWords("Enter New Site Name: ");
 
     cout << "Enter New Location: ";
@@ -1250,10 +1250,7 @@ sites[index].longitude = readValidatedDouble(
     cout << "2. Inactive" << endl;
     cout << "3. Completed" << endl;
 
-    int statusChoice;
-    cout << "Enter choice: ";
-    cin >> statusChoice;
-
+int statusChoice = readValidatedInteger("Enter choice: ");
     switch (statusChoice) {
 
         case 1:
