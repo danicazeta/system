@@ -1091,11 +1091,7 @@ int findSite(int id) {
 
 void searchSite() {
 
-    int id;
-
-    cout << "\nEnter Site ID to Search: ";
-    cin >> id;
-
+        int id = readValidatedInteger("\nEnter Site ID to Search: ");
     int index = findSite(id);
 
     if (index == -1) {
@@ -1118,10 +1114,7 @@ void searchSite() {
 
 void updateSite() {
 
-    int id;
-
-    cout << "\nEnter Site ID to Update: ";
-    cin >> id;
+    int id = readValidatedInteger("\nEnter Site ID to Update: ");
 
     int index = findSite(id);
 
@@ -1130,26 +1123,24 @@ void updateSite() {
         return;
     }
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
     cout << "\n===== UPDATE SITE INFORMATION =====" << endl;
 
-    cout << "Enter New Site Name: ";
-    getline(cin, sites[index].siteName);
+    sites[index].siteName =
+        readValidatedName("Enter New Site Name: ");
 
-    cout << "Enter New Location: ";
-    getline(cin, sites[index].location);
+    sites[index].location =
+        readValidatedText("Enter New Location: ");
 
-    cout << "Enter New Latitude: ";
-    cin >> sites[index].latitude;
+    sites[index].latitude = readValidatedDouble(
+        "Enter New Latitude: ", -90.0, 90.0
+    );
 
-    cout << "Enter New Longitude: ";
-    cin >> sites[index].longitude;
+    sites[index].longitude = readValidatedDouble(
+        "Enter New Longitude: ", -180.0, 180.0
+    );
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    cout << "Enter New Description: ";
-    getline(cin, sites[index].description);
+    sites[index].description =
+        readValidatedText("Enter New Description: ");
 
     cout << "\nSelect New Status" << endl;
     cout << "1. Active" << endl;
@@ -1157,11 +1148,17 @@ void updateSite() {
     cout << "3. Completed" << endl;
 
     int statusChoice;
-    cout << "Enter choice: ";
-    cin >> statusChoice;
+
+    do {
+        statusChoice = readValidatedInteger("Enter choice: ");
+
+        if (statusChoice < 1 || statusChoice > 3) {
+            cout << "Invalid status! Please select 1, 2, or 3.\n";
+        }
+
+    } while (statusChoice < 1 || statusChoice > 3);
 
     switch (statusChoice) {
-
         case 1:
             sites[index].status = "Active";
             break;
@@ -1173,9 +1170,6 @@ void updateSite() {
         case 3:
             sites[index].status = "Completed";
             break;
-
-        default:
-            cout << "Invalid status. Previous status retained." << endl;
     }
 
     cout << "\nSite information successfully updated!" << endl;
@@ -1187,8 +1181,7 @@ void deleteSite() {
 
     int id;
 
-    cout << "\nEnter Site ID to Delete: ";
-    cin >> id;
+        int id = readValidatedInteger("\nEnter Site ID to Delete: ");
 
     int index = findSite(id);
 
