@@ -484,6 +484,30 @@ int readValidatedInteger(string prompt) {
     }
 }
 
+string readValidatedDigits(string prompt) {
+    string input;
+
+    while (true) {
+        cout << prompt;
+        getline(cin >> ws, input);
+
+        bool valid = !input.empty();
+
+        for (char c : input) {
+            if (!isdigit(static_cast<unsigned char>(c))) {
+                valid = false;
+                break;
+            }
+        }
+
+        if (valid) {
+            return input;
+        }
+
+        cout << "Invalid input! Please enter digits only.\n";
+    }
+}
+
 void registerUser() {
     string fullname, username, password, confirmPassword;
     string savedUsername, savedPassword, savedName;
@@ -2334,9 +2358,7 @@ void ExcavationTeamManagement() {
         cout << "[4] Delete Team Member\n";
         cout << "[5] Return to User Menu\n";
 
-        cout << "\nEnter your choice: ";
-        cin >> choice;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                choice = readValidatedInteger("\nEnter your choice: ");
 
         switch (choice) {
 
@@ -2373,17 +2395,16 @@ void registerTeamMember() {
 
     cout << "\n===== REGISTER TEAM MEMBER =====\n";
 
-    cout << "Enter Member Name: ";
-    getline(cin, member.memberName);
+        member.memberName = readValidatedName("Enter Member Name: ");
 
-    cout << "Enter Contact Information: ";
-    getline(cin, member.contactInformation);
+    member.contactInformation =
+        readValidatedDigits("Enter Contact Information: ");
 
-    cout << "Enter Assigned Role: ";
-    getline(cin, member.assignedRole);
+    member.assignedRole = readValidatedWords("Enter Assigned Role: ");
 
-    cout << "Enter Excavation Site ID: ";
-    getline(cin, member.siteID);
+    member.siteID = to_string(
+        readValidatedInteger("Enter Excavation Site ID: ")
+    );
 
     member.teamMemberID = string("TM") +
     (nextTeamID < 10 ? "00" :
@@ -2454,17 +2475,18 @@ void updateTeamMember() {
         return;
     }
 
-    cout << "Enter New Member Name: ";
-    getline(cin, excavationTeam[index].memberName);
+        excavationTeam[index].memberName =
+        readValidatedName("Enter New Member Name: ");
 
-    cout << "Enter New Contact Information: ";
-    getline(cin, excavationTeam[index].contactInformation);
+    excavationTeam[index].contactInformation =
+        readValidatedDigits("Enter New Contact Information: ");
 
-    cout << "Enter New Assigned Role: ";
-    getline(cin, excavationTeam[index].assignedRole);
+    excavationTeam[index].assignedRole =
+        readValidatedWords("Enter New Assigned Role: ");
 
-    cout << "Enter New Excavation Site ID: ";
-    getline(cin, excavationTeam[index].siteID);
+    excavationTeam[index].siteID = to_string(
+        readValidatedInteger("Enter New Excavation Site ID: ")
+    );
 
     cout << "\nTeam Member Record Successfully Updated!\n";
 }
