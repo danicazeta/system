@@ -916,21 +916,98 @@ bool isValidText(string input) {
 }
 
 
-string readValidatedText(string prompt) {
+string readValidatedName(string prompt) {
     string input;
 
     while (true) {
         cout << prompt;
         getline(cin, input);
 
-        if (isValidText(input)) {
+        bool valid = !input.empty();
+        bool hasLetter = false;
+
+        for (char c : input) {
+            if (isalpha(static_cast<unsigned char>(c))) {
+                hasLetter = true;
+            }
+            else if (c != ' ' && c != '-') {
+                valid = false;
+                break;
+            }
+        }
+
+        if (valid && hasLetter) {
             return input;
         }
 
-        cout << "Invalid input! Please enter letters and words only.\n";
+        cout << "Invalid name! Use letters, spaces, and hyphens only.\n";
     }
 }
 
+
+string readValidatedWords(string prompt) {
+    string input;
+
+    while (true) {
+        cout << prompt;
+        getline(cin, input);
+
+        bool valid = !input.empty();
+        bool hasLetter = false;
+
+        for (char c : input) {
+            if (isalpha(static_cast<unsigned char>(c))) {
+                hasLetter = true;
+            }
+            else if (c != ' ') {
+                valid = false;
+                break;
+            }
+        }
+
+        if (valid && hasLetter) {
+            return input;
+        }
+
+        cout << "Invalid input! Please enter words using letters and spaces only.\n";
+    }
+}
+
+
+int readValidatedInteger(string prompt) {
+    string input;
+
+    while (true) {
+        cout << prompt;
+        getline(cin, input);
+
+        bool valid = !input.empty();
+
+        for (char c : input) {
+            if (!isdigit(static_cast<unsigned char>(c))) {
+                valid = false;
+                break;
+            }
+        }
+
+        if (valid) {
+            try {
+                size_t position;
+                long long number = stoll(input, &position);
+
+                if (position == input.length() &&
+                    number <= numeric_limits<int>::max()) {
+                    return static_cast<int>(number);
+                }
+            }
+            catch (...) {
+                // Number is outside the supported integer range.
+            }
+        }
+
+        cout << "Invalid input! Please enter whole numbers only.\n";
+    }
+}
 
 double readValidatedDouble(string prompt, double minimum, double maximum) {
     string input;
