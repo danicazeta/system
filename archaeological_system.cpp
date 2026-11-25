@@ -974,7 +974,7 @@ int readValidatedInteger(string prompt) {
 
     while (true) {
         cout << prompt;
-        getline(cin, input);
+        getline(cin >> ws, input);
 
         bool valid = !input.empty();
 
@@ -1053,9 +1053,9 @@ void registerSite() {
     cout << "========================================\n";
 
     newSite.siteID = nextSiteID;
-
-    newSite.siteName = readValidatedText("Enter Site Name: ");
-
+    
+newSite.siteName = readValidatedWords("Enter Site Name: ");
+    
     newSite.location = readValidatedText("Enter Location: ");
 
     newSite.latitude = readValidatedDouble(
@@ -1183,8 +1183,8 @@ void searchSite() {
 
     int id;
 
-    cout << "\nEnter Site ID to Search: ";
-    cin >> id;
+    id = readValidatedInteger("");
+    id = readValidatedInteger("Enter Site ID to Search: ");
 
     int index = findSite(id);
 
@@ -1213,7 +1213,7 @@ void updateSite() {
     int id;
 
     cout << "\nEnter Site ID to Update: ";
-    cin >> id;
+    id = readValidatedInteger("");
 
     int index = findSite(id);
 
@@ -1227,18 +1227,20 @@ void updateSite() {
     cout << "\n===== UPDATE SITE INFORMATION =====" << endl;
 
     cout << "Enter New Site Name: ";
-    getline(cin, sites[index].siteName);
+    sites[index].siteName = readValidatedWords("Enter New Site Name: ");
 
     cout << "Enter New Location: ";
     getline(cin, sites[index].location);
 
-    cout << "Enter New Latitude: ";
-    cin >> sites[index].latitude;
+    sites[index].latitude = readValidatedDouble(
+    "Enter New Latitude: ", -90.0, 90.0
+);
 
-    cout << "Enter New Longitude: ";
-    cin >> sites[index].longitude;
+sites[index].longitude = readValidatedDouble(
+    "Enter New Longitude: ", -180.0, 180.0
+);
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
 
     cout << "Enter New Description: ";
     getline(cin, sites[index].description);
@@ -1282,7 +1284,7 @@ void deleteSite() {
     int id;
 
     cout << "\nEnter Site ID to Delete: ";
-    cin >> id;
+    id = readValidatedInteger("");
 
     int index = findSite(id);
 
