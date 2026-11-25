@@ -2205,9 +2205,8 @@ void estimateArtifactAge() {
     cout << "\n===== ARTIFACT AGE ESTIMATION =====" << endl;
 
     viewArtifacts();
-
-    cout << "\nEnter Artifact ID: ";
-    cin >> id;
+    
+id = readValidatedInteger("Enter Artifact ID: ");
 
     int artifactIndex = findArtifact(id);
 
@@ -2248,8 +2247,9 @@ void estimateArtifactAge() {
 
     int periodChoice;
 
-    cout << "\nSelect Historical Period Reference: ";
-    cin >> periodChoice;
+    periodChoice = readValidatedInteger(
+    "Select Historical Period Reference: "
+);
 
     if (periodChoice < 1 || periodChoice > 5) {
         cout << "\nInvalid historical period selection!" << endl;
@@ -2399,8 +2399,7 @@ void searchAgeEstimate() {
 
     int id;
 
-    cout << "\nEnter Artifact ID to Search: ";
-    cin >> id;
+    id = readValidatedInteger("Enter Artifact ID to Search: ");
 
     int index = findAgeEstimate(id);
 
@@ -2422,8 +2421,7 @@ void updateAgeEstimate() {
 
     int id;
 
-    cout << "\nEnter Artifact ID to Update: ";
-    cin >> id;
+    id = readValidatedInteger("Enter Artifact ID to Update: ");
 
     int index = findAgeEstimate(id);
 
@@ -2444,8 +2442,9 @@ void updateAgeEstimate() {
 
     int periodChoice;
 
-    cout << "\nSelect New Historical Period: ";
-    cin >> periodChoice;
+    periodChoice = readValidatedInteger(
+    "Select New Historical Period: "
+);
 
     if (periodChoice < 1 || periodChoice > 5) {
         cout << "\nInvalid selection! Update cancelled." << endl;
@@ -2488,8 +2487,7 @@ void deleteAgeEstimate() {
 
     int id;
 
-    cout << "\nEnter Artifact ID to Delete: ";
-    cin >> id;
+    id = readValidatedInteger("Enter Artifact ID to Delete: ");
 
     int index = findAgeEstimate(id);
 
