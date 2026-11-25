@@ -558,8 +558,7 @@ bool loginUser() {
 
     cout << "\n===== USER LOGIN =====\n";
 
-    cout << "Username: ";
-    getline(cin, username);
+    username = readValidatedWords("Username: ");
 
     cout << "Password: ";
     getline(cin, password);
