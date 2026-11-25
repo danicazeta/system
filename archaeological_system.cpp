@@ -1460,10 +1460,7 @@ void updateArtifact() {
 
 void deleteArtifact() {
 
-    int id;
-
         int id = readValidatedInteger("\nEnter Artifact ID to Delete: ");
-
     int index = findArtifact(id);
 
     if (index == -1) {
