@@ -740,8 +740,7 @@ void login() {
             userAccountMenu();
         }
         else if (choice == 2) {
-            cout << "\nEnter Username: ";
-            cin >> username;
+            username = readValidatedWords("\nEnter Username: ");
 
             cout << "Enter Password: ";
             cin >> password;
