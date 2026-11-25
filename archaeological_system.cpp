@@ -490,11 +490,8 @@ void registerUser() {
 
     cout << "\n===== CREATE USER ACCOUNT =====\n";
 
-    cout << "Enter Full Name: ";
-    getline(cin, fullname);
-
-    cout << "Create Username: ";
-    getline(cin, username);
+        fullname = readValidatedName("Enter Full Name: ");
+    username = readValidatedWords("Create Username: ");
 
     if (username.empty() || username.find('|') != string::npos) {
         cout << "Invalid username.\n";
@@ -553,8 +550,7 @@ bool loginUser() {
     cout << "Username: ";
     getline(cin, username);
 
-    cout << "Password: ";
-    getline(cin, password);
+        username = readValidatedWords("Username: ");
 
     ifstream file("users.txt");
 
