@@ -2732,18 +2732,13 @@ void updateTeamMember() {
         return;
     }
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "\n===== UPDATE TEAM MEMBER =====" << endl;
 
-    cout << "\n===== UPDATE TEAM MEMBER =====" << endl;
+    teamMembers[index].memberName = readValidatedName("Enter New Name: ");
 
-    cout << "Enter New Name: ";
-    getline(cin, teamMembers[index].memberName);
+    teamMembers[index].role = readValidatedWords("Enter New Role: ");
 
-    cout << "Enter New Role: ";
-    getline(cin, teamMembers[index].role);
-
-    cout << "Enter New Specialization: ";
-    getline(cin, teamMembers[index].specialization);
+    teamMembers[index].specialization = readValidatedWords("Enter New Specialization: ");
 
     cout << "Enter New Contact Number: ";
     getline(cin, teamMembers[index].contactNumber);
@@ -2759,8 +2754,7 @@ void deleteTeamMember() {
 
     int id;
 
-    cout << "\nEnter Member ID to Delete: ";
-    cin >> id;
+        id = readValidatedInteger("Enter Member ID to Delete: ");
 
     int index = findTeamMember(id);
 
