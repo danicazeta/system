@@ -1197,10 +1197,7 @@ void updateSite() {
 
 void deleteSite() {
 
-    int id;
-
         int id = readValidatedInteger("\nEnter Site ID to Delete: ");
-
     int index = findSite(id);
 
     if (index == -1) {
