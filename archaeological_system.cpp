@@ -2606,14 +2606,11 @@ void registerTeamMember() {
 
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-    cout << "\nEnter Member Name: ";
-    getline(cin, newMember.memberName);
+        newMember.memberName = readValidatedName("Enter Member Name: ");
 
-    cout << "Enter Role: ";
-    getline(cin, newMember.role);
+    newMember.role = readValidatedWords("Enter Role: ");
 
-    cout << "Enter Specialization: ";
-    getline(cin, newMember.specialization);
+    newMember.specialization = readValidatedWords("Enter Specialization: ");
 
     cout << "Enter Contact Number: ";
     getline(cin, newMember.contactNumber);
@@ -2702,8 +2699,7 @@ void searchTeamMember() {
 
     int id;
 
-    cout << "\nEnter Member ID to Search: ";
-    cin >> id;
+        id = readValidatedInteger("Enter Member ID to Search: ");
 
     int index = findTeamMember(id);
 
@@ -2726,8 +2722,7 @@ void updateTeamMember() {
 
     int id;
 
-    cout << "\nEnter Member ID to Update: ";
-    cin >> id;
+        id = readValidatedInteger("Enter Member ID to Update: ");
 
     int index = findTeamMember(id);
 
