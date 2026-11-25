@@ -1830,8 +1830,7 @@ void classifyArtifact() {
 
     viewArtifacts();
 
-    cout << "\nEnter Artifact ID to Classify: ";
-    cin >> id;
+    id = readValidatedInteger("Enter Artifact ID to Classify: ");
 
     int artifactIndex = findArtifact(id);
 
@@ -1855,10 +1854,9 @@ void classifyArtifact() {
     cout << "\nArtifact Name: "
          << artifacts[artifactIndex].artifactName << endl;
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    cout << "\nEnter Artifact Material: ";
-    getline(cin, newClassification.material);
+    newClassification.material = readValidatedWords(
+    "\nEnter Artifact Material: "
+);
 
     cout << "Enter Artifact Characteristics: ";
     getline(cin, newClassification.characteristics);
@@ -1975,8 +1973,7 @@ void searchClassification() {
 
     int id;
 
-    cout << "\nEnter Artifact ID to Search: ";
-    cin >> id;
+    id = readValidatedInteger("Enter Artifact ID to Search: ");
 
     int index = findClassification(id);
 
@@ -2002,8 +1999,7 @@ void updateClassification() {
 
     int id;
 
-    cout << "\nEnter Artifact ID to Update: ";
-    cin >> id;
+    id = readValidatedInteger("Enter Artifact ID to Update: ");
 
     int index = findClassification(id);
 
@@ -2024,10 +2020,9 @@ void updateClassification() {
     cout << "Artifact Name: "
          << artifacts[artifactIndex].artifactName << endl;
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-    cout << "\nEnter New Material: ";
-    getline(cin, classifications[index].material);
+    classifications[index].material = readValidatedWords(
+    "\nEnter New Material: "
+);
 
     cout << "Enter New Characteristics: ";
     getline(cin, classifications[index].characteristics);
@@ -2061,8 +2056,9 @@ void deleteClassification() {
 
     int id;
 
-    cout << "\nEnter Artifact ID to Delete Classification: ";
-    cin >> id;
+    id = readValidatedInteger(
+    "Enter Artifact ID to Delete Classification: "
+);
 
     int index = findClassification(id);
 
