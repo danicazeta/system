@@ -861,12 +861,7 @@ void excavationSiteMenu() {
                 choice = readValidatedInteger("\nEnter your choice: ");
         
 
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "\nInvalid input!" << endl;
-            continue;
-        }
+        
 
         switch (choice) {
 
@@ -1246,13 +1241,7 @@ void artifactMenu() {
 
                 choice = readValidatedInteger("\nEnter your choice: ");
 
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-            cout << "\nInvalid input!" << endl;
-            continue;
-        }
+        
 
         switch (choice) {
 
@@ -1537,13 +1526,7 @@ void classificationMenu() {
 
                 choice = readValidatedInteger("\nEnter your choice: ");
 
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-            cout << "\nInvalid input!" << endl;
-            continue;
-        }
+        
 
         switch (choice) {
 
@@ -1970,13 +1953,7 @@ void ageEstimationMenu() {
 
                 choice = readValidatedInteger("\nEnter your choice: ");
 
-        if (cin.fail()) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-            cout << "\nInvalid input!" << endl;
-            continue;
-        }
+        
 
         switch (choice) {
 
@@ -2529,14 +2506,7 @@ void preservationMenu() {
         cout << "6. Return to Main Menu" << endl;
 
                 choice = readValidatedInteger("\nEnter your choice: ");
-        if (cin.fail()) {
-
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-            cout << "\nInvalid input!" << endl;
-            continue;
-        }
+        
 
         switch (choice) {
 
@@ -2901,14 +2871,7 @@ void restorationMuseumMenu() {
         cout << "\n9. Return to Main Menu" << endl;
 
                 choice = readValidatedInteger("\nEnter your choice: ");
-        if (cin.fail()) {
-
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-            cout << "\nInvalid input!" << endl;
-            continue;
-        }
+        
 
         switch (choice) {
 
