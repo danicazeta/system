@@ -2275,7 +2275,7 @@ id = readValidatedInteger("Enter Artifact ID: ");
         newRecord.maximumAge
     );
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
 
     cout << "\nEnter Historical Reference or Evidence Basis: ";
     getline(cin, newRecord.referenceBasis);
@@ -2466,7 +2466,7 @@ void updateAgeEstimate() {
         ageRecords[index].maximumAge
     );
 
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    
 
     cout << "Enter New Historical Reference or Evidence Basis: ";
     getline(cin, ageRecords[index].referenceBasis);
