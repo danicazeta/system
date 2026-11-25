@@ -615,9 +615,9 @@ void userAccountMenu() {
         cout << "[2] Create Account\n";
         cout << "[3] Back\n";
 
-        cout << "Enter choice: ";
-        cin >> choice;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                choice = readValidatedInteger("Enter choice: ");
+
+        
 
         if (choice == 1) {
             if (loginUser()) {
@@ -654,8 +654,8 @@ void userMenu() {
         cout << "[6] Preservation Management\n";
         cout << "[7] Log Out\n";
         cout << "================================================================\n";
-        cout << "Enter your choice: ";
-        cin >> choice;
+                choice = readValidatedInteger("Enter your choice: ");
+        
 
         switch (choice) {
             case 1:
@@ -705,8 +705,8 @@ void adminMenu() {
         cout << "[2] Restoration and Museum Management\n";
         cout << "[3] Log Out\n";
         cout << "========================================\n";
-        cout << "Enter your choice: ";
-        cin >> choice;
+                choice = readValidatedInteger("Enter your choice: ");
+        
 
         switch (choice) {
             case 1:
@@ -746,8 +746,8 @@ void login() {
         cout << "[2] Admin\n";
         cout << "[3] Exit\n";
         cout << "========================================\n";
-        cout << "Enter your choice: ";
-        cin >> choice;
+                choice = readValidatedInteger("Enter your choice: ");
+        
 
 
  if (choice == 1) {
@@ -797,8 +797,8 @@ void trackingReportsMenu() {
         cout << "[5] View Preservation Records\n";
         cout << "[6] Back to Admin Menu\n";
         cout << "========================================\n";
-        cout << "Enter your choice: ";
-        cin >> choice;
+                choice = readValidatedInteger("Enter your choice: ");
+        
 
         switch (choice) {
             case 1:
@@ -858,8 +858,8 @@ void excavationSiteMenu() {
         cout << "5. Delete Site Record" << endl;
         cout << "6. Return to Main Menu" << endl;
 
-        cout << "\nEnter your choice: ";
-        cin >> choice;
+                choice = readValidatedInteger("\nEnter your choice: ");
+        
 
         if (cin.fail()) {
             cin.clear();
@@ -1244,8 +1244,7 @@ void artifactMenu() {
         cout << "5. Delete Artifact Record" << endl;
         cout << "6. Return to Main Menu" << endl;
 
-        cout << "\nEnter your choice: ";
-        cin >> choice;
+                choice = readValidatedInteger("\nEnter your choice: ");
 
         if (cin.fail()) {
             cin.clear();
