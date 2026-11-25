@@ -917,7 +917,7 @@ string readValidatedName(string prompt) {
 
     while (true) {
         cout << prompt;
-        getline(cin, input);
+        getline(cin >> ws, input);
 
         bool valid = !input.empty();
         bool hasLetter = false;
@@ -940,13 +940,12 @@ string readValidatedName(string prompt) {
     }
 }
 
-
 string readValidatedWords(string prompt) {
     string input;
 
     while (true) {
         cout << prompt;
-        getline(cin, input);
+        getline(cin >> ws, input);
 
         bool valid = !input.empty();
         bool hasLetter = false;
@@ -997,7 +996,7 @@ int readValidatedInteger(string prompt) {
                 }
             }
             catch (...) {
-                // Number is outside the supported integer range.
+                // Invalid or out-of-range number.
             }
         }
 
