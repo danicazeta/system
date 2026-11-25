@@ -500,11 +500,9 @@ void registerUser() {
 
     cout << "\n===== CREATE USER ACCOUNT =====\n";
 
-    cout << "Enter Full Name: ";
-    getline(cin, fullname);
+    fullname = readValidatedName("Enter Full Name: ");
 
-    cout << "Create Username: ";
-    getline(cin, username);
+username = readValidatedWords("Create Username: ");
 
     if (username.empty() || username.find('|') != string::npos) {
         cout << "Invalid username.\n";
