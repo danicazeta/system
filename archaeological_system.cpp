@@ -3423,17 +3423,7 @@ void reportsMenu() {
         cout << "4. Activity Report" << endl;
         cout << "5. Return to Main Menu" << endl;
 
-        cout << "\nEnter your choice: ";
-        cin >> choice;
-
-        if (cin.fail()) {
-
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-            cout << "\nInvalid input!" << endl;
-            continue;
-        }
+                choice = readValidatedInteger("\nEnter your choice: ");
 
         switch (choice) {
 
