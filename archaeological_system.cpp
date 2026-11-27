@@ -3563,3 +3563,4 @@ void agePeriodMenu() {
 void restorationMenu() {
     restorationMuseumMenu();
 }
+
