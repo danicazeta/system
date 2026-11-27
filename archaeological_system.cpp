@@ -1539,6 +1539,27 @@ bool isValidDiscoveryDate(string date) {
     return true;
 }
 
+string readValidatedDate(string prompt) {
+    string date;
+
+    cout << "\nNOTICE: Date format must be MM/DD/YYYY.\n";
+    cout << "Example: 11/27/2026\n";
+
+    do {
+        cout << prompt;
+        getline(cin, date);
+
+        if (!isValidDiscoveryDate(date)) {
+            cout << "Invalid date! Please use MM/DD/YYYY "
+                 << "and enter a valid calendar date.\n";
+        }
+
+    } while (!isValidDiscoveryDate(date));
+
+    return date;
+}
+
+
 // REGISTER NEW ARTIFACT
 
 void registerArtifact() {
