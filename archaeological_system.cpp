@@ -550,7 +550,7 @@ void registerUser() {
     cout << "- Exactly 8 characters\n";
     cout << "- Must contain at least one letter (A-Z)\n";
     cout << "- Must contain at least one number (0-9)\n";
-    cout << "- Allowed special characters: _ - *\n";
+    cout << "- Allowed special characters: _ - * @ # $ % & ! + ? .\n";
     cout << "- No spaces or other special characters allowed\n";
 
     bool validPassword;
@@ -574,8 +574,8 @@ void registerUser() {
             else if (isdigit(static_cast<unsigned char>(c))) {
                 hasNumber = true;
             }
-            else if (c != '_' && c != '-' && c != '*') {
-                validPassword = false;
+            else if (string("_-*@#$%&!+?.").find(c) == string::npos) {
+    validPassword = false;
             }
         }
 
