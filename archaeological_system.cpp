@@ -1389,6 +1389,43 @@ void artifactMenu() {
     } while (choice != 6);
 }
 
+bool isValidDiscoveryDate(string date) {
+    if (date.length() != 10 ||
+        date[2] != '/' || date[5] != '/') {
+        return false;
+    }
+
+    for (int i = 0; i < 10; i++) {
+        if (i == 2 || i == 5)
+            continue;
+
+        if (!isdigit(static_cast<unsigned char>(date[i])))
+            return false;
+    }
+
+    int month = stoi(date.substr(0, 2));
+    int day = stoi(date.substr(3, 2));
+    int year = stoi(date.substr(6, 4));
+
+    if (month < 1 || month > 12 || year < 1)
+        return false;
+
+    int daysInMonth[] = {
+        31, 28, 31, 30, 31, 30,
+        31, 31, 30, 31, 30, 31
+    };
+
+    if (year % 400 == 0 ||
+        (year % 4 == 0 && year % 100 != 0)) {
+        daysInMonth[1] = 29;
+    }
+
+    if (day < 1 || day > daysInMonth[month - 1])
+        return false;
+
+    return true;
+}
+
 // REGISTER NEW ARTIFACT
 
 void registerArtifact() {
@@ -1432,8 +1469,19 @@ getline(cin >> ws, newArtifact.siteID);
             newArtifact.artifactName =
         readValidatedName("\nEnter Artifact Name: ");
 
+    cout << "\nNOTICE: Date format must be MM/DD/YYYY.\n";
+cout << "Example: 11/27/2026\n";
+
+do {
     cout << "Enter Discovery Date: ";
     getline(cin, newArtifact.discoveryDate);
+
+    if (!isValidDiscoveryDate(newArtifact.discoveryDate)) {
+        cout << "Invalid date! Please use MM/DD/YYYY "
+             << "and enter a valid calendar date.\n";
+    }
+
+} while (!isValidDiscoveryDate(newArtifact.discoveryDate));
 
     newArtifact.discoverer =
         readValidatedName("Enter Discoverer's Name: ");
@@ -1567,8 +1615,19 @@ string newSiteID;
         artifacts[index].artifactName =
         readValidatedName("Enter New Artifact Name: ");
 
+    cout << "\nNOTICE: Date format must be MM/DD/YYYY.\n";
+cout << "Example: 11/27/2026\n";
+
+do {
     cout << "Enter New Discovery Date: ";
     getline(cin, artifacts[index].discoveryDate);
+
+    if (!isValidDiscoveryDate(artifacts[index].discoveryDate)) {
+        cout << "Invalid date! Please use MM/DD/YYYY "
+             << "and enter a valid calendar date.\n";
+    }
+
+} while (!isValidDiscoveryDate(artifacts[index].discoveryDate));
 
     artifacts[index].discoverer =
         readValidatedName("Enter New Discoverer's Name: ");
