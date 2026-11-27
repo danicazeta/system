@@ -35,7 +35,7 @@ struct Artifact {
     string discoverer;
     string excavationGrid;
     string discoveryDescription;
-    string photoFilename;
+    
 };
 
 // STRUCTURE FOR ARTIFACT CLASSIFICATION
@@ -1517,8 +1517,7 @@ do {
     newArtifact.discoveryDescription =
     readValidatedDescription("Enter Discovery Description: ");
 
-    cout << "Enter Photo Filename (if available): ";
-    getline(cin, newArtifact.photoFilename);
+    
 
     artifacts[artifactCount] = newArtifact;
     artifactCount++;
@@ -1564,8 +1563,7 @@ void displayArtifact(int index) {
     cout << "Discoverer: " << artifacts[index].discoverer << endl;
     cout << "Excavation Grid: " << artifacts[index].excavationGrid << endl;
     cout << "Description: " << artifacts[index].discoveryDescription << endl;
-    cout << "Photo Filename: " << artifacts[index].photoFilename << endl;
-
+    
     cout << "----------------------------------------" << endl;
 }
 
@@ -1663,8 +1661,7 @@ do {
     artifacts[index].discoveryDescription =
     readValidatedDescription("Enter New Discovery Description: ");
 
-    cout << "Enter New Photo Filename: ";
-    getline(cin, artifacts[index].photoFilename);
+    
 
     cout << "\nArtifact information successfully updated!" << endl;
 }
