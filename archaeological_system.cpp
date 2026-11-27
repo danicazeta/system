@@ -451,6 +451,31 @@ string readValidatedWords(string prompt) {
     }
 }
 
+string readValidatedDescription(string prompt) {
+    string input;
+
+    while (true) {
+        cout << prompt;
+        getline(cin >> ws, input);
+
+        bool valid = !input.empty();
+
+        for (char c : input) {
+            if (!isalnum(static_cast<unsigned char>(c))
+                && c != ' ') {
+                valid = false;
+                break;
+            }
+        }
+
+        if (valid) {
+            return input;
+        }
+
+        cout << "Invalid description! Use letters, numbers, and spaces only.\n";
+    }
+}
+
 int readValidatedInteger(string prompt) {
     string input;
 
@@ -1489,8 +1514,8 @@ do {
     cout << "Enter Excavation Grid or Area: ";
     getline(cin, newArtifact.excavationGrid);
 
-    cout << "Enter Discovery Description: ";
-    getline(cin, newArtifact.discoveryDescription);
+    newArtifact.discoveryDescription =
+    readValidatedDescription("Enter Discovery Description: ");
 
     cout << "Enter Photo Filename (if available): ";
     getline(cin, newArtifact.photoFilename);
@@ -1635,8 +1660,8 @@ do {
     cout << "Enter New Excavation Grid or Area: ";
     getline(cin, artifacts[index].excavationGrid);
 
-    cout << "Enter New Discovery Description: ";
-    getline(cin, artifacts[index].discoveryDescription);
+    artifacts[index].discoveryDescription =
+    readValidatedDescription("Enter New Discovery Description: ");
 
     cout << "Enter New Photo Filename: ";
     getline(cin, artifacts[index].photoFilename);
