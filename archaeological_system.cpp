@@ -1815,8 +1815,7 @@ void saveArtifacts() {
              << artifacts[i].discoveryDate << "|"
              << artifacts[i].discoverer << "|"
              << artifacts[i].excavationGrid << "|"
-             << artifacts[i].discoveryDescription << "|"
-             << artifacts[i].photoFilename << "\n";
+             << artifacts[i].discoveryDescription << "\n";
     }
 
     file.close();
@@ -1861,7 +1860,6 @@ void loadArtifacts() {
         getline(ss, loadedArtifact.discoverer, '|');
         getline(ss, loadedArtifact.excavationGrid, '|');
         getline(ss, loadedArtifact.discoveryDescription, '|');
-        getline(ss, loadedArtifact.photoFilename);
 
         artifacts[artifactCount] = loadedArtifact;
 
