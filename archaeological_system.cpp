@@ -2513,26 +2513,33 @@ void updateTeamMember() {
         excavationTeam[index].memberName =
         readValidatedName("Enter New Member Name: ");
 
+    
+    cout << "\n===== AVAILABLE EXCAVATION SITES =====\n";
+    viewSites();
+
+    string newSiteID;
+
+    cout << "Enter New Excavation Site ID: ";
+    getline(cin >> ws, newSiteID);
+
+    if (findSite(newSiteID) == -1) {
+        cout << "Invalid Site ID! Update cancelled.\n";
+        return;
+    }
+
+    excavationTeam[index].memberName =
+        readValidatedName("Enter New Member Name: ");
+
     excavationTeam[index].contactInformation =
         readValidatedDigits("Enter New Contact Information: ");
 
     excavationTeam[index].assignedRole =
         readValidatedWords("Enter New Assigned Role: ");
 
-    cout << "\n===== AVAILABLE EXCAVATION SITES =====\n";
-viewSites();
+    excavationTeam[index].siteID = newSiteID;
 
-string newSiteID;
+    cout << "\nTeam Member Record Successfully Updated!\n";
 
-cout << "Enter New Excavation Site ID: ";
-getline(cin >> ws, newSiteID);
-
-if (findSite(newSiteID) == -1) {
-    cout << "Invalid Site ID! Update cancelled.\n";
-    return;
-}
-
-excavationTeam[index].siteID = newSiteID;
 
     cout << "\nTeam Member Record Successfully Updated!\n";
 }
