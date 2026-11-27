@@ -14,6 +14,48 @@
 
 using namespace std;
 
+// ==========================================
+// DYNAMIC SYSTEM LAYOUT FUNCTIONS
+// ==========================================
+
+void printDynamicSection(string title, vector<string> content) {
+
+    int width = 40;
+
+    // Determine the longest content or title.
+    if (title.length() > width) {
+        width = title.length();
+    }
+
+    for (const string& line : content) {
+        if (line.length() > width) {
+            width = line.length();
+        }
+    }
+
+    // Print top border.
+    cout << "\n" << string(width + 4, '=') << "\n";
+
+    // Center the title.
+    int padding = (width - title.length()) / 2;
+
+    cout << "  "
+         << string(padding, ' ')
+         << title
+         << "\n";
+
+    // Print separator.
+    cout << string(width + 4, '=') << "\n";
+
+    // Print content.
+    for (const string& line : content) {
+        cout << "  " << line << "\n";
+    }
+
+    // Print bottom border.
+    cout << string(width + 4, '=') << "\n";
+}
+
 // MAXIMUM NUMBER OF SITES
 const int MAX_SITES = 100;
 
