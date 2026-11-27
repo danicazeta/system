@@ -511,6 +511,7 @@ int readValidatedInteger(string prompt) {
     }
 }
 
+
 string readValidatedDigits(string prompt) {
     string input;
 
@@ -518,7 +519,7 @@ string readValidatedDigits(string prompt) {
         cout << prompt;
         getline(cin >> ws, input);
 
-        bool valid = !input.empty();
+        bool valid = (input.length() == 11);
 
         for (char c : input) {
             if (!isdigit(static_cast<unsigned char>(c))) {
@@ -531,9 +532,10 @@ string readValidatedDigits(string prompt) {
             return input;
         }
 
-        cout << "Invalid input! Please enter digits only.\n";
+        cout << "Invalid input! Please enter exactly 11 digits only.\n";
     }
 }
+
 
 
 void registerUser() {
