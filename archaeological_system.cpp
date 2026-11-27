@@ -550,45 +550,50 @@ void registerUser() {
     cout << "- Exactly 8 characters\n";
     cout << "- Must contain at least one letter (A-Z)\n";
     cout << "- Must contain at least one number (0-9)\n";
+    cout << "- Must contain at least one special character\n";
     cout << "- Allowed special characters: _ - * @ # $ % & ! + ? .\n";
     cout << "- No spaces or other special characters allowed\n";
 
     bool validPassword;
 
-    do {
-        bool hasLetter = false;
-        bool hasNumber = false;
-        validPassword = true;
+do {
+    bool hasLetter = false;
+    bool hasNumber = false;
+    bool hasSpecial = false;
+    validPassword = true;
 
-        cout << "\nCreate Password: ";
-        getline(cin, password);
+    cout << "\nCreate Password: ";
+    getline(cin, password);
 
-        if (password.length() != 8) {
+    if (password.length() != 8) {
+        validPassword = false;
+    }
+
+    for (char c : password) {
+        if (isalpha(static_cast<unsigned char>(c))) {
+            hasLetter = true;
+        }
+        else if (isdigit(static_cast<unsigned char>(c))) {
+            hasNumber = true;
+        }
+        else if (string("_-*@#$%&!+?.").find(c) != string::npos) {
+            hasSpecial = true;
+        }
+        else {
             validPassword = false;
         }
+    }
 
-        for (char c : password) {
-            if (isalpha(static_cast<unsigned char>(c))) {
-                hasLetter = true;
-            }
-            else if (isdigit(static_cast<unsigned char>(c))) {
-                hasNumber = true;
-            }
-            else if (string("_-*@#$%&!+?.").find(c) == string::npos) {
-    validPassword = false;
-            }
-        }
+    if (!hasLetter || !hasNumber || !hasSpecial) {
+        validPassword = false;
+    }
 
-        if (!hasLetter || !hasNumber) {
-            validPassword = false;
-        }
+    if (!validPassword) {
+        cout << "\nInvalid password!\n";
+        cout << "Your password must follow all the requirements.\n";
+    }
 
-        if (!validPassword) {
-            cout << "\nInvalid password!\n";
-            cout << "Please follow all the password requirements.\n";
-        }
-
-    } while (!validPassword);
+} while (!validPassword);
 
     cout << "Confirm Password: ";
     getline(cin, confirmPassword);
