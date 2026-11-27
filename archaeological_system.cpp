@@ -510,13 +510,14 @@ string readValidatedDigits(string prompt) {
     }
 }
 
+
 void registerUser() {
     string fullname, username, password, confirmPassword;
     string savedUsername, savedPassword, savedName;
 
     cout << "\n===== CREATE USER ACCOUNT =====\n";
 
-        fullname = readValidatedName("Enter Full Name: ");
+    fullname = readValidatedName("Enter Full Name: ");
     username = readValidatedWords("Create Username: ");
 
     if (username.empty() || username.find('|') != string::npos) {
@@ -537,14 +538,57 @@ void registerUser() {
 
         if (username == savedUsername) {
             cout << "Username already exists!\n";
+            file.close();
             return;
         }
     }
 
     file.close();
 
-    cout << "Create Password: ";
-    getline(cin, password);
+    // Password requirements
+    cout << "\nPASSWORD REQUIREMENTS:\n";
+    cout << "- Exactly 8 characters\n";
+    cout << "- Must contain at least one letter (A-Z)\n";
+    cout << "- Must contain at least one number (0-9)\n";
+    cout << "- Allowed special characters: _ - *\n";
+    cout << "- No spaces or other special characters allowed\n";
+
+    bool validPassword;
+
+    do {
+        bool hasLetter = false;
+        bool hasNumber = false;
+        validPassword = true;
+
+        cout << "\nCreate Password: ";
+        getline(cin, password);
+
+        if (password.length() != 8) {
+            validPassword = false;
+        }
+
+        for (char c : password) {
+            if (isalpha(static_cast<unsigned char>(c))) {
+                hasLetter = true;
+            }
+            else if (isdigit(static_cast<unsigned char>(c))) {
+                hasNumber = true;
+            }
+            else if (c != '_' && c != '-' && c != '*') {
+                validPassword = false;
+            }
+        }
+
+        if (!hasLetter || !hasNumber) {
+            validPassword = false;
+        }
+
+        if (!validPassword) {
+            cout << "\nInvalid password!\n";
+            cout << "Please follow all the password requirements.\n";
+        }
+
+    } while (!validPassword);
 
     cout << "Confirm Password: ";
     getline(cin, confirmPassword);
