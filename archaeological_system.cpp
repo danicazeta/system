@@ -37,12 +37,11 @@ void printDynamicSection(string title, vector<string> content) {
     cout << "\n" << string(width + 4, '=') << "\n";
 
     // Center the title.
-    int padding = (width - title.length()) / 2;
+    int padding = (width + 4 - title.length()) / 2;
 
-    cout << "  "
-         << string(padding, ' ')
-         << title
-         << "\n";
+cout << string(padding, ' ')
+     << title
+     << "\n";
 
     // Print separator.
     cout << string(width + 4, '=') << "\n";
