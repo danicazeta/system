@@ -393,8 +393,11 @@ void adminLogin();
 
 void saveSites();
 void loadSites();
-
-
+//artifact catalog FH
+void saveArtifacts();
+void loadArtifacts();
+void saveClassifications();
+void loadClassifications();
 string readValidatedName(string prompt) {
     string input;
 
@@ -914,9 +917,11 @@ void trackingReportsMenu() {
 
 // MAIN FUNCTION
 int main() {
+     loadSites();
+    loadArtifacts();
+    loadClassifications();
 
-    login();
-
+login();
     return 0;
 }
 // EXCAVATION SITE MANAGEMENT
@@ -1095,7 +1100,6 @@ void registerSite() {
         cout << "\nSite storage is full!\n";
         return;
     }
-    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     ExcavationSite newSite;
 
@@ -1150,6 +1154,9 @@ void registerSite() {
     sites[siteCount] = newSite;
 
     siteCount++;
+
+    // Save the updated site records.
+saveSites();
     
 
     cout << "\nEXCAVATION SITE REGISTERED SUCCESSFULLY!\n";
@@ -1315,8 +1322,8 @@ void updateSite() {
     }
 
     cout << "\nSite information successfully updated!" << endl;
+saveSites();
 }
-
 // DELETE SITE RECORD
 
 void deleteSite() {
@@ -1354,11 +1361,90 @@ void deleteSite() {
     }
 
     siteCount--;
+    saveSites();
 
     cout << "\nSite record successfully deleted!" << endl;
 }
 
+// ========================================
+// EXCAVATION SITE FILE HANDLING
+// ========================================
 
+// SAVE EXCAVATION SITES TO FILE
+
+void saveSites() {
+
+    ofstream file("sites.txt");
+
+    if (!file.is_open()) {
+        cout << "\nError: Unable to save excavation site records.\n";
+        return;
+    }
+
+    for (int i = 0; i < siteCount; i++) {
+
+        file << sites[i].siteID << "|"
+             << sites[i].siteName << "|"
+             << sites[i].location << "|"
+             << sites[i].latitude << "|"
+             << sites[i].longitude << "|"
+             << sites[i].description << "|"
+             << sites[i].status << "\n";
+    }
+
+    file.close();
+}
+
+
+// LOAD EXCAVATION SITES FROM FILE
+
+void loadSites() {
+
+    ifstream file("sites.txt");
+
+    if (!file.is_open()) {
+        // The file does not exist yet.
+        // It will be created when the first site is saved.
+        return;
+    }
+
+    string line;
+
+    siteCount = 0;
+
+    while (getline(file, line) && siteCount < MAX_SITES) {
+
+        stringstream ss(line);
+        ExcavationSite loadedSite;
+        string latitudeText;
+        string longitudeText;
+
+        getline(ss, loadedSite.siteID, '|');
+        getline(ss, loadedSite.siteName, '|');
+        getline(ss, loadedSite.location, '|');
+        getline(ss, latitudeText, '|');
+        getline(ss, longitudeText, '|');
+        getline(ss, loadedSite.description, '|');
+        getline(ss, loadedSite.status);
+
+        try {
+
+            loadedSite.latitude = stod(latitudeText);
+            loadedSite.longitude = stod(longitudeText);
+
+            sites[siteCount] = loadedSite;
+            siteCount++;
+
+        }
+        catch (...) {
+
+            // Skip a record if its coordinates are invalid.
+            continue;
+        }
+    }
+
+    file.close();
+}
 
 // ARTIFACT DISCOVERY AND CATALOGUING MENU
 
@@ -1523,6 +1609,7 @@ do {
 
     artifacts[artifactCount] = newArtifact;
     artifactCount++;
+    saveArtifacts();
 
     cout << "\nArtifact successfully registered!" << endl;
     cout << "Assigned Artifact ID: " << newArtifact.artifactID << endl;
@@ -1666,6 +1753,7 @@ do {
     
 
     cout << "\nArtifact information successfully updated!" << endl;
+    saveArtifacts();
 }
 
 // DELETE ARTIFACT RECORD
@@ -1694,6 +1782,7 @@ void deleteArtifact() {
         }
 
         artifactCount--;
+        saveArtifacts();
 
         cout << "\nArtifact record successfully deleted!" << endl;
 
@@ -1703,7 +1792,88 @@ void deleteArtifact() {
     }
 }
 
+// ========================================
+// ARTIFACT FILE HANDLING
+// ========================================
 
+// SAVE ARTIFACT RECORDS
+
+void saveArtifacts() {
+
+    ofstream file("artifacts.txt");
+
+    if (!file.is_open()) {
+        cout << "\nError: Unable to save artifact records.\n";
+        return;
+    }
+
+    for (int i = 0; i < artifactCount; i++) {
+
+        file << artifacts[i].artifactID << "|"
+             << artifacts[i].siteID << "|"
+             << artifacts[i].artifactName << "|"
+             << artifacts[i].discoveryDate << "|"
+             << artifacts[i].discoverer << "|"
+             << artifacts[i].excavationGrid << "|"
+             << artifacts[i].discoveryDescription << "|"
+             << artifacts[i].photoFilename << "\n";
+    }
+
+    file.close();
+}
+
+
+// LOAD ARTIFACT RECORDS
+
+void loadArtifacts() {
+
+    ifstream file("artifacts.txt");
+
+    if (!file.is_open()) {
+        return;
+    }
+
+    string line;
+
+    artifactCount = 0;
+    nextArtifactID = 1;
+
+    while (getline(file, line) &&
+           artifactCount < MAX_ARTIFACTS) {
+
+        stringstream ss(line);
+        Artifact loadedArtifact;
+
+        string idText;
+
+        getline(ss, idText, '|');
+
+        try {
+            loadedArtifact.artifactID = stoi(idText);
+        }
+        catch (...) {
+            continue;
+        }
+
+        getline(ss, loadedArtifact.siteID, '|');
+        getline(ss, loadedArtifact.artifactName, '|');
+        getline(ss, loadedArtifact.discoveryDate, '|');
+        getline(ss, loadedArtifact.discoverer, '|');
+        getline(ss, loadedArtifact.excavationGrid, '|');
+        getline(ss, loadedArtifact.discoveryDescription, '|');
+        getline(ss, loadedArtifact.photoFilename);
+
+        artifacts[artifactCount] = loadedArtifact;
+
+        artifactCount++;
+
+        if (loadedArtifact.artifactID >= nextArtifactID) {
+            nextArtifactID = loadedArtifact.artifactID + 1;
+        }
+    }
+
+    file.close();
+}
 
 // ARTIFACT CLASSIFICATION MENU
 
@@ -1948,7 +2118,7 @@ void classifyArtifact() {
     classifications[classificationCount] = newClassification;
 
     classificationCount++;
-
+saveClassifications();
     cout << "\nArtifact successfully classified!" << endl;
 
     cout << "Artifact ID: " << id << endl;
@@ -2093,8 +2263,8 @@ void updateClassification() {
     getline(cin, classifications[index].classificationNotes);
 
     cout << "\nClassification successfully updated!" << endl;
+    saveClassifications();
 }
-
 // DELETE CLASSIFICATION
 
 void deleteClassification() {
@@ -2119,6 +2289,7 @@ void deleteClassification() {
         }
 
         classificationCount--;
+        saveClassifications();
 
         cout << "\nClassification successfully deleted!" << endl;
 
@@ -2128,7 +2299,77 @@ void deleteClassification() {
     }
 }
 
+// ========================================
+// ARTIFACT CLASSIFICATION FILE HANDLING
+// ========================================
 
+// SAVE CLASSIFICATION RECORDS
+
+void saveClassifications() {
+
+    ofstream file("classifications.txt");
+
+    if (!file.is_open()) {
+        cout << "\nError: Unable to save classification records.\n";
+        return;
+    }
+
+    for (int i = 0; i < classificationCount; i++) {
+
+        file << classifications[i].artifactID << "|"
+             << classifications[i].category << "|"
+             << classifications[i].material << "|"
+             << classifications[i].characteristics << "|"
+             << classifications[i].classificationNotes << "\n";
+    }
+
+    file.close();
+}
+
+
+// LOAD CLASSIFICATION RECORDS
+
+void loadClassifications() {
+
+    ifstream file("classifications.txt");
+
+    if (!file.is_open()) {
+        return;
+    }
+
+    string line;
+
+    classificationCount = 0;
+
+    while (getline(file, line) &&
+           classificationCount < MAX_CLASSIFICATIONS) {
+
+        stringstream ss(line);
+        ArtifactClassification loadedClassification;
+
+        string idText;
+
+        getline(ss, idText, '|');
+
+        try {
+            loadedClassification.artifactID = stoi(idText);
+        }
+        catch (...) {
+            continue;
+        }
+
+        getline(ss, loadedClassification.category, '|');
+        getline(ss, loadedClassification.material, '|');
+        getline(ss, loadedClassification.characteristics, '|');
+        getline(ss, loadedClassification.classificationNotes);
+
+        classifications[classificationCount] = loadedClassification;
+
+        classificationCount++;
+    }
+
+    file.close();
+}
 
 
 
