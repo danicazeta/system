@@ -9,6 +9,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <random>
 
 using namespace std;
 
@@ -17,7 +18,7 @@ const int MAX_SITES = 100;
 
 // STRUCTURE FOR EXCAVATION SITE
 struct ExcavationSite {
-    int siteID;
+    string siteID;
     string siteName;
     string location;
     double latitude;
@@ -28,7 +29,7 @@ struct ExcavationSite {
 
 struct Artifact {
     int artifactID;
-    int siteID;
+    string siteID;
     string artifactName;
     string discoveryDate;
     string discoverer;
@@ -137,7 +138,7 @@ struct User {
 // GLOBAL ARRAY
 ExcavationSite sites[MAX_SITES];
 int siteCount = 0;
-int nextSiteID = 1;
+
 
 // MAXIMUM NUMBER OF ARTIFACTS
 const int MAX_ARTIFACTS = 500;
@@ -250,7 +251,8 @@ void viewSites();
 void searchSite();
 void updateSite();
 void deleteSite();
-int findSite(int id);
+int findSite(string id);
+string generateSiteID();
 
 void artifactMenu();
 void classificationMenu();
