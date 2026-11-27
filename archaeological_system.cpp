@@ -3251,11 +3251,11 @@ void updatePreservationRecord() {
         updatedRecord.responsiblePerson =
         readValidatedName("Enter New Responsible Person: ");
 
-    cout << "Enter New Preservation Date: ";
-    getline(cin, updatedRecord.preservationDate);
+    updatedRecord.preservationDate =
+    readValidatedDate("Enter New Preservation Date: ");
 
-    cout << "Enter New Monitoring Date: ";
-    getline(cin, updatedRecord.nextMonitoringDate);
+updatedRecord.nextMonitoringDate =
+    readValidatedDate("Enter New Monitoring Date: ");
 
     cout << "\n===== PRESERVATION STATUS =====" << endl;
     cout << "1. Planned" << endl;
