@@ -975,7 +975,43 @@ double readValidatedDouble(string prompt, double minimum, double maximum) {
 }
 
 // REGISTER NEW EXCAVATION SITE
+// GENERATE UNIQUE 8-CHARACTER EXCAVATION SITE ID
 
+string generateSiteID() {
+
+    const string characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    random_device rd;
+    mt19937 generator(rd());
+
+    uniform_int_distribution<int> distribution(
+        0, static_cast<int>(characters.length()) - 1
+    );
+
+    string newID;
+    bool exists;
+
+    do {
+        newID.clear();
+
+        for (int i = 0; i < 8; i++) {
+            newID += characters[distribution(generator)];
+        }
+
+        exists = false;
+
+        for (int i = 0; i < siteCount; i++) {
+            if (sites[i].siteID == newID) {
+                exists = true;
+                break;
+            }
+        }
+
+    } while (exists);
+
+    return newID;
+}
 
 void registerSite() {
 
@@ -991,7 +1027,7 @@ void registerSite() {
     cout << "       REGISTER EXCAVATION SITE\n";
     cout << "========================================\n";
 
-    newSite.siteID = nextSiteID;
+    newSite.siteID = generateSiteID();
 
     newSite.siteName = readValidatedText("Enter Site Name: ");
 
@@ -1038,7 +1074,7 @@ void registerSite() {
     sites[siteCount] = newSite;
 
     siteCount++;
-    nextSiteID++;
+    
 
     cout << "\nEXCAVATION SITE REGISTERED SUCCESSFULLY!\n";
     cout << "Site ID: " << newSite.siteID << endl;
@@ -1098,7 +1134,7 @@ void viewSites() {
 
 // FIND SITE USING ID
 
-int findSite(int id) {
+int findSite(string id) {
 
     for (int i = 0; i < siteCount; i++) {
 
@@ -1114,7 +1150,11 @@ int findSite(int id) {
 
 void searchSite() {
 
-        int id = readValidatedInteger("\nEnter Site ID to Search: ");
+    string id;
+
+    cout << "\nEnter Site ID to Search: ";
+    getline(cin >> ws, id);
+
     int index = findSite(id);
 
     if (index == -1) {
@@ -1137,7 +1177,10 @@ void searchSite() {
 
 void updateSite() {
 
-    int id = readValidatedInteger("\nEnter Site ID to Update: ");
+    string id;
+
+    cout << "\nEnter Site ID to Update: ";
+    getline(cin >> ws, id);
 
     int index = findSite(id);
 
@@ -1202,7 +1245,11 @@ void updateSite() {
 
 void deleteSite() {
 
-        int id = readValidatedInteger("\nEnter Site ID to Delete: ");
+    string id;
+
+    cout << "\nEnter Site ID to Delete: ";
+    getline(cin >> ws, id);
+
     int index = findSite(id);
 
     if (index == -1) {
@@ -1300,8 +1347,10 @@ void registerArtifact() {
 
     viewSites();
 
-        newArtifact.siteID =
-        readValidatedInteger("\nEnter Excavation Site ID: ");
+        cout << "\nEnter Excavation Site ID: ";
+getline(cin >> ws, newArtifact.siteID);
+
+    int siteIndex = findSite(newArtifact.siteID);
 
     int siteIndex = findSite(newArtifact.siteID);
 
@@ -1436,8 +1485,10 @@ void updateArtifact() {
     cout << "\n===== AVAILABLE EXCAVATION SITES =====" << endl;
     viewSites();
 
-        int newSiteID =
-        readValidatedInteger("\nEnter New Excavation Site ID: ");
+string newSiteID;
+
+    cout << "\nEnter New Excavation Site ID: ";
+    getline(cin >> ws, newSiteID);
 
     int siteIndex = findSite(newSiteID);
 
@@ -2379,9 +2430,16 @@ void registerTeamMember() {
 
     member.assignedRole = readValidatedWords("Enter Assigned Role: ");
 
-    member.siteID = to_string(
-        readValidatedInteger("Enter Excavation Site ID: ")
-    );
+    cout << "\n===== AVAILABLE EXCAVATION SITES =====\n";
+viewSites();
+
+cout << "Enter Excavation Site ID: ";
+getline(cin >> ws, member.siteID);
+
+if (findSite(member.siteID) == -1) {
+    cout << "Invalid Site ID! Registration cancelled.\n";
+    return;
+}
 
     member.teamMemberID = string("TM") +
     (nextTeamID < 10 ? "00" :
@@ -2461,9 +2519,20 @@ void updateTeamMember() {
     excavationTeam[index].assignedRole =
         readValidatedWords("Enter New Assigned Role: ");
 
-    excavationTeam[index].siteID = to_string(
-        readValidatedInteger("Enter New Excavation Site ID: ")
-    );
+    cout << "\n===== AVAILABLE EXCAVATION SITES =====\n";
+viewSites();
+
+string newSiteID;
+
+cout << "Enter New Excavation Site ID: ";
+getline(cin >> ws, newSiteID);
+
+if (findSite(newSiteID) == -1) {
+    cout << "Invalid Site ID! Update cancelled.\n";
+    return;
+}
+
+excavationTeam[index].siteID = newSiteID;
 
     cout << "\nTeam Member Record Successfully Updated!\n";
 }
