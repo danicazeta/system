@@ -975,16 +975,14 @@ void excavationSiteMenu() {
 
     do {
 
-        cout << "\n================================" << endl;
-        cout << "     EXCAVATION SITE MANAGEMENT" << endl;
-        cout << "================================" << endl;
-
-        cout << "\n1. Register New Excavation Site" << endl;
-        cout << "2. View All Excavation Sites" << endl;
-        cout << "3. Search Excavation Site" << endl;
-        cout << "4. Update Site Information" << endl;
-        cout << "5. Delete Site Record" << endl;
-        cout << "6. Return to Main Menu" << endl;
+        printDynamicSection("EXCAVATION SITE MANAGEMENT", {
+    "1. Register New Excavation Site",
+    "2. View All Excavation Sites",
+    "3. Search Excavation Site",
+    "4. Update Site Information",
+    "5. Delete Site Record",
+    "6. Return to Main Menu"
+});
 
                 choice = readValidatedInteger("\nEnter your choice: ");
         
@@ -1202,14 +1200,15 @@ void registerSite() {
 saveSites();
     
 
-    cout << "\nEXCAVATION SITE REGISTERED SUCCESSFULLY!\n";
-    cout << "Site ID: " << newSite.siteID << endl;
-    cout << "Site Name: " << newSite.siteName << endl;
-    cout << "Location: " << newSite.location << endl;
-    cout << "Latitude: " << newSite.latitude << endl;
-    cout << "Longitude: " << newSite.longitude << endl;
-    cout << "Description: " << newSite.description << endl;
-    cout << "Status: " << newSite.status << endl;
+    printDynamicSection("EXCAVATION SITE REGISTERED SUCCESSFULLY!", {
+    "Site ID: " + newSite.siteID,
+    "Site Name: " + newSite.siteName,
+    "Location: " + newSite.location,
+    "Latitude: " + to_string(newSite.latitude),
+    "Longitude: " + to_string(newSite.longitude),
+    "Description: " + newSite.description,
+    "Status: " + newSite.status
+});
 }
 
 // VIEW ALL EXCAVATION SITES
@@ -1223,35 +1222,30 @@ void displaySite(int index) {
         return;
     }
 
-    cout << "\n========================================" << endl;
-    cout << "       EXCAVATION SITE DETAILS" << endl;
-    cout << "========================================" << endl;
-
-    cout << "Site ID: " << sites[index].siteID << endl;
-    cout << "Site Name: " << sites[index].siteName << endl;
-    cout << "Location: " << sites[index].location << endl;
-    cout << "Latitude: " << sites[index].latitude << endl;
-    cout << "Longitude: " << sites[index].longitude << endl;
-    cout << "Description: " << sites[index].description << endl;
-    cout << "Status: " << sites[index].status << endl;
-
-    cout << "========================================" << endl;
+    printDynamicSection("EXCAVATION SITE DETAILS", {
+        "Site ID: " + sites[index].siteID,
+        "Site Name: " + sites[index].siteName,
+        "Location: " + sites[index].location,
+        "Latitude: " + to_string(sites[index].latitude),
+        "Longitude: " + to_string(sites[index].longitude),
+        "Description: " + sites[index].description,
+        "Status: " + sites[index].status
+    });
 }
 
 
 void viewSites() {
 
-    cout << "\n========================================" << endl;
-    cout << "       REGISTERED EXCAVATION SITES" << endl;
-    cout << "========================================" << endl;
+    printDynamicSection("REGISTERED EXCAVATION SITES", {
+    "Total Registered Sites: " + to_string(siteCount)
+});
 
     if (siteCount == 0) {
         cout << "No excavation sites registered yet." << endl;
         return;
     }
 
-    cout << "Total Registered Sites: " << siteCount << endl;
-
+    
     for (int i = 0; i < siteCount; i++) {
         displaySite(i);
     }
