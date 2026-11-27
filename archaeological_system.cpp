@@ -1352,7 +1352,7 @@ getline(cin >> ws, newArtifact.siteID);
 
     int siteIndex = findSite(newArtifact.siteID);
 
-    int siteIndex = findSite(newArtifact.siteID);
+    
 
     if (siteIndex == -1) {
         cout << "\nInvalid Site ID! Artifact registration cancelled." << endl;
