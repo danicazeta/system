@@ -1134,10 +1134,7 @@ void registerSite() {
 
     ExcavationSite newSite;
 
-    cout << "\n========================================\n";
-    cout << "       REGISTER EXCAVATION SITE\n";
-    cout << "========================================\n";
-
+    printDynamicSection("REGISTER EXCAVATION SITE", {});
     newSite.siteID = generateSiteID();
 
     newSite.siteName = readValidatedText("Enter Site Name: ");
@@ -1481,16 +1478,14 @@ void artifactMenu() {
 
     do {
 
-        cout << "\n========================================" << endl;
-        cout << "   ARTIFACT DISCOVERY AND CATALOGUING" << endl;
-        cout << "========================================" << endl;
-
-        cout << "\n1. Register New Artifact" << endl;
-        cout << "2. View All Artifacts" << endl;
-        cout << "3. Search Artifact" << endl;
-        cout << "4. Update Artifact Information" << endl;
-        cout << "5. Delete Artifact Record" << endl;
-        cout << "6. Return to Main Menu" << endl;
+        printDynamicSection("ARTIFACT DISCOVERY AND CATALOGUING", {
+    "1. Register New Artifact",
+    "2. View All Artifacts",
+    "3. Search Artifact",
+    "4. Update Artifact Information",
+    "5. Delete Artifact Record",
+    "6. Return to Main Menu"
+});
 
                 choice = readValidatedInteger("\nEnter your choice: ");
 
@@ -1959,16 +1954,14 @@ void classificationMenu() {
 
     do {
 
-        cout << "\n========================================" << endl;
-        cout << "        ARTIFACT CLASSIFICATION" << endl;
-        cout << "========================================" << endl;
-
-        cout << "\n1. Classify Artifact" << endl;
-        cout << "2. View All Classifications" << endl;
-        cout << "3. Search Classification" << endl;
-        cout << "4. Update Classification" << endl;
-        cout << "5. Delete Classification" << endl;
-        cout << "6. Return to Main Menu" << endl;
+        printDynamicSection("ARTIFACT CLASSIFICATION", {
+    "1. Classify Artifact",
+    "2. View All Classifications",
+    "3. Search Classification",
+    "4. Update Classification",
+    "5. Delete Classification",
+    "6. Return to Main Menu"
+});
 
                 choice = readValidatedInteger("\nEnter your choice: ");
 
@@ -2457,16 +2450,14 @@ void ageEstimationMenu() {
 
     do {
 
-        cout << "\n========================================" << endl;
-        cout << " AGE ESTIMATION AND HISTORICAL PERIOD" << endl;
-        cout << "========================================" << endl;
-
-        cout << "\n1. Estimate Artifact Age" << endl;
-        cout << "2. View All Age Estimates" << endl;
-        cout << "3. Search Age Estimate" << endl;
-        cout << "4. Update Age Estimate" << endl;
-        cout << "5. Delete Age Estimate" << endl;
-        cout << "6. Return to Main Menu" << endl;
+        printDynamicSection("AGE ESTIMATION AND HISTORICAL PERIOD", {
+    "1. Estimate Artifact Age",
+    "2. View All Age Estimates",
+    "3. Search Age Estimate",
+    "4. Update Age Estimate",
+    "5. Delete Age Estimate",
+    "6. Return to Main Menu"
+});
 
                 choice = readValidatedInteger("\nEnter your choice: ");
 
@@ -2844,12 +2835,13 @@ void ExcavationTeamManagement() {
 
     do {
 
-        cout << "\n===== EXCAVATION TEAM MANAGEMENT =====\n";
-        cout << "[1] Register Team Member\n";
-        cout << "[2] View Team Members\n";
-        cout << "[3] Update Team Member\n";
-        cout << "[4] Delete Team Member\n";
-        cout << "[5] Return to User Menu\n";
+        printDynamicSection("EXCAVATION TEAM MANAGEMENT", {
+    "[1] Register Team Member",
+    "[2] View Team Members",
+    "[3] Update Team Member",
+    "[4] Delete Team Member",
+    "[5] Return to User Menu"
+});
 
                 choice = readValidatedInteger("\nEnter your choice: ");
 
@@ -3031,16 +3023,14 @@ void preservationMenu() {
 
     do {
 
-        cout << "\n========================================" << endl;
-        cout << "       PRESERVATION MANAGEMENT" << endl;
-        cout << "========================================" << endl;
-
-        cout << "\n1. Add Preservation Record" << endl;
-        cout << "2. View All Preservation Records" << endl;
-        cout << "3. Search Preservation Record" << endl;
-        cout << "4. Update Preservation Record" << endl;
-        cout << "5. Delete Preservation Record" << endl;
-        cout << "6. Return to Main Menu" << endl;
+        printDynamicSection("PRESERVATION MANAGEMENT", {
+    "1. Add Preservation Record",
+    "2. View All Preservation Records",
+    "3. Search Preservation Record",
+    "4. Update Preservation Record",
+    "5. Delete Preservation Record",
+    "6. Return to Main Menu"
+});
 
                 choice = readValidatedInteger("\nEnter your choice: ");
         
@@ -3389,23 +3379,19 @@ void restorationMuseumMenu() {
 
     do {
 
-        cout << "\n========================================" << endl;
-        cout << "   RESTORATION AND MUSEUM MANAGEMENT" << endl;
-        cout << "========================================" << endl;
-
-        cout << "\n===== FACILITY AND MUSEUM RECORDS =====" << endl;
-        cout << "1. Register Facility or Museum" << endl;
-        cout << "2. View All Facilities and Museums" << endl;
-        cout << "3. Search Facility or Museum" << endl;
-        cout << "4. Update Facility Information" << endl;
-        cout << "5. Delete Facility Record" << endl;
-
-        cout << "\n===== ARTIFACT TRANSFERS =====" << endl;
-        cout << "6. Record Artifact Transfer" << endl;
-        cout << "7. View All Artifact Transfers" << endl;
-        cout << "8. Search Artifact Transfer" << endl;
-
-        cout << "\n9. Return to Main Menu" << endl;
+        printDynamicSection("RESTORATION AND MUSEUM MANAGEMENT", {
+    "FACILITY AND MUSEUM RECORDS",
+    "1. Register Facility or Museum",
+    "2. View All Facilities and Museums",
+    "3. Search Facility or Museum",
+    "4. Update Facility Information",
+    "5. Delete Facility Record",
+    "ARTIFACT TRANSFERS",
+    "6. Record Artifact Transfer",
+    "7. View All Artifact Transfers",
+    "8. Search Artifact Transfer",
+    "9. Return to Main Menu"
+});
 
                 choice = readValidatedInteger("\nEnter your choice: ");
         
@@ -3912,15 +3898,13 @@ void reportsMenu() {
 
     do {
 
-        cout << "\n========================================" << endl;
-        cout << "          REPORTS AND RECORDS" << endl;
-        cout << "========================================" << endl;
-
-        cout << "\n1. System Summary Report" << endl;
-        cout << "2. Excavation Site Report" << endl;
-        cout << "3. Artifact Inventory Report" << endl;
-        cout << "4. Activity Report" << endl;
-        cout << "5. Return to Main Menu" << endl;
+        printDynamicSection("REPORTS AND RECORDS", {
+    "1. System Summary Report",
+    "2. Excavation Site Report",
+    "3. Artifact Inventory Report",
+    "4. Activity Report",
+    "5. Return to Main Menu"
+});
 
                 choice = readValidatedInteger("\nEnter your choice: ");
 
