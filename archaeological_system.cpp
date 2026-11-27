@@ -1257,6 +1257,22 @@ void deleteSite() {
         return;
     }
 
+    for (int i = 0; i < artifactCount; i++) {
+        if (artifacts[i].siteID == id) {
+            cout << "\nCannot delete this site! "
+                 << "Artifacts are still assigned to it.\n";
+            return;
+        }
+    }
+
+    for (int i = 0; i < excavationTeam.size(); i++) {
+        if (excavationTeam[i].siteID == id) {
+            cout << "\nCannot delete this site! "
+                 << "Team members are still assigned to it.\n";
+            return;
+        }
+    }
+    
     for (int i = index; i < siteCount - 1; i++) {
         sites[i] = sites[i + 1];
     }
@@ -2496,6 +2512,7 @@ int findExcavationTeamMember(string id) {
     return -1;
 }
 
+
 void updateTeamMember() {
 
     string id;
@@ -2510,10 +2527,6 @@ void updateTeamMember() {
         return;
     }
 
-        excavationTeam[index].memberName =
-        readValidatedName("Enter New Member Name: ");
-
-    
     cout << "\n===== AVAILABLE EXCAVATION SITES =====\n";
     viewSites();
 
@@ -2539,10 +2552,8 @@ void updateTeamMember() {
     excavationTeam[index].siteID = newSiteID;
 
     cout << "\nTeam Member Record Successfully Updated!\n";
-
-
-    cout << "\nTeam Member Record Successfully Updated!\n";
 }
+
 void deleteTeamMember() {
 
     string id;
