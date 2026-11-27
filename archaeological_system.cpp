@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include <random>
+#include <ctime>
 
 using namespace std;
 
@@ -1502,7 +1503,7 @@ void artifactMenu() {
     } while (choice != 6);
 }
 
-bool isValidDiscoveryDate(string date) {
+bool isValidDiscoveryDate(string date, bool allowFuture = false) {
     if (date.length() != 10 ||
         date[2] != '/' || date[5] != '/') {
         return false;
@@ -1536,25 +1537,55 @@ bool isValidDiscoveryDate(string date) {
     if (day < 1 || day > daysInMonth[month - 1])
         return false;
 
+    // Check whether the date is in the future.
+    if (!allowFuture) {
+        time_t currentTime = time(nullptr);
+        tm* currentDate = localtime(&currentTime);
+
+        if (currentDate == nullptr)
+            return false;
+
+        int currentYear = currentDate->tm_year + 1900;
+        int currentMonth = currentDate->tm_mon + 1;
+        int currentDay = currentDate->tm_mday;
+
+        if (year > currentYear ||
+            (year == currentYear && month > currentMonth) ||
+            (year == currentYear && month == currentMonth &&
+             day > currentDay)) {
+            return false;
+        }
+    }
+
     return true;
 }
 
-string readValidatedDate(string prompt) {
+string readValidatedDate(string prompt, bool allowFuture = false) {
     string date;
 
     cout << "\nNOTICE: Date format must be MM/DD/YYYY.\n";
     cout << "Example: 11/27/2026\n";
 
+    if (!allowFuture) {
+        cout << "Future dates are not allowed for this field.\n";
+    }
+
     do {
         cout << prompt;
         getline(cin, date);
 
-        if (!isValidDiscoveryDate(date)) {
+        if (!isValidDiscoveryDate(date, allowFuture)) {
             cout << "Invalid date! Please use MM/DD/YYYY "
-                 << "and enter a valid calendar date.\n";
+                 << "and enter a valid calendar date.";
+
+            if (!allowFuture) {
+                cout << " Future dates are not allowed.";
+            }
+
+            cout << "\n";
         }
 
-    } while (!isValidDiscoveryDate(date));
+    } while (!isValidDiscoveryDate(date, allowFuture));
 
     return date;
 }
@@ -1612,7 +1643,7 @@ do {
 
     if (!isValidDiscoveryDate(newArtifact.discoveryDate)) {
         cout << "Invalid date! Please use MM/DD/YYYY "
-             << "and enter a valid calendar date.\n";
+             << "and enter a valid calendar date that is not in the future.\n";
     }
 
 } while (!isValidDiscoveryDate(newArtifact.discoveryDate));
@@ -1757,7 +1788,7 @@ do {
 
     if (!isValidDiscoveryDate(artifacts[index].discoveryDate)) {
         cout << "Invalid date! Please use MM/DD/YYYY "
-             << "and enter a valid calendar date.\n";
+             << "and enter a valid calendar date that is not in the future.\n";
     }
 
 } while (!isValidDiscoveryDate(artifacts[index].discoveryDate));
@@ -3083,7 +3114,7 @@ void addPreservationRecord() {
     readValidatedDate("Enter Preservation Date: ");
 
 newRecord.nextMonitoringDate =
-    readValidatedDate("Enter Next Monitoring Date: ");
+    readValidatedDate("Enter Next Monitoring Date: ", true);
 
     cout << "\n===== PRESERVATION STATUS =====" << endl;
     cout << "1. Planned" << endl;
@@ -3255,7 +3286,7 @@ void updatePreservationRecord() {
     readValidatedDate("Enter New Preservation Date: ");
 
 updatedRecord.nextMonitoringDate =
-    readValidatedDate("Enter New Monitoring Date: ");
+    readValidatedDate("Enter New Monitoring Date: ", true);
 
     cout << "\n===== PRESERVATION STATUS =====" << endl;
     cout << "1. Planned" << endl;
