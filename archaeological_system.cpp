@@ -735,10 +735,11 @@ void userAccountMenu() {
     int choice;
 
     do {
-        cout << "\n===== USER ACCOUNT =====\n";
-        cout << "[1] Log In\n";
-        cout << "[2] Create Account\n";
-        cout << "[3] Back\n";
+        printDynamicSection("USER ACCOUNT", {
+    "[1] Log In",
+    "[2] Create Account",
+    "[3] Back"
+});
 
                 choice = readValidatedInteger("Enter choice: ");
 
@@ -821,13 +822,11 @@ void adminMenu() {
     int choice;
 
     do {
-        cout << "\n========================================\n";
-        cout << "               ADMIN MENU\n";
-        cout << "========================================\n";
-        cout << "[1] Tracking, Reports and Records\n";
-        cout << "[2] Restoration and Museum Management\n";
-        cout << "[3] Log Out\n";
-        cout << "========================================\n";
+        printDynamicSection("ADMIN MENU", {
+    "[1] Tracking, Reports and Records",
+    "[2] Restoration and Museum Management",
+    "[3] Log Out"
+});
                 choice = readValidatedInteger("Enter your choice: ");
         
 
@@ -859,16 +858,12 @@ void login() {
     string password;
 
     do {
-        cout << "\n========================================\n";
-        cout << "       ARCHAEOLOGICAL MANAGEMENT SYSTEM\n";
-        cout << "========================================\n";
-        cout << "\n";
-        cout << "                 LOGIN\n";
-        cout << "\n";
-        cout << "[1] User\n";
-        cout << "[2] Admin\n";
-        cout << "[3] Exit\n";
-        cout << "========================================\n";
+        printDynamicSection("ARCHAEOLOGICAL MANAGEMENT SYSTEM", {
+    "LOGIN",
+    "[1] User",
+    "[2] Admin",
+    "[3] Exit"
+});
                 choice = readValidatedInteger("Enter your choice: ");
         
 
@@ -910,16 +905,14 @@ void trackingReportsMenu() {
     int choice;
 
     do {
-        cout << "\n========================================\n";
-        cout << "       TRACKING, REPORTS AND RECORDS\n";
-        cout << "========================================\n";
-        cout << "[1] View Excavation Site Records\n";
-        cout << "[2] View Artifact Catalogue\n";
-        cout << "[3] View Classification Records\n";
-        cout << "[4] View Age Estimation Records\n";
-        cout << "[5] View Preservation Records\n";
-        cout << "[6] Back to Admin Menu\n";
-        cout << "========================================\n";
+        printDynamicSection("TRACKING, REPORTS AND RECORDS", {
+    "[1] View Excavation Site Records",
+    "[2] View Artifact Catalogue",
+    "[3] View Classification Records",
+    "[4] View Age Estimation Records",
+    "[5] View Preservation Records",
+    "[6] Back to Admin Menu"
+});
                 choice = readValidatedInteger("Enter your choice: ");
         
 
