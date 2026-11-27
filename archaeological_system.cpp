@@ -3705,8 +3705,8 @@ void recordArtifactTransfer() {
 
     
 
-    cout << "\nEnter Transfer Date: ";
-    getline(cin, newTransfer.transferDate);
+    newTransfer.transferDate =
+    readValidatedDate("\nEnter Transfer Date: ");
 
     cout << "Enter Transfer Purpose: ";
     getline(cin, newTransfer.transferPurpose);
