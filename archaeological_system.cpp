@@ -768,17 +768,15 @@ void userMenu() {
     int choice;
 
     do {
-        cout << "\n============================================================== \n";
-        cout << "                          USER MENU\n"; 
-        cout << "================================================================\n";
-        cout << "[1] Excavation Site Management\n";
-        cout << "[2] Artifact Discovery and Cataloguing\n";
-        cout << "[3] Artifact Classification\n";
-        cout << "[4] Artifact Age Estimation\n";
-        cout << "[5] Excavation Team Management\n";
-        cout << "[6] Preservation Management\n";
-        cout << "[7] Log Out\n";
-        cout << "================================================================\n";
+        printDynamicSection("USER MENU", {
+    "[1] Excavation Site Management",
+    "[2] Artifact Discovery and Cataloguing",
+    "[3] Artifact Classification",
+    "[4] Artifact Age Estimation",
+    "[5] Excavation Team Management",
+    "[6] Preservation Management",
+    "[7] Log Out"
+});
                 choice = readValidatedInteger("Enter your choice: ");
         
 
