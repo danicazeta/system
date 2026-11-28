@@ -602,7 +602,23 @@ string readValidatedDigits(string prompt) {
     }
 }
 
+bool readValidatedConfirmation(string prompt) {
+    string input;
 
+    while (true) {
+        cout << prompt;
+        getline(cin >> ws, input);
+
+        if (input == "Y" || input == "y") {
+            return true;
+        }
+        else if (input == "N" || input == "n") {
+            return false;
+        }
+
+        cout << "Invalid input! Please enter Y or N only.\n";
+    }
+}
 
 void registerUser() {
     string fullname, username, password, confirmPassword;
@@ -1852,12 +1868,11 @@ void deleteArtifact() {
 
     cout << "\nArtifact Name: " << artifacts[index].artifactName << endl;
 
-    char confirmation;
+    bool confirmation = readValidatedConfirmation(
+    "Are you sure you want to delete this artifact? (Y/N): "
+);
 
-    cout << "Are you sure you want to delete this artifact? (Y/N): ";
-    cin >> confirmation;
-
-    if (confirmation == 'Y' || confirmation == 'y') {
+if (confirmation) {
 
         for (int i = index; i < artifactCount - 1; i++) {
             artifacts[i] = artifacts[i + 1];
@@ -2094,12 +2109,11 @@ string confirmClassification(string suggested) {
 
         cout << "Suggested Category: " << suggested << endl;
 
-        char confirmation;
+        bool confirmation = readValidatedConfirmation(
+    "Confirm this classification? (Y/N): "
+);
 
-        cout << "Confirm this classification? (Y/N): ";
-        cin >> confirmation;
-
-        if (confirmation == 'Y' || confirmation == 'y') {
+        if (confirmation) {
             return suggested;
         }
     }
@@ -2356,12 +2370,11 @@ void deleteClassification() {
         return;
     }
 
-    char confirmation;
+    bool confirmation = readValidatedConfirmation(
+    "\nAre you sure you want to delete this classification? (Y/N): "
+);
 
-    cout << "\nAre you sure you want to delete this classification? (Y/N): ";
-    cin >> confirmation;
-
-    if (confirmation == 'Y' || confirmation == 'y') {
+    if (confirmation) {
 
         for (int i = index; i < classificationCount - 1; i++) {
             classifications[i] = classifications[i + 1];
@@ -2816,13 +2829,11 @@ void deleteAgeEstimate() {
         return;
     }
 
-    char confirmation;
+    bool confirmation = readValidatedConfirmation(
+    "\nAre you sure you want to delete this age estimation? (Y/N): "
+);
 
-    cout << "\nAre you sure you want to delete this age estimation? (Y/N): ";
-    cin >> confirmation;
-
-    if (confirmation == 'Y' || confirmation == 'y') {
-
+    if (confirmation) {
         for (int i = index; i < ageCount - 1; i++) {
             ageRecords[i] = ageRecords[i + 1];
         }
@@ -3361,12 +3372,11 @@ void deletePreservationRecord() {
         return;
     }
 
-    char confirmation;
+    bool confirmation = readValidatedConfirmation(
+    "\nAre you sure you want to delete this record? (Y/N): "
+);
 
-    cout << "\nAre you sure you want to delete this record? (Y/N): ";
-    cin >> confirmation;
-
-    if (confirmation == 'Y' || confirmation == 'y') {
+if (confirmation) {
 
         for (int i = index; i < preservationCount - 1; i++) {
 
@@ -3666,12 +3676,11 @@ void deleteFacility() {
         }
     }
 
-    char confirmation;
+    bool confirmation = readValidatedConfirmation(
+    "\nAre you sure you want to delete this facility? (Y/N): "
+);
 
-    cout << "\nAre you sure you want to delete this facility? (Y/N): ";
-    cin >> confirmation;
-
-    if (confirmation == 'Y' || confirmation == 'y') {
+    if (confirmation) {
 
         for (int i = index; i < facilityCount - 1; i++) {
 
