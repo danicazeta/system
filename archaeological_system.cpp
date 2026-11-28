@@ -496,6 +496,7 @@ string readValidatedWords(string prompt) {
     }
 }
 
+
 string readValidatedDescription(string prompt) {
     string input;
 
@@ -504,22 +505,39 @@ string readValidatedDescription(string prompt) {
         getline(cin >> ws, input);
 
         bool valid = !input.empty();
+        bool hasContent = false;
 
         for (char c : input) {
-            if (!isalnum(static_cast<unsigned char>(c))
-                && c != ' ') {
+            if (isalnum(static_cast<unsigned char>(c))) {
+                hasContent = true;
+            }
+            else if (isspace(static_cast<unsigned char>(c)) ||
+                     c == '.' || c == ',' || c == ';' ||
+                     c == ':' || c == '!' || c == '?' ||
+                     c == '\'' || c == '"' ||
+                     c == '(' || c == ')' ||
+                     c == '-' || c == '_' ||
+                     c == '/' || c == '\\' ||
+                     c == '@' || c == '#' ||
+                     c == '&' || c == '+' ||
+                     c == '%') {
+                continue;
+            }
+            else {
                 valid = false;
                 break;
             }
         }
 
-        if (valid) {
+        if (valid && hasContent) {
             return input;
         }
 
-        cout << "Invalid description! Use letters, numbers, and spaces only.\n";
+        cout << "Invalid description! Use letters, numbers, spaces, "
+             << "and common punctuation only.\n";
     }
 }
+
 
 int readValidatedInteger(string prompt) {
     string input;
@@ -1014,22 +1032,29 @@ void excavationSiteMenu() {
 
 
 
+
 bool isValidText(string input) {
-    bool hasLetter = false;
+    bool hasContent = false;
 
     if (input.empty()) {
         return false;
     }
 
-    for (int i = 0; i < input.length(); i++) {
-        char ch = input[i];
-
-        if (isalpha(static_cast<unsigned char>(ch))) {
-            hasLetter = true;
+    for (char ch : input) {
+        if (isalnum(static_cast<unsigned char>(ch))) {
+            hasContent = true;
         }
         else if (isspace(static_cast<unsigned char>(ch)) ||
                  ch == ',' || ch == '.' ||
-                 ch == '-' || ch == '\'') {
+                 ch == '-' || ch == '\'' ||
+                 ch == '"' || ch == ';' ||
+                 ch == ':' || ch == '!' ||
+                 ch == '?' || ch == '(' ||
+                 ch == ')' || ch == '_' ||
+                 ch == '/' || ch == '\\' ||
+                 ch == '@' || ch == '#' ||
+                 ch == '&' || ch == '+' ||
+                 ch == '%') {
             continue;
         }
         else {
@@ -1037,8 +1062,9 @@ bool isValidText(string input) {
         }
     }
 
-    return hasLetter;
+    return hasContent;
 }
+
 
 
 string readValidatedText(string prompt) {
