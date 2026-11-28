@@ -3318,11 +3318,11 @@ void updatePreservationRecord() {
 
     
 
-    cout << "\nEnter New Preservation Activity: ";
-    getline(cin, updatedRecord.preservationActivity);
+    updatedRecord.preservationActivity =
+    readValidatedDescription("\nEnter New Preservation Activity: ");
 
-    cout << "Enter New Preservation Method: ";
-    getline(cin, updatedRecord.preservationMethod);
+updatedRecord.preservationMethod =
+    readValidatedDescription("Enter New Preservation Method: ");
 
         updatedRecord.responsiblePerson =
         readValidatedName("Enter New Responsible Person: ");
@@ -3643,8 +3643,8 @@ void updateFacility() {
         facilities[index].facilityName =
         readValidatedText("Enter New Institution Name: ");
 
-    cout << "Enter New Location: ";
-    getline(cin, facilities[index].location);
+    facilities[index].location =
+    readValidatedDescription("Enter New Location: ");
 
     facilities[index].contactPerson =
         readValidatedName("Enter New Contact Person: ");
@@ -3652,8 +3652,8 @@ void updateFacility() {
     facilities[index].contactNumber =
         readValidatedDigits("Enter New Contact Number: ");
 
-    cout << "Enter New Services Offered: ";
-    getline(cin, facilities[index].services);
+    facilities[index].services =
+    readValidatedDescription("Enter New Services Offered: ");
 
     cout << "\nFacility information successfully updated!" << endl;
 }
