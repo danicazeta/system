@@ -1081,7 +1081,8 @@ string readValidatedText(string prompt) {
             return input;
         }
 
-        cout << "Invalid input! Please enter letters and words only.\n";
+        cout << "Invalid input! Please enter letters, numbers, spaces, "
+     << "and common punctuation only.\n";
     }
 }
 
@@ -1668,7 +1669,6 @@ void registerArtifact() {
 getline(cin >> ws, newArtifact.siteID);
 
     int siteIndex = findSite(newArtifact.siteID);
-
     
 
     if (siteIndex == -1) {
@@ -1684,19 +1684,8 @@ getline(cin >> ws, newArtifact.siteID);
             newArtifact.artifactName =
         readValidatedName("\nEnter Artifact Name: ");
 
-    cout << "\nNOTICE: Date format must be MM/DD/YYYY.\n";
-cout << "Example: 11/27/2026\n";
-
-do {
-    cout << "Enter Discovery Date: ";
-    getline(cin, newArtifact.discoveryDate);
-
-    if (!isValidDiscoveryDate(newArtifact.discoveryDate)) {
-        cout << "Invalid date! Please use MM/DD/YYYY "
-             << "and enter a valid calendar date that is not in the future.\n";
-    }
-
-} while (!isValidDiscoveryDate(newArtifact.discoveryDate));
+    newArtifact.discoveryDate =
+    readValidatedDate("Enter Discovery Date: ");
 
     newArtifact.discoverer =
         readValidatedName("Enter Discoverer's Name: ");
@@ -1824,24 +1813,15 @@ string newSiteID;
         return;
     }
 
+    
+
     artifacts[index].siteID = newSiteID;
 
         artifacts[index].artifactName =
         readValidatedName("Enter New Artifact Name: ");
 
-    cout << "\nNOTICE: Date format must be MM/DD/YYYY.\n";
-cout << "Example: 11/27/2026\n";
-
-do {
-    cout << "Enter New Discovery Date: ";
-    getline(cin, artifacts[index].discoveryDate);
-
-    if (!isValidDiscoveryDate(artifacts[index].discoveryDate)) {
-        cout << "Invalid date! Please use MM/DD/YYYY "
-             << "and enter a valid calendar date that is not in the future.\n";
-    }
-
-} while (!isValidDiscoveryDate(artifacts[index].discoveryDate));
+    artifacts[index].discoveryDate =
+    readValidatedDate("Enter New Discovery Date: ");
 
     artifacts[index].discoverer =
         readValidatedName("Enter New Discoverer's Name: ");
