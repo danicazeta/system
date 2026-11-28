@@ -1325,7 +1325,7 @@ void updateSite() {
     cout << "\n===== UPDATE SITE INFORMATION =====" << endl;
 
     sites[index].siteName =
-        readValidatedName("Enter New Site Name: ");
+    readValidatedText("Enter New Site Name: ");
 
     sites[index].location =
         readValidatedText("Enter New Location: ");
@@ -1697,10 +1697,10 @@ do {
 
     newArtifact.discoverer =
         readValidatedName("Enter Discoverer's Name: ");
-
-    cout << "Enter Excavation Grid or Area: ";
-    getline(cin, newArtifact.excavationGrid);
-
+    
+newArtifact.excavationGrid =
+    readValidatedDescription("Enter Excavation Grid or Area: ");
+    
     newArtifact.discoveryDescription =
     readValidatedDescription("Enter Discovery Description: ");
 
@@ -1843,8 +1843,8 @@ do {
     artifacts[index].discoverer =
         readValidatedName("Enter New Discoverer's Name: ");
 
-    cout << "Enter New Excavation Grid or Area: ";
-    getline(cin, artifacts[index].excavationGrid);
+    artifacts[index].excavationGrid =
+    readValidatedDescription("Enter New Excavation Grid or Area: ");
 
     artifacts[index].discoveryDescription =
     readValidatedDescription("Enter New Discovery Description: ");
