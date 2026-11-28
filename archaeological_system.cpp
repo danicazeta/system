@@ -2184,11 +2184,11 @@ void classifyArtifact() {
     cout << "\nArtifact Name: "
          << artifacts[artifactIndex].artifactName << endl;
 
-    cout << "\nEnter Artifact Material: ";
-    getline(cin, newClassification.material);
+    newClassification.material =
+    readValidatedDescription("\nEnter Artifact Material: ");
 
-    cout << "Enter Artifact Characteristics: ";
-    getline(cin, newClassification.characteristics);
+newClassification.characteristics =
+    readValidatedDescription("Enter Artifact Characteristics: ");
 
     // SYSTEM GENERATES CLASSIFICATION SUGGESTION
 
@@ -2207,9 +2207,9 @@ void classifyArtifact() {
         return;
     }
 
-    cout << "\nEnter Additional Classification Notes: ";
-    getline(cin, newClassification.classificationNotes);
-
+    newClassification.classificationNotes =
+    readValidatedDescription("\nEnter Additional Classification Notes: ");
+    
     classifications[classificationCount] = newClassification;
 
     classificationCount++;
@@ -2333,12 +2333,12 @@ void updateClassification() {
     cout << "Artifact Name: "
          << artifacts[artifactIndex].artifactName << endl;
 
-    cout << "\nEnter New Material: ";
-    getline(cin, classifications[index].material);
+    classifications[index].material =
+    readValidatedDescription("\nEnter New Material: ");
 
-    cout << "Enter New Characteristics: ";
-    getline(cin, classifications[index].characteristics);
-
+classifications[index].characteristics =
+    readValidatedDescription("Enter New Characteristics: ");
+    
     string suggested = suggestClassification(
         artifacts[artifactIndex].artifactName,
         classifications[index].material,
@@ -2355,8 +2355,9 @@ void updateClassification() {
     classifications[index].category = newCategory;
 
     cout << "Enter New Classification Notes: ";
-    getline(cin, classifications[index].classificationNotes);
-
+    classifications[index].classificationNotes =
+    readValidatedDescription("\nEnter New Classification Notes: ");
+    
     cout << "\nClassification successfully updated!" << endl;
     saveClassifications();
 }
@@ -2631,11 +2632,11 @@ void estimateArtifactAge() {
         newRecord.maximumAge
     );
 
-    cout << "\nEnter Historical Reference or Evidence Basis: ";
-    getline(cin, newRecord.referenceBasis);
+    newRecord.referenceBasis =
+    readValidatedDescription("\nEnter Historical Reference or Evidence Basis: ");
 
-    cout << "Enter Additional Estimation Notes: ";
-    getline(cin, newRecord.estimationNotes);
+newRecord.estimationNotes =
+    readValidatedDescription("Enter Additional Estimation Notes: ");
 
     ageRecords[ageCount] = newRecord;
 
@@ -2806,11 +2807,14 @@ void updateAgeEstimate() {
     
 
     cout << "Enter New Historical Reference or Evidence Basis: ";
-    getline(cin, ageRecords[index].referenceBasis);
+    ageRecords[index].referenceBasis =
+    readValidatedDescription("\nEnter New Historical Reference or Evidence Basis: ");
+
 
     cout << "Enter New Estimation Notes: ";
-    getline(cin, ageRecords[index].estimationNotes);
-
+    ageRecords[index].estimationNotes =
+    readValidatedDescription("Enter New Estimation Notes: ");
+    
     cout << "\nAge estimation successfully updated!" << endl;
 
     displayAgeEstimate(index);
@@ -3143,12 +3147,11 @@ void addPreservationRecord() {
 
     
 
-    cout << "\nEnter Preservation Activity: ";
-    getline(cin, newRecord.preservationActivity);
+    newRecord.preservationActivity =
+    readValidatedDescription("\nEnter Preservation Activity: ");
 
-    cout << "Enter Preservation Method: ";
-    getline(cin, newRecord.preservationMethod);
-
+newRecord.preservationMethod =
+    readValidatedDescription("Enter Preservation Method: ");
         newRecord.responsiblePerson =
         readValidatedName("Enter Responsible Person: ");
 
@@ -3509,8 +3512,8 @@ void registerFacility() {
         newFacility.facilityName =
         readValidatedText("\nEnter Institution Name: ");
 
-    cout << "Enter Location: ";
-    getline(cin, newFacility.location);
+    newFacility.location =
+    readValidatedDescription("Enter Location: ");
 
     newFacility.contactPerson =
         readValidatedName("Enter Contact Person: ");
@@ -3518,8 +3521,8 @@ void registerFacility() {
     newFacility.contactNumber =
         readValidatedDigits("Enter Contact Number: ");
 
-    cout << "Enter Services or Facilities Offered: ";
-    getline(cin, newFacility.services);
+    newFacility.services =
+    readValidatedDescription("Enter Services or Facilities Offered: ");
 
     newFacility.facilityID = nextFacilityID;
 
@@ -3777,8 +3780,8 @@ void recordArtifactTransfer() {
     newTransfer.transferDate =
     readValidatedDate("\nEnter Transfer Date: ");
 
-    cout << "Enter Transfer Purpose: ";
-    getline(cin, newTransfer.transferPurpose);
+    newTransfer.transferPurpose =
+    readValidatedDescription("Enter Transfer Purpose: ");
 
     cout << "\n===== TRANSFER STATUS =====" << endl;
     cout << "1. Scheduled" << endl;
