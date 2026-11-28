@@ -440,6 +440,7 @@ void saveArtifacts();
 void loadArtifacts();
 void saveClassifications();
 void loadClassifications();
+
 string readValidatedName(string prompt) {
     string input;
 
@@ -454,7 +455,8 @@ string readValidatedName(string prompt) {
             if (isalpha(static_cast<unsigned char>(c))) {
                 hasLetter = true;
             }
-            else if (c != ' ' && c != '-') {
+            else if (c != ' ' && c != '-' &&
+                     c != '\'' && c != '.') {
                 valid = false;
                 break;
             }
@@ -464,7 +466,8 @@ string readValidatedName(string prompt) {
             return input;
         }
 
-        cout << "Invalid name! Use letters, spaces, and hyphens only.\n";
+        cout << "Invalid name! Use letters, spaces, "
+             << "hyphens, apostrophes, and periods only.\n";
     }
 }
 
@@ -1845,7 +1848,7 @@ do {
 
     artifacts[index].excavationGrid =
     readValidatedDescription("Enter New Excavation Grid or Area: ");
-
+    
     artifacts[index].discoveryDescription =
     readValidatedDescription("Enter New Discovery Description: ");
 
